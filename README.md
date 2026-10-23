@@ -115,3 +115,7 @@ Wolf + Ranger now uses the owner-uploaded original `public/characters/wolf/range
 The depicted worn cloak is registered as **Patched Cloak**. Selecting another outfit keeps this supplied Wolf Ranger base portrait and explicitly states that the selected outfit is saved but not depicted. No outfit variant is fabricated. Other species/classes retain labelled vector prototypes. Drafts, wallet behavior and downloads are preserved.
 
 The cinematic UI reference is still missing at `docs/references/robinhoot-cinematic-ui.png`; reference-matching remains pending. See [the asset contract](docs/CINEMATIC_ASSETS.md). `npm run validate:art` runs before production builds; `npm run test:assets` checks publishing guards.
+
+### Mobile RPG studio refinement
+
+The portrait leads the mobile layout. Four keyboard-accessible tabs (Species, Class, Outfit and Spirit) reveal compact radio-card choices instead of a long stack of selects. Thumbnails use only the original Wolf Ranger image, with honest coverage labels; unsupported options remain selectable and saved without fabricated appearance changes. Tab summaries show the complete current selection, and section links lead to customization, WANTED and passport/profile. The WANTED preview uses aged parchment, distressed borders and serif typography; its PNG carries matching parchment shading while retaining the current selected art and draft disclosures. No character image, wallet behavior or storage schema changes.

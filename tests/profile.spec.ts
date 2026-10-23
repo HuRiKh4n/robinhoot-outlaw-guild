@@ -1,3 +1,4 @@
+import { choose, selected } from './creator-helpers';
 import { expect, test, type Page } from '@playwright/test';
 import { mockMeteorWeb, openMeteor } from './helpers';
 
@@ -17,18 +18,18 @@ test('wallet drafts stay isolated through reload, switching and disconnect', asy
   await page.goto('/');
   await expect(nameInput(page)).toBeEnabled();
   await nameInput(page).fill('Guest Fox');
-  await page.getByRole('combobox', { name: 'YOUR SPECIES', exact: true }).selectOption('Fox');
+  await choose(page, 'SPECIES', 'Fox');
   await page.reload();
   await expect(nameInput(page)).toHaveValue('Guest Fox');
   await connectWeb(page);
   await expect(page.getByRole('button', { name: 'Wallet connected: alpha.near. Manage wallet', exact: true })).toBeEnabled();
   await expect(nameInput(page)).toHaveValue('The Broke Bandit');
   await nameInput(page).fill('Alpha Ranger');
-  await page.getByRole('combobox', { name: 'YOUR CLASS', exact: true }).selectOption('Ranger');
-  await page.getByRole('combobox', { name: 'YOUR SPECIES', exact: true }).selectOption('Wolf');
-  await page.getByRole('combobox', { name: 'YOUR OUTFIT', exact: true }).selectOption('Ragged Hood');
-  await page.getByRole('combobox', { name: 'YOUR PERSONALITY', exact: true }).selectOption('Fearless');
-  await page.getByRole('link', { name: 'VIEW YOUR OUTLAW PROFILE' }).click();
+  await choose(page, 'CLASS', 'Ranger');
+  await choose(page, 'SPECIES', 'Wolf');
+  await choose(page, 'OUTFIT', 'Ragged Hood');
+  await choose(page, 'PERSONALITY', 'Fearless');
+  await page.getByRole('link', { name: 'PROFILE', exact: true }).click();
   const profile = page.getByRole('region', { name: 'OUTLAW PROFILE', exact: true });
   await expect(profile.getByRole('heading', { name: 'Alpha Ranger', exact: true })).toBeVisible();
   for (const text of ['Ranger', 'Wolf', 'Ragged Hood', 'Fearless']) await expect(profile.getByText(text, { exact: true })).toBeVisible();
@@ -42,17 +43,17 @@ test('wallet drafts stay isolated through reload, switching and disconnect', asy
   await expect(page.getByRole('button', { name: 'Wallet connected: beta.near. Manage wallet', exact: true })).toBeEnabled();
   await expect(nameInput(page)).toHaveValue('The Broke Bandit');
   await nameInput(page).fill('Beta Trickster');
-  await page.getByRole('combobox', { name: 'YOUR CLASS', exact: true }).selectOption('Trickster');
+  await choose(page, 'CLASS', 'Trickster');
   await page.reload();
   await expect(nameInput(page)).toHaveValue('Beta Trickster');
   await reconnect(page, 'beta.near');
   await expect(page.getByRole('button', { name: 'Wallet connected: alpha.near. Manage wallet', exact: true })).toBeEnabled();
   await expect(nameInput(page)).toHaveValue('Alpha Ranger');
-  await expect(page.getByRole('combobox', { name: 'YOUR CLASS', exact: true })).toHaveValue('Ranger');
+  await selected(page, 'CLASS', 'Ranger');
   await page.getByRole('button', { name: 'Wallet connected: alpha.near. Manage wallet', exact: true }).click();
   await page.getByRole('button', { name: 'DISCONNECT WALLET', exact: true }).click();
   await expect(nameInput(page)).toHaveValue('Guest Fox');
-  await expect(page.getByRole('combobox', { name: 'YOUR SPECIES', exact: true })).toHaveValue('Fox');
+  await selected(page, 'SPECIES', 'Fox');
   await expect(profile).toContainText('UNCONNECTED DRAFT MODE');
   await page.reload();
   await expect(nameInput(page)).toHaveValue('Guest Fox');
@@ -96,9 +97,9 @@ test('long wallet accounts never wrap or overflow the responsive header', async 
   await expect(page.locator('.wallet-account')).toHaveText(accountId);
   await expect(page.getByRole('button', { name: 'DISCONNECT WALLET', exact: true })).toBeVisible();
   await page.keyboard.press('Escape');
-  await page.getByRole('link', { name: 'VIEW YOUR OUTLAW PROFILE' }).click();
+  await page.getByRole('link', { name: 'PROFILE', exact: true }).click();
   await page.locator('#profile').screenshot({ path: testInfo.outputPath('mobile-profile.png') });
-  await page.locator('nav').screenshot({ path: testInfo.outputPath('mobile-header.png') });
+  await page.locator('nav').first().screenshot({ path: testInfo.outputPath('mobile-header.png') });
   await expect(page.getByRole('img', { name: 'RobinHoot — The Outlaw of NEAR', exact: true })).toBeAttached();
 });
 
@@ -108,8 +109,8 @@ test('malformed local data cannot create membership or replace allowed creator c
   })));
   await page.goto('/');
   await expect(nameInput(page)).toHaveValue('Local Imposter');
-  await expect(page.getByRole('combobox', { name: 'YOUR CLASS', exact: true })).toHaveValue('Scout');
-  await expect(page.getByRole('combobox', { name: 'YOUR SPECIES', exact: true })).toHaveValue('Raccoon');
+  await selected(page, 'CLASS', 'Scout');
+  await selected(page, 'SPECIES', 'Raccoon');
   await expect(page.getByRole('region', { name: 'OUTLAW PROFILE', exact: true })).toContainText('do not establish reputation or membership');
   await nameInput(page).fill('Valid Local Draft');
   expect(await page.evaluate(() => JSON.parse(sessionStorage.getItem('robinhoot:outlaw-draft')!))).toEqual({ name: 'Valid Local Draft', class: 'Scout', species: 'Raccoon', outfit: 'Patched Cloak', personality: 'Cunning' });

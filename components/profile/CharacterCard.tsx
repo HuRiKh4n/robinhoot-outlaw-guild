@@ -91,10 +91,17 @@ export default function CharacterCard({ draft, accountId }: { draft: OutlawDraft
 
 export function drawPassport(ctx: CanvasRenderingContext2D, draft: OutlawDraft, account: string | undefined, character: HTMLImageElement, title: 'GUILD PASSPORT' | 'WANTED' = 'GUILD PASSPORT') {
   ctx.fillStyle = '#dec28d'; ctx.fillRect(0, 0, 840, 1120);
+  if (title === 'WANTED') {
+    const parchment = ctx.createRadialGradient(420, 500, 100, 420, 500, 760);
+    parchment.addColorStop(0, '#e2cfaa'); parchment.addColorStop(1, '#ac8556');
+    ctx.fillStyle = parchment; ctx.fillRect(0, 0, 840, 1120);
+    ctx.strokeStyle = '#66462718'; ctx.lineWidth = 1;
+    for (let y = 20; y < 1120; y += 19) { ctx.beginPath(); ctx.moveTo(20, y); ctx.lineTo(820, y + 8); ctx.stroke(); }
+  }
   ctx.strokeStyle = '#a77c4b'; ctx.lineWidth = 14; ctx.strokeRect(14, 14, 812, 1092);
   ctx.strokeStyle = '#8e6b43'; ctx.lineWidth = 2; ctx.strokeRect(32, 32, 776, 1056);
   ctx.textAlign = 'center'; ctx.fillStyle = '#402619'; ctx.font = 'bold 24px sans-serif'; ctx.fillText('ROBINHOOT · OUTLAW GUILD', 420, 79);
-  ctx.font = 'bold 51px serif'; ctx.fillText(title, 420, 143);
+  ctx.font = title === 'WANTED' ? 'bold 65px Georgia, serif' : 'bold 51px serif'; ctx.fillText(title, 420, 143);
   ctx.fillStyle = '#17201b'; ctx.fillRect(65, 173, 710, 345);
   const scale = Math.min(710 / character.naturalWidth, 345 / character.naturalHeight);
   const width = character.naturalWidth * scale; const height = character.naturalHeight * scale;

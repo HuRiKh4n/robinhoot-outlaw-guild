@@ -1,3 +1,4 @@
+import { choose, selected } from './creator-helpers';
 import { expect, test } from '@playwright/test';
 import { resolveAppearance, type PortraitAsset } from '../lib/character/appearance';
 import { createHash } from 'node:crypto';
@@ -24,8 +25,8 @@ test('uploaded Wolf PNG loads unchanged and stays synchronized through previews,
   expect(response.ok()).toBe(true);
   expect(createHash('sha256').update(await response.body()).digest('hex')).toBe('bb00b8a3d99fd1d83189b54f9718c1daf4cd744230c33dddc16e914fc369127e');
   await page.goto('/');
-  await page.getByRole('combobox', { name: 'YOUR SPECIES', exact: true }).selectOption('Wolf');
-  await page.getByRole('combobox', { name: 'YOUR CLASS', exact: true }).selectOption('Ranger');
+  await choose(page, 'SPECIES', 'Wolf');
+  await choose(page, 'CLASS', 'Ranger');
   const source = '/characters/wolf/ranger/portrait.png';
   for (const selector of ['.character-preview-large img', '.poster img', '.profile-emblem img']) {
     await expect(page.locator(selector)).toHaveAttribute('src', source);
@@ -36,7 +37,7 @@ test('uploaded Wolf PNG loads unchanged and stays synchronized through previews,
   await page.setViewportSize({ width: 393, height: 851 });
   await page.locator('.builder-stage').screenshot({ path: testInfo.outputPath('wolf-ranger-mobile.png') });
   await page.goto('/my-outlaw');
-  await expect(page.getByRole('combobox', { name: 'YOUR SPECIES', exact: true })).toHaveValue('Wolf');
+  await selected(page, 'SPECIES', 'Wolf');
   await expect(page.getByRole('button', { name: 'DOWNLOAD GUILD PASSPORT', exact: true })).toBeEnabled();
   // Independently rasterize the unmodified PNG with the same aspect-preserving containment;
   // compare the actual passport image region, not just its metadata or source URL.
@@ -52,13 +53,13 @@ test('uploaded Wolf PNG loads unchanged and stays synchronized through previews,
     return actual.every((value,index)=>value===expected[index]);
   })).toBe(true);
   for (const outfit of ['Ragged Hood', 'Worn Leather Vest']) {
-    await page.getByRole('combobox', { name: 'YOUR OUTFIT', exact: true }).selectOption(outfit);
+    await choose(page, 'OUTFIT', outfit);
     await expect(page.locator('.character-preview-large img')).toHaveAttribute('src',source);
     await expect(page.locator('.art-availability')).toContainText(`Selected ${outfit} is saved but not depicted`);
     await expect(page.locator('.passport-tools')).toContainText('outfit preview unavailable');
     await expect(page.getByRole('button', { name: 'DOWNLOAD GUILD PASSPORT', exact: true })).toBeEnabled();
   }
-  await page.getByRole('combobox', { name: 'YOUR CLASS', exact: true }).selectOption('Mage');
+  await choose(page, 'CLASS', 'Mage');
   await expect(page.locator('.character-preview-large img')).toHaveAttribute('src', /^data:image/);
   await expect(page.locator('.art-availability')).toContainText('No cinematic artwork');
 });
@@ -69,7 +70,7 @@ test('cinematic studio stays usable at narrow Android and desktop sizes', async 
   for (const width of [320, 393, 768, 1280]) {
     await page.setViewportSize({ width, height: 900 });
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
-    for (const control of [page.getByRole('textbox', { name: 'YOUR OUTLAW NAME' }), page.getByRole('combobox', { name: 'YOUR OUTFIT', exact: true }), page.getByRole('button', { name: 'SAVE DRAFT', exact: true })]) {
+    for (const control of [page.getByRole('textbox', { name: 'YOUR OUTLAW NAME' }), page.getByRole('tab', { name: /^Outfit/ }), page.getByRole('button', { name: 'SAVE DRAFT', exact: true })]) {
       const box = await control.boundingBox(); expect(box!.height).toBeGreaterThanOrEqual(48);
       expect(box!.x).toBeGreaterThanOrEqual(0); expect(box!.x + box!.width).toBeLessThanOrEqual(width);
     }
