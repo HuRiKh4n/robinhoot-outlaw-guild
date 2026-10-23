@@ -44,6 +44,28 @@
     "credit": "Approved original Wolf artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
   },
   {
+    "id": "wolf-dark-sorcerer",
+    "species": "Wolf",
+    "class": "Mage",
+    "outfit": "Dark Sorcerer",
+    "status": "ready",
+    "src": "/characters/wolf/mage/dark-sorcerer.png",
+    "width": 1030,
+    "height": 1536,
+    "credit": "Original Wolf Mage artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "wolf-mystic-hood",
+    "species": "Wolf",
+    "class": "Mage",
+    "outfit": "Mystic Hood",
+    "status": "ready",
+    "src": "/characters/wolf/mage/mystic-hood.png",
+    "width": 1031,
+    "height": 1536,
+    "credit": "Original Wolf Mage artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
     "id": "wolf-ranger-legacy-fallback",
     "species": "Wolf",
     "class": "Ranger",

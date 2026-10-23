@@ -5,10 +5,11 @@ import { classDraft, defaultDraft, outfitsFor, parseDraft } from '../lib/profile
 import { choose, selected } from './creator-helpers';
 
 const variants = portraits.filter(asset => !asset.fallback);
-test('all four exact approved paths are registered; active variants resolve without cross-class substitution', async () => {
+test('all six exact approved paths are registered; active variants resolve without cross-class substitution', async () => {
   expect(variants.map(asset=>asset.src)).toEqual([
     '/characters/wolf/ranger/patched-cloak.png', '/characters/wolf/ranger/leather-vest.png',
     '/characters/wolf/ranger/forest-hood.png', '/characters/wolf/mage/arcane-robes.png',
+    '/characters/wolf/mage/dark-sorcerer.png', '/characters/wolf/mage/mystic-hood.png',
   ]);
   const ready: PortraitAsset[] = variants;
   expect(ready.every(asset=>asset.status==='ready')).toBe(true);
@@ -31,7 +32,7 @@ test('draft migration preserves old aliases without rewriting storage and class 
   await page.goto('/my-outlaw'); await selected(page,'OUTFIT','Forest Hood');
   expect(await page.evaluate(()=>JSON.parse(sessionStorage.getItem('robinhoot:outlaw-draft')!).outfit)).toBe('Ragged Hood');
   await choose(page,'CLASS','Mage'); await selected(page,'OUTFIT','Arcane Robes');
-  await expect(page.getByRole('radio')).toHaveCount(1);
+  await expect(page.getByRole('radio')).toHaveCount(3);
   await choose(page,'CLASS','Ranger'); await selected(page,'OUTFIT',outfitsFor('Ranger')[0]);
   await expect(page.getByRole('radio')).toHaveCount(3);
 });

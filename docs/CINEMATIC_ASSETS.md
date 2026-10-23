@@ -1,15 +1,17 @@
 # Cinematic character registry and current asset inventory
 
-## Active originals (all four activated)
+## Active originals (all six activated)
 
-All four newly approved originals are now present at the exact case-sensitive paths below. The misplaced Mage file was moved byte-for-byte from `ranger/mage/arcane-robes.png` to `mage/arcane-robes.png`; the accidental `README.md.` and empty misplaced directory were removed:
+All six approved originals are now present at the exact case-sensitive paths below. The misplaced Mage file was moved byte-for-byte from `ranger/mage/arcane-robes.png` to `mage/arcane-robes.png`; the accidental `README.md.` and empty misplaced directory were removed:
 
 - `public/characters/wolf/ranger/patched-cloak.png`
 - `public/characters/wolf/ranger/leather-vest.png`
 - `public/characters/wolf/ranger/forest-hood.png`
 - `public/characters/wolf/mage/arcane-robes.png`
+- `public/characters/wolf/mage/dark-sorcerer.png`
+- `public/characters/wolf/mage/mystic-hood.png`
 
-These exact paths are now registered as `ready` with their actual 1030×1536 dimensions and repository-owner source attribution. The creator uses all four original images for their corresponding selections. No image was modified during activation. Do not upload a renamed Ranger image as Mage or a different outfit. The lower-priority same-outfit fallback remains the original `public/characters/wolf/ranger/portrait.png` from deb7bc8: 1030×1536, 1,848,193 bytes; SHA-256 `bb00b8a3d99fd1d83189b54f9718c1daf4cd744230c33dddc16e914fc369127e`. It is unchanged and explicitly registered as the same-outfit Patched Cloak fallback.
+These exact paths are now registered as `ready` with their actual dimensions (1030×1536; Mystic Hood 1031×1536) and repository-owner source attribution. The creator uses all six original images for their corresponding selections. No image was modified during activation. Do not upload a renamed Ranger image as Mage or a different outfit. The lower-priority same-outfit fallback remains the original `public/characters/wolf/ranger/portrait.png` from deb7bc8: 1030×1536, 1,848,193 bytes; SHA-256 `bb00b8a3d99fd1d83189b54f9718c1daf4cd744230c33dddc16e914fc369127e`. It is unchanged and explicitly registered as the same-outfit Patched Cloak fallback.
 
 ## Exact selection contract
 
@@ -19,7 +21,7 @@ One resolver supplies live preview, Outlaw Profile, Wanted Poster, passport and 
 
 ## Wardrobe and draft compatibility
 
-Outfit names are derived from catalogue entries per class, retaining the legacy wardrobe for classes without registered outfits. Ranger offers Patched Cloak, Leather Vest and Forest Hood. Mage offers Arcane Robes. Changing class atomically selects its first valid outfit; no old invalid outfit can leak into the new class. Class-card previews use that same transition logic.
+Outfit names are derived from catalogue entries per class, retaining the legacy wardrobe for classes without registered outfits. Ranger offers Patched Cloak, Leather Vest and Forest Hood. Mage offers Arcane Robes, Dark Sorcerer and Mystic Hood. Changing class atomically selects its first valid outfit; no old invalid outfit can leak into the new class. Class-card previews use that same transition logic.
 
 The parser validates stored outfits against the class wardrobe. Old Ranger `Ragged Hood` maps to Forest Hood and `Worn Leather Vest` maps to Leather Vest. Old Mage drafts move to Arcane Robes. Name, species, personality, draft keys and account/guest isolation remain intact. Reading does not rewrite data; the next deliberate edit saves the normalized shape. No destructive migration or wallet operation is introduced.
 
@@ -29,7 +31,7 @@ The parser validates stored outfits against the class wardrobe. Old Ranger `Ragg
 2. Record actual dimensions, source/attribution and `status: ready` in `portraits.json`. New species/classes can use the existing choices; a new outfit name registered for a class automatically becomes a wardrobe option. No creator redesign is needed.
 3. A primary and fallback may cover the same combination; primary always wins. Do not add multiple ready primary entries or fallbacks for one combination.
 4. Run `npm run validate:art`, TypeScript, production build and browser tests. Validation checks local PNG paths, actual file/header dimensions, minimum 960×1240, maximum 10 MB and unambiguous coverage. Missing pending paths are printed explicitly. A present pending file is reported for activation; uploading alone does not falsely mark it ready before its metadata is verified.
-5. Check original-image decoding, crop-free previews, actual exported pixels, rapid selection changes, keyboard controls and physical Android downloads. Browser tests now render all four real originals, verify served checksums and decoding, switch without navigation, compare live/poster/profile sources, and compare both downloaded PNG image regions against independent rasterizations of each selected original. Passport PNGs are also compared byte-for-byte with the visible canvas. Unsupported classes still display no substitute artwork.
+5. Check original-image decoding, crop-free previews, actual exported pixels, rapid selection changes, keyboard controls and physical Android downloads. Browser tests now render all six real originals, verify served checksums and decoding, switch without navigation, compare live/poster/profile sources, and compare both downloaded PNG image regions against independent rasterizations of each selected original. Passport PNGs are also compared byte-for-byte with the visible canvas. Unsupported classes still display no substitute artwork.
 
 No runtime art service, paid API, replacement generation, transaction, signing, minting or authenticated membership is introduced. The original cinematic UI mockup also remains unavailable at `docs/references/robinhoot-cinematic-ui.png`; no reference fidelity is claimed. The independently refined charcoal/emerald studio, aged parchment poster, Meteor integration, routes, local drafts and download actions remain.
 
@@ -41,5 +43,7 @@ No runtime art service, paid API, replacement generation, transaction, signing, 
 | Ranger / Leather Vest | `40a85cc3cfe290c3f0d81efef43bb796c9fafd14798c677ec7a0ac9fcdec6674` |
 | Ranger / Forest Hood | `6fc8e8c4b1c1e57a9e43475427ec7c487f5d76dca717ed62fb37fa9e491618fc` |
 | Mage / Arcane Robes | `44959834c1c7692650ee8bef504d3a2d460dffe8354db99a96dd465bdfc545c3` |
+| Mage / Dark Sorcerer | `49ff71bb130b564a6e5c5a5ae4f766a26613c64c24fd2ad2ddd8288e8da62e7b` |
+| Mage / Mystic Hood | `6ab933bcf46a3380a627795e505cb054499029e08be94ac02acb273da0d89e81` |
 
-All four images were visually inspected. Automated mobile tests use Pixel 7 Chromium emulation of the production build; physical Android storage policies and live wallet handoff still need device acceptance.
+All six images were visually inspected. Automated mobile tests use Pixel 7 Chromium emulation of the production build; physical Android storage policies and live wallet handoff still need device acceptance.
