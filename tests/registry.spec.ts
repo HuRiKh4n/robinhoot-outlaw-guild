@@ -5,19 +5,20 @@ import { classDraft, defaultDraft, outfitsFor, parseDraft } from '../lib/profile
 import { choose, selected } from './creator-helpers';
 
 const variants = portraits.filter(asset => !asset.fallback);
-test('all six exact approved paths are registered; active variants resolve without cross-class substitution', async () => {
+test('all nine exact approved paths are registered; active variants resolve without cross-class substitution', async () => {
   expect(variants.map(asset=>asset.src)).toEqual([
     '/characters/wolf/ranger/patched-cloak.png', '/characters/wolf/ranger/leather-vest.png',
     '/characters/wolf/ranger/forest-hood.png', '/characters/wolf/mage/arcane-robes.png',
     '/characters/wolf/mage/dark-sorcerer.png', '/characters/wolf/mage/mystic-hood.png',
+    '/characters/wolf/rogue/shadow-hood.png', '/characters/wolf/rogue/assassin-gear.png', '/characters/wolf/rogue/thief-cloak.png',
   ]);
   const ready: PortraitAsset[] = variants;
   expect(ready.every(asset=>asset.status==='ready')).toBe(true);
   for (const asset of ready) {
-    const draft={...defaultDraft,species:'Wolf' as const,class:asset.class as 'Ranger'|'Mage',outfit:asset.outfit!};
+    const draft={...defaultDraft,species:'Wolf' as const,class:asset.class as 'Ranger'|'Mage'|'Rogue',outfit:asset.outfit!};
     expect(resolveAppearance(draft,ready).src).toBe(asset.src);
   }
-  expect(resolveAppearance({...defaultDraft,species:'Wolf',class:'Rogue'},ready).kind).toBe('unavailable');
+  expect(resolveAppearance({...defaultDraft,species:'Wolf',class:'Warrior'},ready).kind).toBe('unavailable');
   for (const asset of variants) {
     const exists=await access(`public${asset.src}`).then(()=>true,()=>false);
     expect(exists).toBe(true); // All approved originals must exist at these exact case-sensitive paths.
@@ -28,6 +29,8 @@ test('draft migration preserves old aliases without rewriting storage and class 
   expect(parseDraft(JSON.stringify({...defaultDraft,class:'Ranger',outfit:'Ragged Hood'})).outfit).toBe('Forest Hood');
   expect(parseDraft(JSON.stringify({...defaultDraft,class:'Ranger',outfit:'Worn Leather Vest'})).outfit).toBe('Leather Vest');
   expect(classDraft(defaultDraft,'Mage').outfit).toBe('Arcane Robes');
+  expect(classDraft(defaultDraft,'Rogue').outfit).toBe('Shadow Hood');
+  expect(parseDraft(JSON.stringify({...defaultDraft,class:'Rogue',outfit:'Ragged Hood'})).outfit).toBe('Shadow Hood');
   await page.addInitScript(()=>sessionStorage.setItem('robinhoot:outlaw-draft',JSON.stringify({name:'Legacy Wolf',animal:'Wolf',class:'Ranger',outfit:'Ragged Hood',trait:'Loyal'})));
   await page.goto('/my-outlaw'); await selected(page,'OUTFIT','Forest Hood');
   expect(await page.evaluate(()=>JSON.parse(sessionStorage.getItem('robinhoot:outlaw-draft')!).outfit)).toBe('Ragged Hood');
@@ -35,4 +38,10 @@ test('draft migration preserves old aliases without rewriting storage and class 
   await expect(page.getByRole('radio')).toHaveCount(3);
   await choose(page,'CLASS','Ranger'); await selected(page,'OUTFIT',outfitsFor('Ranger')[0]);
   await expect(page.getByRole('radio')).toHaveCount(3);
+  await choose(page,'CLASS','Rogue'); await selected(page,'OUTFIT','Shadow Hood');
+  await expect(page.getByRole('radio')).toHaveCount(3);
+  await choose(page,'OUTFIT','Thief Cloak');
+  await choose(page,'CLASS','Mage'); await selected(page,'OUTFIT','Arcane Robes');
+  await expect(page.getByRole('textbox',{name:'YOUR OUTLAW NAME'})).toHaveValue('Legacy Wolf');
+  await expect(page.getByRole('tab',{name:/^Spirit/})).toContainText('Loyal');
 });

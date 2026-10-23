@@ -66,6 +66,39 @@
     "credit": "Original Wolf Mage artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
   },
   {
+    "id": "wolf-shadow-hood",
+    "species": "Wolf",
+    "class": "Rogue",
+    "outfit": "Shadow Hood",
+    "status": "ready",
+    "src": "/characters/wolf/rogue/shadow-hood.png",
+    "width": 1031,
+    "height": 1536,
+    "credit": "Original Wolf Rogue artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "wolf-assassin-gear",
+    "species": "Wolf",
+    "class": "Rogue",
+    "outfit": "Assassin Gear",
+    "status": "ready",
+    "src": "/characters/wolf/rogue/assassin-gear.png",
+    "width": 1031,
+    "height": 1536,
+    "credit": "Original Wolf Rogue artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "wolf-thief-cloak",
+    "species": "Wolf",
+    "class": "Rogue",
+    "outfit": "Thief Cloak",
+    "status": "ready",
+    "src": "/characters/wolf/rogue/thief-cloak.png",
+    "width": 1031,
+    "height": 1536,
+    "credit": "Original Wolf Rogue artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
     "id": "wolf-ranger-legacy-fallback",
     "species": "Wolf",
     "class": "Ranger",
