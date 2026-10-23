@@ -1,15 +1,15 @@
 # Cinematic character registry and current asset inventory
 
-## Exact missing files
+## Exact registered files (all now present)
 
-On the remote `feat/phase-5-cinematic-creator` branch inspected for this revision, all four newly approved files are absent on the case-sensitive Linux filesystem:
+All four newly approved originals are now present at the exact case-sensitive paths below. The misplaced Mage file was moved byte-for-byte from `ranger/mage/arcane-robes.png` to `mage/arcane-robes.png`; the accidental `README.md.` and empty misplaced directory were removed:
 
 - `public/characters/wolf/ranger/patched-cloak.png`
 - `public/characters/wolf/ranger/leather-vest.png`
 - `public/characters/wolf/ranger/forest-hood.png`
 - `public/characters/wolf/mage/arcane-robes.png`
 
-These exact paths are registered in `lib/character/portraits.json` as `awaiting-artwork`. They are not fetched or claimed integrated. Do not upload a renamed Ranger image as Mage or a different outfit. The only available Wolf file is the original `public/characters/wolf/ranger/portrait.png` from deb7bc8: 1030×1536, 1,848,193 bytes; SHA-256 `bb00b8a3d99fd1d83189b54f9718c1daf4cd744230c33dddc16e914fc369127e`. It is unchanged and explicitly registered as the same-outfit Patched Cloak fallback.
+These exact paths are registered in `lib/character/portraits.json` as `awaiting-artwork`. They are present on disk but are not fetched or claimed activated until catalogue metadata is updated. Do not upload a renamed Ranger image as Mage or a different outfit. The currently active fallback is the original `public/characters/wolf/ranger/portrait.png` from deb7bc8: 1030×1536, 1,848,193 bytes; SHA-256 `bb00b8a3d99fd1d83189b54f9718c1daf4cd744230c33dddc16e914fc369127e`. It is unchanged and explicitly registered as the same-outfit Patched Cloak fallback.
 
 ## Exact selection contract
 

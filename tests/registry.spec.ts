@@ -18,7 +18,7 @@ test('all four exact approved paths are registered; ready fixture variants resol
   expect(resolveAppearance({...defaultDraft,species:'Wolf',class:'Rogue'},ready).kind).toBe('unavailable');
   for (const asset of variants) {
     const exists=await access(`public${asset.src}`).then(()=>true,()=>false);
-    expect(exists).toBe(asset.status==='ready'); // Exact case-sensitive disk paths, no alias substitution.
+    expect(exists).toBe(true); // All approved originals must exist at these exact case-sensitive paths.
   }
 });
 
