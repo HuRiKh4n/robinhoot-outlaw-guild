@@ -2,7 +2,36 @@
   "name": "robinhoot-outlaw-guild",
   "version": "0.1.0",
   "private": true,
-  "scripts": {"dev": "next dev", "build": "next build", "start": "next start"},
-  "dependencies": {"next": "^15.5.0", "react": "^19.0.0", "react-dom": "^19.0.0"},
-  "devDependencies": {"typescript": "^5.9.0", "@types/node": "^22.0.0", "@types/react": "^19.0.0", "@types/react-dom": "^19.0.0"}
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "next typegen && tsc --noEmit",
+    "test:e2e": "playwright test"
+  },
+  "dependencies": {
+    "@meteorwallet/sdk": "3.24.0",
+    "@near-js/keystores": "2.2.5",
+    "next": "^15.5.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.1",
+    "@types/node": "^22.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.9.0"
+  },
+  "engines": {
+    "node": ">=22 <25"
+  },
+  "overrides": {
+    "next": {
+      "postcss": "8.5.31"
+    },
+    "@meteorwallet/sdk": {
+      "nanoid": "5.1.16"
+    }
+  }
 }
