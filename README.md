@@ -118,4 +118,8 @@ The same resolver drives the live preview, Wanted Poster, Outlaw Profile, Guild 
 
 See [the active asset inventory and rendering contract](docs/CINEMATIC_ASSETS.md). `npm run validate:art` runs before builds and verifies ready assets at their exact paths. Original images retain their actual dimensions and unchanged bytes (1030×1536; Mystic Hood and the Rogue originals are 1031×1536; Warrior originals are 1024×1536). New registered outfit names become options automatically. The cinematic UI mockup is also still missing; reference matching is not claimed.
 
-Warrior originals are 1024×1536 JPEG-encoded images uploaded under the requested `.png` paths. Their bytes and paths are preserved; signature-based validation accepts PNG and JPEG, and browser canvas exports remain genuine PNG. Invalid legacy Warrior outfits normalize to Battle Armor on read; valid outfits, names and personality are preserved without rewriting storage.
+The replacement Warrior originals are genuine 1024×1536 PNGs at the requested paths. Their bytes and paths are preserved; strict PNG signature validation is restored, and browser canvas exports remain genuine PNG. Invalid legacy Warrior outfits normalize to Battle Armor on read; valid outfits, names and personality are preserved without rewriting storage.
+
+### Wallet-associated local character continuity
+
+Connected drafts already persist across sessions in the same browser and origin, separately per mainnet account. An empty connected account can now explicitly **USE GUEST CHARACTER FOR THIS ACCOUNT**; the guest original remains separate and existing saved account drafts are protected. This is local association, not wallet authentication, on-chain registration or cross-device sync. See [the identity audit and next-phase plan](docs/OUTLAW_IDENTITY.md) for current boundaries, storage behavior and future requirements.

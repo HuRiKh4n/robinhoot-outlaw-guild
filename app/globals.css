@@ -197,3 +197,5 @@ input:focus-visible, textarea:focus-visible { outline: 3px solid #df9950; outlin
 .portrait-unavailable strong { display:block; font-family:Georgia,serif; font-size:18px; letter-spacing:2px; }
 .portrait-unavailable small { display:block; font-size:12px; color:#b4c2b8; }
 @media(prefers-reduced-motion:reduce) { .portrait-reveal { animation:none; } }
+
+.guest-draft-copy .button { width:100%; min-height:52px; line-height:1.5; white-space:normal; overflow-wrap:anywhere; }

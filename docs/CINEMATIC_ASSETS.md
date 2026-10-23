@@ -37,7 +37,7 @@ The parser validates stored outfits against the class wardrobe. Old Ranger `Ragg
 1. Upload the approved original PNG at its exact path, without modification.
 2. Record actual dimensions, source/attribution and `status: ready` in `portraits.json`. New species/classes can use the existing choices; a new outfit name registered for a class automatically becomes a wardrobe option. No creator redesign is needed.
 3. A primary and fallback may cover the same combination; primary always wins. Do not add multiple ready primary entries or fallbacks for one combination.
-4. Run `npm run validate:art`, TypeScript, production build and browser tests. Validation checks exact local paths, PNG/JPEG signatures and actual header dimensions, minimum 960×1240, maximum 10 MB and unambiguous coverage. Missing pending paths are printed explicitly. A present pending file is reported for activation; uploading alone does not falsely mark it ready before its metadata is verified.
+4. Run `npm run validate:art`, TypeScript, production build and browser tests. Validation checks exact local paths, PNG signatures and actual header dimensions, minimum 960×1240, maximum 10 MB and unambiguous coverage. Missing pending paths are printed explicitly. A present pending file is reported for activation; uploading alone does not falsely mark it ready before its metadata is verified.
 5. Check original-image decoding, crop-free previews, actual exported pixels, rapid selection changes, keyboard controls and physical Android downloads. Browser tests now render all twelve real originals, verify served checksums and decoding, switch without navigation, compare live/poster/profile sources, and compare both downloaded PNG image regions against independent rasterizations of each selected original. Passport PNGs are also compared byte-for-byte with the visible canvas. Unsupported classes still display no substitute artwork.
 
 No runtime art service, paid API, replacement generation, transaction, signing, minting or authenticated membership is introduced. The original cinematic UI mockup also remains unavailable at `docs/references/robinhoot-cinematic-ui.png`; no reference fidelity is claimed. The independently refined charcoal/emerald studio, aged parchment poster, Meteor integration, routes, local drafts and download actions remain.
@@ -58,8 +58,8 @@ No runtime art service, paid API, replacement generation, transaction, signing, 
 
 All twelve images were visually inspected. Automated mobile tests use Pixel 7 Chromium emulation of the production build; physical Android storage policies and live wallet handoff still need device acceptance.
 
-Warrior originals are 1024×1536 JPEG-encoded images uploaded under the requested `.png` paths. Their bytes and paths are preserved; signature-based validation accepts PNG and JPEG, and browser canvas exports remain genuine PNG. Invalid legacy Warrior outfits normalize to Battle Armor on read; valid outfits, names and personality are preserved without rewriting storage.
+The replacement Warrior originals are genuine 1024×1536 PNGs at the requested paths. Their bytes and paths are preserved; strict PNG signature validation is restored, and browser canvas exports remain genuine PNG. Invalid legacy Warrior outfits normalize to Battle Armor on read; valid outfits, names and personality are preserved without rewriting storage.
 
-- Warrior / Battle Armor: SHA-256 `cb580d286ced5f52afbafe3ba484f0473a01ed463250fbdd1d2a19673c25bf5a`
-- Warrior / Berserker: SHA-256 `60aef782a1ed6602344f3b486f1b77fa4f25129d4fb4170cb5658f258622f744`
-- Warrior / Royal Guard: SHA-256 `56d1cafa5b1f7965b8c346534f9b54806880d0c786819db1d9db7f56d83d2a65`
+- Warrior / Battle Armor: SHA-256 `92376df3d7d70a690524f0de04c86ca29ded45f3d7ae22dc39beb19f407ce9d2`
+- Warrior / Berserker: SHA-256 `a1c09136b17d0dbc894480a293f642060ba203d7163e7d317cc6aea08b534411`
+- Warrior / Royal Guard: SHA-256 `90edcf8fca989e6843fff34f6e04543980d31551e95d2d03e30b19a108274438`

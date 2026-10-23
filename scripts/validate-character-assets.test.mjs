@@ -35,11 +35,13 @@ test('publishing rejects permission gaps, remote sources and conflicting combina
 });
 
 
-test('JPEG originals at supplied PNG paths are checked by signature and real dimensions', async () => {
+test('Warrior originals are genuine PNGs; incorrect dimensions and JPEG signatures are rejected', async () => {
   const original = await readFile('public/characters/wolf/warrior/battle-armor.png');
-  const jpeg = { ...entry, width: 1024, height: 1536 };
-  await check([jpeg], true, run => assert.match(run(), /1 ready, 0 awaiting/), original);
-  await check([{ ...jpeg, width: 1025 }], true, run => assert.throws(run, /dimensions do not match/), original);
-  await check([jpeg], true, run => assert.throws(run, /truncated JPEG|invalid JPEG/), original.subarray(0, 10));
-  await check([jpeg], true, run => assert.throws(run, /real PNG or JPEG/), Buffer.from('not an image'));
+  assert.equal(original.subarray(0, 8).toString('hex'), '89504e470d0a1a0a');
+  const warrior = { ...entry, width: 1024, height: 1536 };
+  await check([warrior], true, run => assert.match(run(), /1 ready, 0 awaiting/), original);
+  await check([{ ...warrior, width: 1025 }], true, run => assert.throws(run, /dimensions do not match/), original);
+  const mislabeled = Buffer.from(original); mislabeled[0] = 0xff; mislabeled[1] = 0xd8;
+  await check([warrior], true, run => assert.throws(run, /real PNG/), mislabeled);
+  await check([warrior], true, run => assert.throws(run, /real PNG/), original.subarray(0, 10));
 });

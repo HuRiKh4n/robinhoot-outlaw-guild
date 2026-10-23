@@ -115,3 +115,69 @@ test('malformed local data cannot create membership or replace allowed creator c
   await nameInput(page).fill('Valid Local Draft');
   expect(await page.evaluate(() => JSON.parse(sessionStorage.getItem('robinhoot:outlaw-draft')!))).toEqual({ name: 'Valid Local Draft', class: 'Scout', species: 'Raccoon', outfit: 'Patched Cloak', personality: 'Cunning' });
 });
+
+test('explicit guest copy preserves the full character across a new browser session without another wallet request', async ({ page, context, browser }, testInfo) => {
+  await mockMeteorWeb(context, ['identity.near']);
+  await page.goto('/my-outlaw');
+  await nameInput(page).fill('Persistent Wolf');
+  await choose(page, 'SPECIES', 'Wolf'); await choose(page, 'CLASS', 'Warrior');
+  await choose(page, 'OUTFIT', 'Royal Guard'); await choose(page, 'PERSONALITY', 'Loyal');
+  const guest = await page.evaluate(() => sessionStorage.getItem('robinhoot:outlaw-draft'));
+  await connectWeb(page);
+  await expect(nameInput(page)).toHaveValue('The Broke Bandit');
+  const copy = page.getByRole('button', { name: 'USE GUEST CHARACTER FOR THIS ACCOUNT', exact: true });
+  await expect(copy).toBeVisible();
+  await page.setViewportSize({width:320,height:851});
+  const box = await copy.boundingBox(); expect(box!.height).toBeGreaterThanOrEqual(48);
+  expect(box!.x).toBeGreaterThanOrEqual(0); expect(box!.x + box!.width).toBeLessThanOrEqual(320);
+  await page.locator('.controls').screenshot({path:testInfo.outputPath('guest-character-account-copy.png')});
+  await copy.click();
+  await expect(nameInput(page)).toHaveValue('Persistent Wolf');
+  await expect(copy).toHaveCount(0);
+  await expect(page.getByText('Saved locally on this browser for this account only.', { exact: false })).toBeVisible();
+  expect(await page.evaluate(() => sessionStorage.getItem('robinhoot:outlaw-draft'))).toBe(guest);
+  const state = await context.storageState();
+  const resumed = await browser.newContext({ storageState: state, viewport: page.viewportSize()!, isMobile: testInfo.project.name === 'android', hasTouch: testInfo.project.name === 'android' });
+  try {
+    await mockMeteorWeb(resumed, []);
+    const next = await resumed.newPage(); await next.goto('http://127.0.0.1:3000/my-outlaw');
+    await expect(next.getByRole('button', { name: 'Wallet connected: identity.near. Manage wallet', exact: true })).toBeEnabled();
+    await expect(nameInput(next)).toHaveValue('Persistent Wolf');
+    for (const [field, value] of [['SPECIES','Wolf'],['CLASS','Warrior'],['OUTFIT','Royal Guard'],['PERSONALITY','Loyal']]) await selected(next, field, value);
+    await expect(next.locator('.character-preview-large img')).toHaveAttribute('src', '/characters/wolf/warrior/royal-guard.png');
+    await expect(next.locator('.poster')).toContainText('Royal Guard');
+    await expect(next.locator('.passport canvas')).toHaveAttribute('aria-label', /Persistent Wolf, Warrior, Wolf, Royal Guard, Loyal/);
+    await expect(next.getByRole('button', { name: 'DOWNLOAD GUILD PASSPORT', exact: true })).toBeEnabled();
+    expect(await next.evaluate(() => sessionStorage.getItem('robinhoot:outlaw-draft'))).toBeNull();
+    expect(await next.evaluate(() => Reflect.get(window, '__meteorRequests'))).toEqual([]);
+    const stored = await next.evaluate(() => JSON.parse(localStorage.getItem('robinhoot:profile:v1:mainnet:identity.near')!));
+    expect(stored).toEqual({ name:'Persistent Wolf', species:'Wolf', class:'Warrior', outfit:'Royal Guard', personality:'Loyal' });
+  } finally { await resumed.close(); }
+});
+
+test('guest copy fails honestly on storage errors and never replaces an existing account draft', async ({ page, context }) => {
+  await mockMeteorWeb(context, ['protected.near']);
+  await page.goto('/my-outlaw'); await nameInput(page).fill('Guest Original');
+  await connectWeb(page);
+  const copy = page.getByRole('button', { name:'USE GUEST CHARACTER FOR THIS ACCOUNT', exact:true });
+  await expect(copy).toBeVisible();
+  await page.evaluate(() => {
+    Reflect.set(window, '__originalStorageSet', Storage.prototype.setItem);
+    Storage.prototype.setItem = () => { throw new DOMException('Full', 'QuotaExceededError'); };
+  });
+  await copy.click();
+  await expect(page.getByText('Could not save locally:', { exact:false })).toBeVisible();
+  await expect(nameInput(page)).toHaveValue('The Broke Bandit');
+  expect(await page.evaluate(() => localStorage.getItem('robinhoot:profile:v1:mainnet:protected.near'))).toBeNull();
+  await page.evaluate(() => {
+    Storage.prototype.setItem = Reflect.get(window, '__originalStorageSet');
+    localStorage.setItem('robinhoot:profile:v1:mainnet:protected.near', JSON.stringify({name:'Existing Owner Draft',species:'Wolf',class:'Mage',outfit:'Mystic Hood',personality:'Fearless'}));
+  });
+  await copy.click();
+  await expect(page.getByText('This account already has a saved draft.', { exact:false })).toBeVisible();
+  await page.reload();
+  await expect(nameInput(page)).toHaveValue('Existing Owner Draft');
+  await expect(copy).toHaveCount(0);
+  await selected(page,'OUTFIT','Mystic Hood');
+  expect(await page.evaluate(() => JSON.parse(sessionStorage.getItem('robinhoot:outlaw-draft')!).name)).toBe('Guest Original');
+});

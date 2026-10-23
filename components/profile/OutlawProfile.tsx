@@ -22,6 +22,7 @@ function DraftEditor({ accountId, dedicated }: { accountId?: string; dedicated: 
   const [loaded, setLoaded] = useState(false);
   const [saved, setSaved] = useState('');
   const [hasDraft, setHasDraft] = useState(false);
+  const [guestAvailable, setGuestAvailable] = useState(false);
   const input = useRef<HTMLInputElement>(null);
   useEffect(() => {
     try {
@@ -30,6 +31,7 @@ function DraftEditor({ accountId, dedicated }: { accountId?: string; dedicated: 
       setDraft(parseDraft(raw));
       setHasDraft(raw !== null);
       setSaved(accountId ? 'Wallet draft stays on this browser.' : 'Unconnected draft stays in this tab.');
+      if (accountId && raw === null) setGuestAvailable(sessionStorage.getItem(draftKey()) !== null);
     } catch { setSaved('Storage unavailable. Edits work for this visit only.'); }
     setLoaded(true);
   }, [accountId]);
@@ -49,7 +51,27 @@ function DraftEditor({ accountId, dedicated }: { accountId?: string; dedicated: 
       setSaved(accountId
         ? `${explicit ? 'Saved locally' : 'Draft auto-saved'} on this browser for this account only. Not uploaded, registered or authenticated.`
         : `${explicit ? 'Saved locally' : 'Draft auto-saved'} in this browser tab only. No wallet, upload or on-chain registration.`);
-    } catch { setSaved('Could not save locally: browser storage is unavailable or full. Edits remain for this visit only.'); }
+      return true;
+    } catch { setSaved('Could not save locally: browser storage is unavailable or full. Edits remain for this visit only.'); return false; }
+  }
+
+  function copyGuestDraft() {
+    if (!accountId || hasDraft) return;
+    try {
+      // Recheck storage on click: avoid overwriting an account draft saved by another tab.
+      if (localStorage.getItem(draftKey(accountId)) !== null) {
+        setGuestAvailable(false);
+        setSaved('This account already has a saved draft. Reload to load it; nothing was overwritten.');
+        return;
+      }
+      const raw = sessionStorage.getItem(draftKey());
+      if (raw === null) { setGuestAvailable(false); setSaved('No guest draft is available in this tab.'); return; }
+      const next = parseDraft(raw);
+      if (persist(next, true)) {
+        setDraft(next);
+        setGuestAvailable(false);
+      }
+    } catch { setSaved('Could not copy the guest draft: browser storage is unavailable. Nothing was overwritten.'); }
   }
 
   const appearance = resolveAppearance(draft);
@@ -75,6 +97,10 @@ function DraftEditor({ accountId, dedicated }: { accountId?: string; dedicated: 
           <div className="studio-heading"><p className="eyebrow">MAKE IT YOURS</p><h2>SHAPE YOUR LEGEND.</h2></div>
           <label>YOUR OUTLAW NAME<input ref={input} maxLength={32} value={draft.name} disabled={!loaded} onChange={event => update('name', event.target.value)} /></label>
           <ChoiceDeck draft={draft} disabled={!loaded} onChange={update} />
+          {accountId && guestAvailable && !hasDraft && <div className="guest-draft-copy">
+            <p className="note">This account has no saved character. You can copy your guest character from this tab. The guest original stays separate.</p>
+            <button type="button" className="button" disabled={!loaded} onClick={copyGuestDraft}>USE GUEST CHARACTER FOR THIS ACCOUNT</button>
+          </div>}
           <button type="button" className="button save-draft" disabled={!loaded} onClick={() => persist(draft, true)}>SAVE DRAFT</button>
           <p className="note" role="status">{saved}</p>
           <p className="note">Character preview only: no registration, authentication or minting. Wallet connection is optional.</p>

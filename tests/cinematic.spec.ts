@@ -31,9 +31,9 @@ const variants = [
   ['Rogue', 'Shadow Hood', '/characters/wolf/rogue/shadow-hood.png', '2d7714ecf4394521bf2065c0dd8050d83d4deca9ff628e6a50c9cd8539a98d8d'],
   ['Rogue', 'Assassin Gear', '/characters/wolf/rogue/assassin-gear.png', '523402f37d806e5951f6893ba2eae8117c45832a688a9c016a7b6255ec2e25bf'],
   ['Rogue', 'Thief Cloak', '/characters/wolf/rogue/thief-cloak.png', '41d17aed5089c7689d3785d3f8e784e50572b93909a30512cdb7967eb2629891'],
-  ['Warrior', 'Battle Armor', '/characters/wolf/warrior/battle-armor.png', 'cb580d286ced5f52afbafe3ba484f0473a01ed463250fbdd1d2a19673c25bf5a'],
-  ['Warrior', 'Berserker', '/characters/wolf/warrior/berserker.png', '60aef782a1ed6602344f3b486f1b77fa4f25129d4fb4170cb5658f258622f744'],
-  ['Warrior', 'Royal Guard', '/characters/wolf/warrior/royal-guard.png', '56d1cafa5b1f7965b8c346534f9b54806880d0c786819db1d9db7f56d83d2a65'],
+  ['Warrior', 'Battle Armor', '/characters/wolf/warrior/battle-armor.png', '92376df3d7d70a690524f0de04c86ca29ded45f3d7ae22dc39beb19f407ce9d2'],
+  ['Warrior', 'Berserker', '/characters/wolf/warrior/berserker.png', 'a1c09136b17d0dbc894480a293f642060ba203d7163e7d317cc6aea08b534411'],
+  ['Warrior', 'Royal Guard', '/characters/wolf/warrior/royal-guard.png', '90edcf8fca989e6843fff34f6e04543980d31551e95d2d03e30b19a108274438'],
 ];
 
 test('all twelve actual Wolf images switch without reload and synchronize live, Wanted and profile', async ({ page }) => {
@@ -43,7 +43,9 @@ test('all twelve actual Wolf images switch without reload and synchronize live, 
   const sources = new Set<string>();
   for (const [job, outfit, source, checksum] of variants) {
     const response = await page.request.get(source); expect(response.ok()).toBe(true);
-    expect(createHash('sha256').update(await response.body()).digest('hex')).toBe(checksum);
+    const bytes = await response.body();
+    expect(bytes.subarray(0, 8).toString('hex')).toBe('89504e470d0a1a0a');
+    expect(createHash('sha256').update(bytes).digest('hex')).toBe(checksum);
     await choose(page, 'CLASS', job); await choose(page, 'OUTFIT', outfit);
     for (const selector of ['.character-preview-large img', '.poster img', '.profile-emblem img']) {
       const image = page.locator(selector);
