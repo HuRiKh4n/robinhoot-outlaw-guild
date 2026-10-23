@@ -1,8 +1,8 @@
 # Cinematic character registry and current asset inventory
 
-## Active originals (all nine activated)
+## Active originals (all twelve activated)
 
-All nine approved originals are now present at the exact case-sensitive paths below. The misplaced Mage file was moved byte-for-byte from `ranger/mage/arcane-robes.png` to `mage/arcane-robes.png`; the accidental `README.md.` and empty misplaced directory were removed:
+All twelve approved originals are now present at the exact case-sensitive paths below. The misplaced Mage file was moved byte-for-byte from `ranger/mage/arcane-robes.png` to `mage/arcane-robes.png`; the accidental `README.md.` and empty misplaced directory were removed:
 
 - `public/characters/wolf/ranger/patched-cloak.png`
 - `public/characters/wolf/ranger/leather-vest.png`
@@ -14,7 +14,11 @@ All nine approved originals are now present at the exact case-sensitive paths be
 - `public/characters/wolf/rogue/assassin-gear.png`
 - `public/characters/wolf/rogue/thief-cloak.png`
 
-These exact paths are now registered as `ready` with their actual dimensions (1030×1536; Mystic Hood and Rogue originals 1031×1536) and repository-owner source attribution. The creator uses all nine original images for their corresponding selections. No image was modified during activation. Do not upload a renamed Ranger image as Mage or a different outfit. The lower-priority same-outfit fallback remains the original `public/characters/wolf/ranger/portrait.png` from deb7bc8: 1030×1536, 1,848,193 bytes; SHA-256 `bb00b8a3d99fd1d83189b54f9718c1daf4cd744230c33dddc16e914fc369127e`. It is unchanged and explicitly registered as the same-outfit Patched Cloak fallback.
+- `public/characters/wolf/warrior/battle-armor.png`
+- `public/characters/wolf/warrior/berserker.png`
+- `public/characters/wolf/warrior/royal-guard.png`
+
+These exact paths are now registered as `ready` with their actual dimensions (1030×1536; Mystic Hood and Rogue originals 1031×1536; Warrior originals 1024×1536) and repository-owner source attribution. The creator uses all twelve original images for their corresponding selections. No image was modified during activation. Do not upload a renamed Ranger image as Mage or a different outfit. The lower-priority same-outfit fallback remains the original `public/characters/wolf/ranger/portrait.png` from deb7bc8: 1030×1536, 1,848,193 bytes; SHA-256 `bb00b8a3d99fd1d83189b54f9718c1daf4cd744230c33dddc16e914fc369127e`. It is unchanged and explicitly registered as the same-outfit Patched Cloak fallback.
 
 ## Exact selection contract
 
@@ -24,7 +28,7 @@ One resolver supplies live preview, Outlaw Profile, Wanted Poster, passport and 
 
 ## Wardrobe and draft compatibility
 
-Outfit names are derived from catalogue entries per class, retaining the legacy wardrobe for classes without registered outfits. Ranger offers Patched Cloak, Leather Vest and Forest Hood. Mage offers Arcane Robes, Dark Sorcerer and Mystic Hood. Rogue offers Shadow Hood, Assassin Gear and Thief Cloak. Changing class atomically selects its first valid outfit; no old invalid outfit can leak into the new class. Class-card previews use that same transition logic.
+Outfit names are derived from catalogue entries per class, retaining the legacy wardrobe for classes without registered outfits. Ranger offers Patched Cloak, Leather Vest and Forest Hood. Mage offers Arcane Robes, Dark Sorcerer and Mystic Hood. Rogue offers Shadow Hood, Assassin Gear and Thief Cloak. Warrior offers Battle Armor, Berserker and Royal Guard. Changing class atomically selects its first valid outfit; no old invalid outfit can leak into the new class. Class-card previews use that same transition logic.
 
 The parser validates stored outfits against the class wardrobe. Old Ranger `Ragged Hood` maps to Forest Hood and `Worn Leather Vest` maps to Leather Vest. Old Mage drafts move to Arcane Robes. Name, species, personality, draft keys and account/guest isolation remain intact. Reading does not rewrite data; the next deliberate edit saves the normalized shape. No destructive migration or wallet operation is introduced.
 
@@ -33,8 +37,8 @@ The parser validates stored outfits against the class wardrobe. Old Ranger `Ragg
 1. Upload the approved original PNG at its exact path, without modification.
 2. Record actual dimensions, source/attribution and `status: ready` in `portraits.json`. New species/classes can use the existing choices; a new outfit name registered for a class automatically becomes a wardrobe option. No creator redesign is needed.
 3. A primary and fallback may cover the same combination; primary always wins. Do not add multiple ready primary entries or fallbacks for one combination.
-4. Run `npm run validate:art`, TypeScript, production build and browser tests. Validation checks local PNG paths, actual file/header dimensions, minimum 960×1240, maximum 10 MB and unambiguous coverage. Missing pending paths are printed explicitly. A present pending file is reported for activation; uploading alone does not falsely mark it ready before its metadata is verified.
-5. Check original-image decoding, crop-free previews, actual exported pixels, rapid selection changes, keyboard controls and physical Android downloads. Browser tests now render all nine real originals, verify served checksums and decoding, switch without navigation, compare live/poster/profile sources, and compare both downloaded PNG image regions against independent rasterizations of each selected original. Passport PNGs are also compared byte-for-byte with the visible canvas. Unsupported classes still display no substitute artwork.
+4. Run `npm run validate:art`, TypeScript, production build and browser tests. Validation checks exact local paths, PNG/JPEG signatures and actual header dimensions, minimum 960×1240, maximum 10 MB and unambiguous coverage. Missing pending paths are printed explicitly. A present pending file is reported for activation; uploading alone does not falsely mark it ready before its metadata is verified.
+5. Check original-image decoding, crop-free previews, actual exported pixels, rapid selection changes, keyboard controls and physical Android downloads. Browser tests now render all twelve real originals, verify served checksums and decoding, switch without navigation, compare live/poster/profile sources, and compare both downloaded PNG image regions against independent rasterizations of each selected original. Passport PNGs are also compared byte-for-byte with the visible canvas. Unsupported classes still display no substitute artwork.
 
 No runtime art service, paid API, replacement generation, transaction, signing, minting or authenticated membership is introduced. The original cinematic UI mockup also remains unavailable at `docs/references/robinhoot-cinematic-ui.png`; no reference fidelity is claimed. The independently refined charcoal/emerald studio, aged parchment poster, Meteor integration, routes, local drafts and download actions remain.
 
@@ -52,4 +56,10 @@ No runtime art service, paid API, replacement generation, transaction, signing, 
 | Rogue / Assassin Gear | `523402f37d806e5951f6893ba2eae8117c45832a688a9c016a7b6255ec2e25bf` |
 | Rogue / Thief Cloak | `41d17aed5089c7689d3785d3f8e784e50572b93909a30512cdb7967eb2629891` |
 
-All nine images were visually inspected. Automated mobile tests use Pixel 7 Chromium emulation of the production build; physical Android storage policies and live wallet handoff still need device acceptance.
+All twelve images were visually inspected. Automated mobile tests use Pixel 7 Chromium emulation of the production build; physical Android storage policies and live wallet handoff still need device acceptance.
+
+Warrior originals are 1024×1536 JPEG-encoded images uploaded under the requested `.png` paths. Their bytes and paths are preserved; signature-based validation accepts PNG and JPEG, and browser canvas exports remain genuine PNG. Invalid legacy Warrior outfits normalize to Battle Armor on read; valid outfits, names and personality are preserved without rewriting storage.
+
+- Warrior / Battle Armor: SHA-256 `cb580d286ced5f52afbafe3ba484f0473a01ed463250fbdd1d2a19673c25bf5a`
+- Warrior / Berserker: SHA-256 `60aef782a1ed6602344f3b486f1b77fa4f25129d4fb4170cb5658f258622f744`
+- Warrior / Royal Guard: SHA-256 `56d1cafa5b1f7965b8c346534f9b54806880d0c786819db1d9db7f56d83d2a65`

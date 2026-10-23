@@ -99,6 +99,39 @@
     "credit": "Original Wolf Rogue artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
   },
   {
+    "id": "wolf-battle-armor",
+    "species": "Wolf",
+    "class": "Warrior",
+    "outfit": "Battle Armor",
+    "status": "ready",
+    "src": "/characters/wolf/warrior/battle-armor.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Original Wolf Warrior artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; JPEG bytes at supplied PNG path preserved unchanged."
+  },
+  {
+    "id": "wolf-berserker",
+    "species": "Wolf",
+    "class": "Warrior",
+    "outfit": "Berserker",
+    "status": "ready",
+    "src": "/characters/wolf/warrior/berserker.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Original Wolf Warrior artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; JPEG bytes at supplied PNG path preserved unchanged."
+  },
+  {
+    "id": "wolf-royal-guard",
+    "species": "Wolf",
+    "class": "Warrior",
+    "outfit": "Royal Guard",
+    "status": "ready",
+    "src": "/characters/wolf/warrior/royal-guard.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Original Wolf Warrior artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; JPEG bytes at supplied PNG path preserved unchanged."
+  },
+  {
     "id": "wolf-ranger-legacy-fallback",
     "species": "Wolf",
     "class": "Ranger",
