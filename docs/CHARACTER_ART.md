@@ -41,3 +41,7 @@ Vector art uses browser-native SVG/canvas with no new package or paid API. It ne
 ## Phase 5 follow-up
 
 The vector work above remains an explicitly labelled fallback. The new cinematic catalogue and shared resolver are documented in [CINEMATIC_ASSETS.md](CINEMATIC_ASSETS.md). The owner-uploaded Wolf Ranger portrait is now active; the cinematic UI reference is still missing. Wolf Ranger uses its original PNG, with explicit disclosures for unsupported outfit variations. The pipeline does not treat the mascot or a vector recreation as the requested Wolf artwork. New production entries require exact species/class/outfit coverage and real same-origin PNG files.
+
+## Current cinematic wardrobe revision
+
+The historical vectors described above are no longer displayed as substitutes in the cinematic creator. Exact ready registry matches or a same-outfit legacy fallback are used; unsupported choices display no illustration. All four newly requested originals are missing and documented in CINEMATIC_ASSETS.md. Class wardrobes and legacy alias migration are now registry-driven.

@@ -27,12 +27,12 @@ test('wallet drafts stay isolated through reload, switching and disconnect', asy
   await nameInput(page).fill('Alpha Ranger');
   await choose(page, 'CLASS', 'Ranger');
   await choose(page, 'SPECIES', 'Wolf');
-  await choose(page, 'OUTFIT', 'Ragged Hood');
+  await choose(page, 'OUTFIT', 'Forest Hood');
   await choose(page, 'PERSONALITY', 'Fearless');
   await page.getByRole('link', { name: 'PROFILE', exact: true }).click();
   const profile = page.getByRole('region', { name: 'OUTLAW PROFILE', exact: true });
   await expect(profile.getByRole('heading', { name: 'Alpha Ranger', exact: true })).toBeVisible();
-  for (const text of ['Ranger', 'Wolf', 'Ragged Hood', 'Fearless']) await expect(profile.getByText(text, { exact: true })).toBeVisible();
+  for (const text of ['Ranger', 'Wolf', 'Forest Hood', 'Fearless']) await expect(profile.locator('.profile-details').getByText(text, { exact: true })).toBeVisible();
   await expect(profile).toContainText('NOT authenticated ownership');
   await expect(profile).toContainText('NOT registered on-chain or server-verified');
   await profile.getByRole('button', { name: 'EDIT PROFILE' }).click();

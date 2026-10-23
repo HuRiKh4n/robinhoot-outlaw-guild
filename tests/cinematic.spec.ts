@@ -13,11 +13,11 @@ test('cinematic catalogue only covers exact ready species/class/outfit combinati
   expect(resolveAppearance({ ...wolf, name: 'Different name', personality: 'Loyal' }, [entry]).src).toBe(entry.src);
   expect(art.note).toContain('does not change this portrait');
   for (const selection of [{ ...wolf, outfit: 'Ragged Hood' as const }, { ...wolf, class: 'Mage' as const }, { ...wolf, species: 'Fox' as const }]) {
-    expect(resolveAppearance(selection, [entry]).kind).toBe('prototype');
+    expect(resolveAppearance(selection, [entry]).kind).toBe('unavailable');
   }
-  expect(resolveAppearance(wolf, [{ ...entry, status: 'awaiting-artwork' }]).kind).toBe('prototype');
+  expect(resolveAppearance(wolf, [{ ...entry, status: 'awaiting-artwork' }]).kind).toBe('unavailable');
   expect(resolveAppearance(wolf).src).toBe('/characters/wolf/ranger/portrait.png');
-  expect(resolveAppearance({ ...wolf, outfit: 'Ragged Hood' }).note).toContain('saved but not depicted');
+  expect(resolveAppearance({ ...wolf, outfit: 'Ragged Hood' }).note).toContain('no other character or outfit is substituted');
 });
 
 test('uploaded Wolf PNG loads unchanged and stays synchronized through previews, outfits and passport', async ({ page }, testInfo) => {
@@ -52,15 +52,15 @@ test('uploaded Wolf PNG loads unchanged and stays synchronized through previews,
     const actual=(element as HTMLCanvasElement).getContext('2d')!.getImageData(65,173,710,345).data;
     return actual.every((value,index)=>value===expected[index]);
   })).toBe(true);
-  for (const outfit of ['Ragged Hood', 'Worn Leather Vest']) {
+  for (const outfit of ['Forest Hood', 'Leather Vest']) {
     await choose(page, 'OUTFIT', outfit);
-    await expect(page.locator('.character-preview-large img')).toHaveAttribute('src',source);
-    await expect(page.locator('.art-availability')).toContainText(`Selected ${outfit} is saved but not depicted`);
-    await expect(page.locator('.passport-tools')).toContainText('outfit preview unavailable');
+    await expect(page.locator('.character-preview-large img')).toHaveCount(0);
+    await expect(page.locator('.art-availability')).toContainText(`No cinematic artwork is available for Wolf / Ranger / ${outfit}`);
+    await expect(page.locator('.passport-tools')).toContainText('Cinematic artwork not yet available');
     await expect(page.getByRole('button', { name: 'DOWNLOAD GUILD PASSPORT', exact: true })).toBeEnabled();
   }
   await choose(page, 'CLASS', 'Mage');
-  await expect(page.locator('.character-preview-large img')).toHaveAttribute('src', /^data:image/);
+  await expect(page.locator('.character-preview-large img')).toHaveCount(0);
   await expect(page.locator('.art-availability')).toContainText('No cinematic artwork');
 });
 

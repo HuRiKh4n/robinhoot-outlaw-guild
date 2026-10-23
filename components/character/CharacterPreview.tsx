@@ -9,8 +9,9 @@ export default function CharacterPreview({ draft, large = false }: { draft: Outl
   const [failedSource, setFailedSource] = useState<string>();
   return <figure className={large ? 'character-preview character-preview-large' : 'character-preview'}>
     <div className="portrait-frame" data-art-kind={art.kind}>
-      {failedSource === art.src ? <div className="portrait-unavailable" role="status">Character artwork could not load. Your selections remain saved; image downloads are unavailable.</div>
-        : <img src={art.src} width={art.width} height={art.height} alt={art.alt} onError={() => setFailedSource(art.src)} />}
+      {!art.src ? <div className="portrait-unavailable" role="status"><strong>CINEMATIC ARTWORK UNAVAILABLE</strong><p>{draft.species} · {draft.class}</p><p>{draft.outfit}</p><small>Your selections remain editable. No substitute artwork is shown.</small></div>
+        : failedSource === art.src ? <div className="portrait-unavailable" role="status">Character artwork could not load. Your selections remain saved; image downloads are unavailable.</div>
+        : <img key={art.src} className="portrait-reveal" src={art.src} width={art.width} height={art.height} alt={art.alt} onError={() => setFailedSource(art.src)} />}
     </div>
     <figcaption>{large && <strong>{draft.species} · {draft.class}</strong>}<span>{art.label}</span></figcaption>
   </figure>;

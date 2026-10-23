@@ -15,12 +15,12 @@ export default function CharacterDownload({ draft }: { draft: OutlawDraft }) {
     let url: string | undefined;
     setFailed(false);
     const image = new Image();
-    image.onload = () => {
+    function render(character?: HTMLImageElement) {
       if (!active) return;
       const canvas = document.createElement('canvas'); canvas.width = 840; canvas.height = 1120;
       const context = canvas.getContext('2d');
       if (!context) { setFailed(true); return; }
-      drawPassport(context, draft, undefined, image, 'WANTED');
+      drawPassport(context, draft, undefined, character, 'WANTED');
       try {
         canvas.toBlob(blob => {
           if (!active) return;
@@ -28,9 +28,11 @@ export default function CharacterDownload({ draft }: { draft: OutlawDraft }) {
           url = URL.createObjectURL(blob); setAsset({ fingerprint, url });
         }, 'image/png');
       } catch { setFailed(true); }
-    };
+    }
+    image.onload = () => render(image);
     image.onerror = () => { if (active) setFailed(true); };
-    image.src = resolveAppearance(draft).src;
+    const source = resolveAppearance(draft).src;
+    if (source) image.src = source; else render();
     return () => { active = false; image.onload = null; image.onerror = null; if (url) URL.revokeObjectURL(url); };
   }, [fingerprint]);
   return <DownloadPngButton url={asset?.fingerprint === fingerprint ? asset.url : undefined} filename="robinhoot-character.png" label="DOWNLOAD CHARACTER" failed={failed} />;

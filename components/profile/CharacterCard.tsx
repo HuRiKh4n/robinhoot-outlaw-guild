@@ -29,7 +29,7 @@ export default function CharacterCard({ draft, accountId }: { draft: OutlawDraft
     setStatus('');
     setManual(false);
     const image = new Image();
-    async function render(character: HTMLImageElement) {
+    async function render(character?: HTMLImageElement) {
       if (!active || !canvas.current) return;
       const ctx = canvas.current.getContext('2d');
       if (!ctx) { setFailed(true); return; }
@@ -47,7 +47,8 @@ export default function CharacterCard({ draft, accountId }: { draft: OutlawDraft
     // Clear the old portrait immediately; a failed replacement must not show stale artwork.
     const context = canvas.current?.getContext('2d');
     context?.clearRect(0, 0, 840, 1120);
-    image.src = resolveAppearance(draft).src;
+    const source = resolveAppearance(draft).src;
+    if (source) image.src = source; else void render();
     return () => { active = false; image.onload = null; image.onerror = null; if (url) URL.revokeObjectURL(url); };
   // The fingerprint represents every value painted onto the image.
   }, [fingerprint]);
@@ -78,7 +79,7 @@ export default function CharacterCard({ draft, accountId }: { draft: OutlawDraft
         <p className="passport-flags">Preview / Not minted / Not registered</p>
         <dl><div><dt>NAME</dt><dd>{draft.name || 'UNKNOWN OUTLAW'}</dd></div><div><dt>IDENTITY</dt><dd>{draft.class} · {draft.species}</dd></div><div><dt>OUTFIT</dt><dd>{draft.outfit}</dd></div><div><dt>PERSONALITY</dt><dd>{draft.personality}</dd></div></dl>
         {accountId && <label className="passport-account-option"><input type="checkbox" checked={includeAccount} onChange={event => setIncludeAccount(event.target.checked)} />Include shortened NEAR account on the card and shared text</label>}
-        <p>{appearance.label}. {appearance.note} The same artwork is used in every preview and PNG.</p>
+        <p>{appearance.label}. {appearance.note} Available artwork is shared by every preview and PNG. Unavailable selections export identity details only.</p>
         {failed && <p className="note">Image download is unavailable. Share or copy your details instead.</p>}
         <button type="button" className="button passport-share" onClick={() => void share()}>SHARE / COPY DETAILS ↗</button>
         <p className="note" role="status">{status}</p>
@@ -89,7 +90,7 @@ export default function CharacterCard({ draft, accountId }: { draft: OutlawDraft
   </section>;
 }
 
-export function drawPassport(ctx: CanvasRenderingContext2D, draft: OutlawDraft, account: string | undefined, character: HTMLImageElement, title: 'GUILD PASSPORT' | 'WANTED' = 'GUILD PASSPORT') {
+export function drawPassport(ctx: CanvasRenderingContext2D, draft: OutlawDraft, account: string | undefined, character: HTMLImageElement | undefined, title: 'GUILD PASSPORT' | 'WANTED' = 'GUILD PASSPORT') {
   ctx.fillStyle = '#dec28d'; ctx.fillRect(0, 0, 840, 1120);
   if (title === 'WANTED') {
     const parchment = ctx.createRadialGradient(420, 500, 100, 420, 500, 760);
@@ -103,9 +104,15 @@ export function drawPassport(ctx: CanvasRenderingContext2D, draft: OutlawDraft, 
   ctx.textAlign = 'center'; ctx.fillStyle = '#402619'; ctx.font = 'bold 24px sans-serif'; ctx.fillText('ROBINHOOT · OUTLAW GUILD', 420, 79);
   ctx.font = title === 'WANTED' ? 'bold 65px Georgia, serif' : 'bold 51px serif'; ctx.fillText(title, 420, 143);
   ctx.fillStyle = '#17201b'; ctx.fillRect(65, 173, 710, 345);
-  const scale = Math.min(710 / character.naturalWidth, 345 / character.naturalHeight);
-  const width = character.naturalWidth * scale; const height = character.naturalHeight * scale;
-  ctx.drawImage(character, 65 + (710 - width) / 2, 173 + (345 - height) / 2, width, height);
+  if (character) {
+    const scale = Math.min(710 / character.naturalWidth, 345 / character.naturalHeight);
+    const width = character.naturalWidth * scale; const height = character.naturalHeight * scale;
+    ctx.drawImage(character, 65 + (710 - width) / 2, 173 + (345 - height) / 2, width, height);
+  } else {
+    ctx.fillStyle = '#d6c19a'; ctx.font = 'bold 24px serif';
+    ctx.fillText('CINEMATIC ARTWORK NOT YET AVAILABLE', 420, 325, 650);
+    ctx.font = '18px sans-serif'; ctx.fillText('Identity details only · no substitute illustration', 420, 365, 650);
+  }
   ctx.fillStyle = '#a93624'; ctx.font = 'bold 20px sans-serif'; ctx.fillText(resolveAppearance(draft).exportLabel, 420, 560, 710);
   ctx.fillStyle = '#402619';
   const name = draft.name || 'UNKNOWN OUTLAW';

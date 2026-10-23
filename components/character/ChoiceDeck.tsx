@@ -1,13 +1,13 @@
 'use client';
 
 import { useId, useRef, useState } from 'react';
-import { classes, outfits, personalities, species, type OutlawDraft } from '@/lib/profile/draft';
+import { classDraft, classes, outfitsFor, personalities, species, type OutlawDraft } from '@/lib/profile/draft';
 import { resolveAppearance } from '@/lib/character/appearance';
 
 const groups = [
   { field: 'species', label: 'Species', choices: species },
   { field: 'class', label: 'Class', choices: classes },
-  { field: 'outfit', label: 'Outfit', choices: outfits },
+  { field: 'outfit', label: 'Outfit', choices: [] as readonly string[] },
   { field: 'personality', label: 'Spirit', choices: personalities },
 ] as const;
 type Field = typeof groups[number]['field'];
@@ -34,22 +34,20 @@ export default function ChoiceDeck({ draft, disabled, onChange }: {
     </div>
     {groups.map((item, index) => <div key={item.field} role="tabpanel" id={`${id}-panel-${item.field}`} aria-labelledby={`${id}-${item.field}`} hidden={active !== index}>
       {active === index && <fieldset className="choice-panel"><legend>{group.label === 'Spirit' ? 'YOUR PERSONALITY' : `YOUR ${group.label.toUpperCase()}`}</legend>
-        <div className="choice-grid">{group.choices.map(value => {
-          const next = { ...draft, [group.field]: value } as OutlawDraft;
+        <div className="choice-grid">{(group.field === 'outfit' ? outfitsFor(draft.class) : group.choices).map(value => {
+          const next = group.field === 'class' ? classDraft(draft, value as OutlawDraft['class']) : { ...draft, [group.field]: value } as OutlawDraft;
           const art = resolveAppearance(next);
           const metadata = group.field === 'personality';
-          const exact = art.kind === 'cinematic' && !art.label.includes('base portrait');
-          // Species cards may show the real Wolf Ranger portrait, explicitly named as such.
-          const wolfSpecies = group.field === 'species' && value === 'Wolf';
-          const thumbnail = wolfSpecies ? '/characters/wolf/ranger/portrait.png' : exact && !metadata ? art.src : undefined;
-          const status = metadata ? 'Story detail' : wolfSpecies && !exact ? 'Ranger portrait available' : exact ? 'Cinematic artwork' : art.kind === 'cinematic' ? 'Base portrait only' : 'Vector preview';
+          const exact = art.kind === 'cinematic';
+          const thumbnail = exact && !metadata ? art.src : undefined;
+          const status = metadata ? 'Story detail' : exact ? art.label.includes('fallback') ? 'Original portrait fallback' : 'Cinematic artwork' : 'Artwork unavailable';
           return <label className={`choice-card${draft[group.field] === value ? ' is-selected' : ''}`} key={value}>
             <input type="radio" name={`${id}-${group.field}-choice`} aria-label={value} value={value} checked={draft[group.field] === value} disabled={disabled} onChange={() => onChange(group.field as Field, value as OutlawDraft[Field])} />
-            {thumbnail && <img src={thumbnail} width={1030} height={1536} alt={wolfSpecies ? 'Available Wolf Ranger portrait' : ''} />}
+            {thumbnail && <img src={thumbnail} width={art.width} height={art.height} alt="" />}
             <span className="choice-card-copy"><strong>{value}</strong><small>{status}</small></span><span className="choice-check" aria-hidden="true">{draft[group.field] === value ? '✓' : '+'}</span>
           </label>;
         })}</div>
-        <p className="choice-help">{group.field === 'outfit' ? 'Outfit choices are saved. A base portrait does not depict unavailable clothing variants.' : group.field === 'personality' ? 'Personality shapes your story; it does not alter cinematic artwork.' : 'Cinematic artwork is available for Wolf Ranger. Other combinations use labelled vector previews.'}</p>
+        <p className="choice-help">{group.field === 'outfit' ? 'Choose a class outfit. Missing original files are labelled unavailable; no different outfit is shown.' : group.field === 'personality' ? 'Personality shapes your story; it does not alter cinematic artwork.' : 'Cards show only available artwork for the current selection. Other combinations are clearly marked unavailable.'}</p>
       </fieldset>}
     </div>)}
   </div>;

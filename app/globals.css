@@ -183,3 +183,17 @@ input:focus-visible, textarea:focus-visible { outline: 3px solid #df9950; outlin
 .cinematic-keepsakes .poster p { line-height:1.8; letter-spacing:1px; font-size:10px; }
 .cinematic-keepsakes .poster strong { color:#713921; font-family:Georgia,serif; font-size:24px; border-top:1px solid #795939; padding-top:15px; }
 @media(max-width:500px) { .my-outlaw h1 { font-size:42px; margin:8px 0 12px; } .guild { padding-top:35px; } .identity-empty { border:0; border-left:2px solid #9b7845; background:transparent; padding:8px 12px; font-size:12px; margin:10px 0; } .cinematic-builder .portrait-pane { padding:20px 12px; } .portrait-pane .character-preview-large { max-width:100%; } .cinematic-builder .controls { padding:20px 14px; gap:15px; } .portrait-pane > .eyebrow { font-size:9px; margin:0 0 16px; } .portrait-identity { margin-top:4px; font-size:27px; } .portrait-story { font-size:11px; } .portrait-pane .character-preview figcaption { padding:12px 4px 5px; } .portrait-pane .art-availability { font-size:11px; } .cinematic-keepsakes .poster { padding:25px 19px; } }
+
+/* Emerald and charcoal finish; transitions never retain the previous character image. */
+.cinematic-builder { border-color:#456353; background:#101614; }
+.cinematic-builder .controls { background:linear-gradient(145deg,#20352c88,#151b18); border-color:#3e5848; }
+.choice-tabs button[aria-selected=true] { border-bottom-color:#7fb598; color:#dcecdf; background:#6caa8020; }
+.choice-card.is-selected { border-color:#8dbda0; box-shadow:inset 0 0 0 1px #8dbda0; background:linear-gradient(135deg,#406a4870,#182b21); }
+.choice-check { color:#9bc8aa; }
+.choice-card:focus-within { outline-color:#b6d9c2; }
+.cinematic-builder .save-draft { background:linear-gradient(#365f48,#213e2e); border-color:#8fb79c; }
+.portrait-reveal { animation:portrait-reveal 180ms ease-out; }
+@keyframes portrait-reveal { from { opacity:.45; } to { opacity:1; } }
+.portrait-unavailable strong { display:block; font-family:Georgia,serif; font-size:18px; letter-spacing:2px; }
+.portrait-unavailable small { display:block; font-size:12px; color:#b4c2b8; }
+@media(prefers-reduced-motion:reduce) { .portrait-reveal { animation:none; } }

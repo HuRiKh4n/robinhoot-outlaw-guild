@@ -8,7 +8,7 @@ import CharacterPreview from '@/components/character/CharacterPreview';
 import { portraits, resolveAppearance } from '@/lib/character/appearance';
 import { useWalletState } from '@/hooks/useWalletState';
 import ChoiceDeck from '@/components/character/ChoiceDeck';
-import { defaultDraft, draftKey, parseDraft, type OutlawDraft } from '@/lib/profile/draft';
+import { classDraft, defaultDraft, draftKey, parseDraft, type OutlawDraft } from '@/lib/profile/draft';
 
 export default function OutlawProfile({ dedicated = false }: { dedicated?: boolean }) {
   const { account, ready } = useWalletState();
@@ -36,7 +36,7 @@ function DraftEditor({ accountId, dedicated }: { accountId?: string; dedicated: 
 
   function update<K extends keyof OutlawDraft>(field: K, value: OutlawDraft[K]) {
     if (!loaded) return;
-    const next = { ...draft, [field]: value };
+    const next = field === 'class' ? classDraft(draft, value as OutlawDraft['class']) : { ...draft, [field]: value };
     setDraft(next);
     setHasDraft(true);
     persist(next, false);
@@ -62,7 +62,7 @@ function DraftEditor({ accountId, dedicated }: { accountId?: string; dedicated: 
         {loaded && !hasDraft && <p className="identity-empty"><strong>Your outlaw story is unwritten.</strong> Shape the sample below into your own outlaw.</p>}
       </> : <h2>CREATE YOUR OUTLAW</h2>}
       <nav className="studio-nav" aria-label="Creator sections"><a href="#customize">CUSTOMIZE</a><a href="#wanted-poster">WANTED POSTER</a><a href={dedicated ? "#passport-title" : "#profile"}>{dedicated ? "PASSPORT" : "PROFILE"}</a></nav>
-      <details className="art-collection-info"><summary>About the artwork collection</summary><p className="character-art-note">Cinematic collection · {portraits.some(asset => asset.status === 'ready') ? 'select portraits available' : 'artwork pending'}. Wolf Ranger uses the supplied cinematic portrait. Other classes and species use labelled vector prototypes. Cinematic class and outfit changes require their own artwork.</p></details>
+      <details className="art-collection-info"><summary>About the artwork collection</summary><p className="character-art-note">Cinematic collection · {portraits.some(asset => asset.status === 'ready') ? 'select portraits available' : 'artwork pending'}. Wolf Ranger uses the supplied cinematic portrait. Registered variants appear only when their original files are available. Missing combinations display no substitute illustration.</p></details>
       <div className="builder-stage cinematic-builder">
         <div className="portrait-pane">
           <p className="eyebrow">YOUR LEGEND, IN THE MAKING</p>

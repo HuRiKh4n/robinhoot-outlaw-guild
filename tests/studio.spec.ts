@@ -12,12 +12,12 @@ test('choice deck supports keyboard tabs and honest artwork cards', async ({ pag
   await wolf.focus(); await page.keyboard.press('Space'); await expect(wolf).toBeChecked();
   await choose(page, 'CLASS', 'Ranger');
   await expect(page.locator('.character-preview-large img')).toHaveAttribute('src', '/characters/wolf/ranger/portrait.png');
-  await choose(page, 'OUTFIT', 'Ragged Hood');
-  await expect(page.locator('.art-availability')).toContainText('saved but not depicted');
-  await expect(page.locator('.choice-card.is-selected')).toContainText('Base portrait only');
+  await choose(page, 'OUTFIT', 'Forest Hood');
+  await expect(page.locator('.art-availability')).toContainText('No cinematic artwork is available');
+  await expect(page.locator('.choice-card.is-selected')).toContainText('Artwork unavailable');
   await expect(page.locator('.choice-card.is-selected img')).toHaveCount(0);
   await choose(page, 'CLASS', 'Mage');
-  await expect(page.locator('.choice-card.is-selected')).toContainText('Vector preview');
+  await expect(page.locator('.choice-card.is-selected')).toContainText('Artwork unavailable');
 });
 
 test('mobile portrait leads compact controls and parchment poster remains downloadable', async ({ page }, testInfo) => {

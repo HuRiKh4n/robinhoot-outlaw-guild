@@ -5,7 +5,7 @@ import { clothing, ears, equipment, faceMarks, palette } from './layers';
 export function characterSvg(draft: OutlawDraft): string {
   const animal = Object.prototype.hasOwnProperty.call(palette, draft.species) ? draft.species : 'Raccoon';
   const [fur, light, shadow] = palette[animal];
-  const wear = clothing[draft.outfit] ?? clothing['Patched Cloak'];
+  const wear = clothing[draft.outfit as keyof typeof clothing] ?? clothing['Patched Cloak'];
   const gear = equipment[draft.class] ?? equipment.Scout;
   const eye = draft.personality === 'Fearless' ? '#e9bc60' : draft.personality === 'Chaotic' ? '#a9c293' : '#c8b87d';
   return `<svg xmlns="http://www.w3.org/2000/svg" width="480" height="620" viewBox="0 0 480 620">

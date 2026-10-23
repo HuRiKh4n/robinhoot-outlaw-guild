@@ -1,43 +1,29 @@
 import type { OutlawDraft } from '../profile/draft';
 import catalogue from './portraits.json';
-import { characterSvg } from './render';
 
 export interface PortraitAsset {
-  id: string;
-  species: string;
-  class: string;
-  outfit: string | null;
-  status: 'ready' | 'awaiting-artwork';
-  src: string;
-  width: number;
-  height: number;
-  credit: string;
-  baseForClass?: boolean;
+  id: string; species: string; class: string; outfit: string | null;
+  status: 'ready' | 'awaiting-artwork'; src: string;
+  width: number; height: number; credit: string; fallback?: boolean;
 }
-
 export const portraits = catalogue as PortraitAsset[];
 
-/** Prefer exact coverage; an explicit class base may be shown with an outfit-mismatch disclosure. */
+/** Exact species/class/outfit only. An explicit same-outfit legacy fallback never implies a new variant. */
 export function resolveAppearance(draft: OutlawDraft, assets: readonly PortraitAsset[] = portraits) {
-  const portrait = assets.find(asset => asset.status === 'ready' && asset.species === draft.species
-    && asset.class === draft.class && asset.outfit === draft.outfit)
-    ?? assets.find(asset => asset.status === 'ready' && asset.species === draft.species
-      && asset.class === draft.class && asset.baseForClass);
-  const outfitMatches = portrait?.outfit === draft.outfit;
+  const matches = assets.filter(asset => asset.status === 'ready' && asset.species === draft.species && asset.class === draft.class && asset.outfit === draft.outfit);
+  const portrait = matches.find(asset => !asset.fallback) ?? matches.find(asset => asset.fallback);
   if (portrait) return {
     kind: 'cinematic' as const, src: portrait.src, width: portrait.width, height: portrait.height,
-    alt: `${draft.species} ${draft.class} wearing ${portrait.outfit}. Cinematic character artwork.${outfitMatches ? '' : ` Selected ${draft.outfit} is not depicted.`}`,
-    label: outfitMatches ? 'Cinematic character artwork' : 'Cinematic base portrait · outfit preview unavailable',
-    note: `${outfitMatches ? 'Selected portrait artwork.' : `Showing the supplied ${portrait.outfit} portrait. Selected ${draft.outfit} is saved but not depicted; its artwork is unavailable.`} Personality is a saved story detail; it does not change this portrait.`,
-    exportLabel: outfitMatches ? 'CINEMATIC PORTRAIT · LOCAL DRAFT' : 'BASE PORTRAIT · SELECTED OUTFIT NOT DEPICTED',
+    alt: `${draft.species} ${draft.class} wearing ${draft.outfit}. Cinematic character artwork.`,
+    label: portrait.fallback ? 'Cinematic artwork · original portrait fallback' : 'Cinematic character artwork',
+    note: `${portrait.fallback ? 'Showing the original Patched Cloak portrait; the newly registered variant file is unavailable.' : 'Selected portrait artwork.'} Personality is a saved story detail; it does not change this portrait.`,
+    exportLabel: portrait.fallback ? 'ORIGINAL PORTRAIT FALLBACK · LOCAL DRAFT' : 'CINEMATIC PORTRAIT · LOCAL DRAFT',
   };
   return {
-    kind: 'prototype' as const,
-    src: `data:image/svg+xml;charset=utf-8,${encodeURIComponent(characterSvg(draft))}`,
-    width: 480, height: 620,
-    alt: `${draft.species} ${draft.class} wearing ${draft.outfit}, ${draft.personality} personality. Vector illustration prototype.`,
-    label: 'Vector prototype · cinematic artwork unavailable',
-    note: `No cinematic artwork is available for ${draft.species} / ${draft.class} / ${draft.outfit}. The existing vector preview shows your choices.`,
-    exportLabel: 'VECTOR PROTOTYPE · CINEMATIC ART PENDING',
+    kind: 'unavailable' as const, src: undefined, width: 480, height: 620,
+    alt: `${draft.species} ${draft.class}, ${draft.outfit}. Cinematic artwork unavailable.`,
+    label: 'Cinematic artwork not yet available',
+    note: `No cinematic artwork is available for ${draft.species} / ${draft.class} / ${draft.outfit}. Your choices remain editable; no other character or outfit is substituted. PNG exports contain identity details and an explicit artwork-unavailable notice.`,
+    exportLabel: 'ARTWORK UNAVAILABLE · IDENTITY DETAILS ONLY',
   };
 }

@@ -1,6 +1,50 @@
 [
   {
-    "id": "wolf-ranger",
+    "id": "wolf-patched-cloak",
+    "species": "Wolf",
+    "class": "Ranger",
+    "outfit": "Patched Cloak",
+    "status": "awaiting-artwork",
+    "src": "/characters/wolf/ranger/patched-cloak.png",
+    "width": 0,
+    "height": 0,
+    "credit": "Approved path supplied by repository owner; original file not yet available."
+  },
+  {
+    "id": "wolf-leather-vest",
+    "species": "Wolf",
+    "class": "Ranger",
+    "outfit": "Leather Vest",
+    "status": "awaiting-artwork",
+    "src": "/characters/wolf/ranger/leather-vest.png",
+    "width": 0,
+    "height": 0,
+    "credit": "Approved path supplied by repository owner; original file not yet available."
+  },
+  {
+    "id": "wolf-forest-hood",
+    "species": "Wolf",
+    "class": "Ranger",
+    "outfit": "Forest Hood",
+    "status": "awaiting-artwork",
+    "src": "/characters/wolf/ranger/forest-hood.png",
+    "width": 0,
+    "height": 0,
+    "credit": "Approved path supplied by repository owner; original file not yet available."
+  },
+  {
+    "id": "wolf-arcane-robes",
+    "species": "Wolf",
+    "class": "Mage",
+    "outfit": "Arcane Robes",
+    "status": "awaiting-artwork",
+    "src": "/characters/wolf/mage/arcane-robes.png",
+    "width": 0,
+    "height": 0,
+    "credit": "Approved path supplied by repository owner; original file not yet available."
+  },
+  {
+    "id": "wolf-ranger-legacy-fallback",
     "species": "Wolf",
     "class": "Ranger",
     "status": "ready",
@@ -9,6 +53,6 @@
     "height": 1536,
     "credit": "Original artwork uploaded by repository owner HuRiKh4n in commit deb7bc8; supplied for RobinHoot integration.",
     "outfit": "Patched Cloak",
-    "baseForClass": true
+    "fallback": true
   }
 ]
