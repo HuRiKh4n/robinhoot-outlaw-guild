@@ -1,21 +1,13 @@
 "use client";
 
-import WalletControl from "@/components/wallet/WalletControl";
+import SiteHeader from "@/components/SiteHeader";
+import Link from "next/link";
 import OutlawProfile from "@/components/profile/OutlawProfile";
 
 export default function Home() {
   return (
     <main>
-      <nav>
-        <a className="brand" href="#legend">🦊 ROBINHOOT <span>$RHOOT</span></a>
-        <div className="nav-links">
-          <a href="#legend">The Legend</a>
-          <a href="#guild">The Guild</a>
-          <a href="#roadmap">Roadmap</a>
-          <a href="#profile">Outlaw Profile</a>
-        </div>
-        <WalletControl />
-      </nav>
+      <SiteHeader />
 
       <section className="hero" id="legend">
         <p className="eyebrow">THE OUTLAW OF NEAR · CHAPTER I</p>
@@ -31,6 +23,7 @@ export default function Home() {
         <div className="actions">
           <a className="button" href="#guild">BECOME AN OUTLAW →</a>
           <a className="secondary" href="#roadmap">READ THE ROADMAP ↓</a>
+          <Link className="secondary" href="/my-outlaw">MY OUTLAW / PASSPORT →</Link>
         </div>
         <small>STEAL THE HYPE. GIVE IT TO THE TRENCHES.</small>
       </section>
