@@ -1,48 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import WalletControl from "@/components/wallet/WalletControl";
-
-const animals = ["Raccoon", "Wolf", "Rabbit", "Fox", "Badger", "Owl"];
-const outfits = ["Patched Cloak", "Ragged Hood", "Worn Leather Vest"];
-const traits = ["Cunning", "Fearless", "Chaotic", "Loyal"];
+import OutlawProfile from "@/components/profile/OutlawProfile";
 
 export default function Home() {
-  const [animal, setAnimal] = useState("Raccoon");
-  const [outfit, setOutfit] = useState("Patched Cloak");
-  const [trait, setTrait] = useState("Cunning");
-  const [name, setName] = useState("The Broke Bandit");
-  const [draftReady, setDraftReady] = useState(false);
-  const posterId = "PREVIEW-001";
-
-  useEffect(() => {
-    try {
-      const draft = JSON.parse(sessionStorage.getItem('robinhoot:outlaw-draft') || 'null');
-      if (draft && typeof draft === 'object') {
-        if (typeof draft.name === 'string') setName(draft.name.slice(0, 32));
-        if (animals.includes(draft.animal)) setAnimal(draft.animal);
-        if (outfits.includes(draft.outfit)) setOutfit(draft.outfit);
-        if (traits.includes(draft.trait)) setTrait(draft.trait);
-      }
-    } catch { /* A missing or invalid draft must not block the preview. */ }
-    setDraftReady(true);
-  }, []);
-
-  useEffect(() => {
-    if (!draftReady) return;
-    try {
-      sessionStorage.setItem('robinhoot:outlaw-draft', JSON.stringify({ name, animal, outfit, trait }));
-    } catch { /* The creator also works when browser storage is unavailable. */ }
-  }, [draftReady, name, animal, outfit, trait]);
-
   return (
     <main>
       <nav>
         <a className="brand" href="#legend">🦊 ROBINHOOT <span>$RHOOT</span></a>
-        <div>
+        <div className="nav-links">
           <a href="#legend">The Legend</a>
           <a href="#guild">The Guild</a>
           <a href="#roadmap">Roadmap</a>
+          <a href="#profile">Outlaw Profile</a>
         </div>
         <WalletControl />
       </nav>
@@ -74,44 +44,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="guild" className="guild">
-        <p className="eyebrow">CHAPTER II · ASSEMBLE THE GUILD</p>
-        <h2>CREATE YOUR OUTLAW</h2>
-        <p>Choose your identity and preview your WANTED poster. Connect your NEAR wallet above. AI image generation and guild registration are coming in a later release.</p>
-        <div className="creator">
-          <div className="controls">
-            <label>YOUR OUTLAW NAME
-              <input maxLength={32} value={name} onChange={e => setName(e.target.value)} />
-            </label>
-            <label>YOUR SPECIES
-              <select value={animal} onChange={e => setAnimal(e.target.value)}>
-                {animals.map(x => <option key={x}>{x}</option>)}
-              </select>
-            </label>
-            <label>YOUR OUTFIT
-              <select value={outfit} onChange={e => setOutfit(e.target.value)}>
-                {outfits.map(x => <option key={x}>{x}</option>)}
-              </select>
-            </label>
-            <label>YOUR PERSONALITY
-              <select value={trait} onChange={e => setTrait(e.target.value)}>
-                {traits.map(x => <option key={x}>{x}</option>)}
-              </select>
-            </label>
-            <p className="note">⚒ Character preview only: AI generation and registration are not active yet. Wallet connection is optional.</p>
-          </div>
-          <div className="poster">
-            <div className="wanted">WANTED</div>
-            <div className="portrait">{animal === "Raccoon" ? "🦝" : animal === "Wolf" ? "🐺" : animal === "Rabbit" ? "🐰" : animal === "Fox" ? "🦊" : animal === "Owl" ? "🦉" : "🦡"}</div>
-            <h3>{name || "UNKNOWN OUTLAW"}</h3>
-            <p>{animal.toUpperCase()} · {outfit.toUpperCase()}</p>
-            <p>KNOWN FOR: {trait.toUpperCase()} MISCHIEF</p>
-            <strong>REWARD: 100 LOOT</strong>
-            <small>OUTLAW ID: {posterId} · DEMO ONLY</small>
-            <small>ROBINHOOT · OUTLAW GUILD · NEAR</small>
-          </div>
-        </div>
-      </section>
+      <OutlawProfile />
 
       <section id="roadmap" className="roadmap">
         <p className="eyebrow">THE OUTLAW ROADMAP</p>
