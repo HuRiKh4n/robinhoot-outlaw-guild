@@ -47,8 +47,8 @@ test('passport PNG pixels change with species, equipment and clothing, matching 
     await page.getByRole('combobox', { name: 'YOUR SPECIES', exact: true }).selectOption(animal);
     await page.getByRole('combobox', { name: 'YOUR CLASS', exact: true }).selectOption(job);
     await page.getByRole('combobox', { name: 'YOUR OUTFIT', exact: true }).selectOption(outfit);
-    const link = page.getByRole('link', { name: 'DOWNLOAD CARD PNG' });
-    await expect(link).toBeVisible();
+    const link = page.getByRole('button', { name: 'DOWNLOAD GUILD PASSPORT' });
+    await expect(link).toBeEnabled();
     // The exported card is the exact current canvas, not a fixed mascot image.
     const signature = await page.locator('.passport canvas').evaluate(canvas => (canvas as HTMLCanvasElement).toDataURL());
     const promise = page.waitForEvent('download'); await link.click();

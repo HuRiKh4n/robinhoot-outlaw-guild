@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import CharacterCard from './CharacterCard';
+import CharacterDownload from './CharacterDownload';
 import CharacterPreview from '@/components/character/CharacterPreview';
 import { useWalletState } from '@/hooks/useWalletState';
 import { classes, defaultDraft, draftKey, outfits, parseDraft, personalities, species, type OutlawDraft } from '@/lib/profile/draft';
@@ -36,10 +37,17 @@ function DraftEditor({ accountId, dedicated }: { accountId?: string; dedicated: 
     const next = { ...draft, [field]: value };
     setDraft(next);
     setHasDraft(true);
+    persist(next, false);
+  }
+
+  function persist(value: OutlawDraft, explicit: boolean) {
     try {
-      (accountId ? localStorage : sessionStorage).setItem(draftKey(accountId), JSON.stringify(next));
-      setSaved(accountId ? 'Draft saved on this browser for this account.' : 'Unconnected draft saved in this tab.');
-    } catch { setSaved('Storage unavailable. Edits work for this visit only.'); }
+      (accountId ? localStorage : sessionStorage).setItem(draftKey(accountId), JSON.stringify(value));
+      setHasDraft(true);
+      setSaved(accountId
+        ? `${explicit ? 'Saved locally' : 'Draft auto-saved'} on this browser for this account only. Not uploaded, registered or authenticated.`
+        : `${explicit ? 'Saved locally' : 'Draft auto-saved'} in this browser tab only. No wallet, upload or on-chain registration.`);
+    } catch { setSaved('Could not save locally: browser storage is unavailable or full. Edits remain for this visit only.'); }
   }
 
   return <>
@@ -60,10 +68,11 @@ function DraftEditor({ accountId, dedicated }: { accountId?: string; dedicated: 
           <label>YOUR SPECIES<select value={draft.species} disabled={!loaded} onChange={event => update('species', event.target.value as OutlawDraft['species'])}>{species.map(value => <option key={value}>{value}</option>)}</select></label>
           <label>YOUR OUTFIT<select value={draft.outfit} disabled={!loaded} onChange={event => update('outfit', event.target.value as OutlawDraft['outfit'])}>{outfits.map(value => <option key={value}>{value}</option>)}</select></label>
           <label>YOUR PERSONALITY<select value={draft.personality} disabled={!loaded} onChange={event => update('personality', event.target.value as OutlawDraft['personality'])}>{personalities.map(value => <option key={value}>{value}</option>)}</select></label>
+          <button type="button" className="button save-draft" disabled={!loaded} onClick={() => persist(draft, true)}>SAVE DRAFT</button>
           <p className="note" role="status">{saved}</p>
           <p className="note">Character preview only: no registration, authentication or minting. Wallet connection is optional.</p>
         </div>
-        {dedicated ? <CharacterCard draft={draft} accountId={accountId} /> : <div className="poster">
+        {dedicated ? <><div className="poster-group"><div className="poster"><div className="wanted">WANTED</div><CharacterPreview draft={draft} /><h3>{draft.name || 'UNKNOWN OUTLAW'}</h3><p>{draft.class} · {draft.species} · {draft.outfit}</p><p>{draft.personality} · LOCAL PREVIEW / NOT REGISTERED</p></div><CharacterDownload draft={draft} /></div><CharacterCard draft={draft} accountId={accountId} /></> : <div className="poster-group"><div className="poster">
           <div className="wanted">WANTED</div>
           <CharacterPreview draft={draft} />
           <h3>{draft.name || 'UNKNOWN OUTLAW'}</h3>
@@ -72,7 +81,7 @@ function DraftEditor({ accountId, dedicated }: { accountId?: string; dedicated: 
           <strong>REWARD: 100 LOOT</strong>
           <small>OUTLAW ID: PREVIEW-001 · DEMO ONLY</small>
           <small>ROBINHOOT · OUTLAW GUILD · NEAR</small>
-        </div>}
+        </div><CharacterDownload draft={draft} /></div>}
       </div>
     </section>
     <section id="profile" className="outlaw-profile" aria-labelledby="profile-title">

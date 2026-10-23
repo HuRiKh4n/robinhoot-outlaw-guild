@@ -108,3 +108,12 @@ input:focus-visible, textarea:focus-visible { outline: 3px solid #df9950; outlin
 .profile-emblem { padding: 15px; background: #20271f; }
 .controls select { min-height: 48px; }
 @media(max-width:650px) { .builder-stage { grid-template-columns: minmax(0,1fr); gap: 10px; padding: 14px; } .builder-stage-copy { padding: 6px 12px; } .builder-stage-copy h2 { margin: 10px 0; } }
+
+.download-actions { width: 100%; padding: 18px; background: #24291f; border-top: 1px solid #8e6b43; text-align: center; }
+.download-actions .prominent-download, .save-draft { width: 100%; min-height: 52px; font-size: 13px; line-height: 1.5; }
+.download-fallback { display: inline-flex; align-items: center; min-height: 44px; font-size: 11px; line-height: 1.6; color: #e3b979; }
+.poster-group { min-width: 0; }
+.my-outlaw .creator > .passport { grid-column: 1 / -1; }
+.my-outlaw .passport-layout { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 24px; align-items: start; }
+.my-outlaw .passport-tools { margin-top: 0; }
+@media(max-width:850px) { .my-outlaw .passport-layout { grid-template-columns: minmax(0,1fr); } .download-actions { padding: 16px; } }

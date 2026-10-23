@@ -99,3 +99,11 @@ Live wallet acceptance and physical Android handoff are not replaced by browser 
 - Database-backed profiles, bounties and treasury distributions
 
 Never enter a seed phrase into RobinHoot. No on-chain transactions occur in this phase.
+
+## Visible save and download actions
+
+The creator includes an explicit **SAVE DRAFT** button in addition to auto-save. Feedback distinguishes per-account browser-local storage from the unconnected tab-only draft, and reports denied/full storage without claiming a save. Neither action uploads or registers a character.
+
+**DOWNLOAD CHARACTER** sits directly below the WANTED poster on both `/` and `/my-outlaw` and exports `robinhoot-character.png`. **DOWNLOAD GUILD PASSPORT** sits directly below the passport image on `/my-outlaw` and exports `robinhoot-passport-preview.png`. Both are 840×1120 PNG files with the current character selections and prototype labels. Buttons remain visible while preparing and become enabled only for the current image.
+
+Downloads use a prepared blob and a synchronous, user-initiated HTML download action, including on Android Chrome. The page reports a download request, not an unobservable device-save success. Check Chrome's Downloads list; if browser settings open the image instead, use the visible **Open PNG if download does not start** link and the browser's save-image action. The site cannot force an OS folder or bypass device/browser policy. Physical Android saving still needs preview acceptance testing; automated mobile Chromium tests capture and validate the emitted PNG files.
