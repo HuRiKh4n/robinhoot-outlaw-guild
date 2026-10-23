@@ -108,8 +108,10 @@ The creator includes an explicit **SAVE DRAFT** button in addition to auto-save.
 
 Downloads use a prepared blob and a synchronous, user-initiated HTML download action, including on Android Chrome. The page reports a download request, not an unobservable device-save success. Check Chrome's Downloads list; if browser settings open the image instead, use the visible **Open PNG if download does not start** link and the browser's save-image action. The site cannot force an OS folder or bypass device/browser policy. Physical Android saving still needs preview acceptance testing; automated mobile Chromium tests capture and validate the emitted PNG files.
 
-## Phase 5 — cinematic asset pipeline (references missing)
+## Phase 5 — cinematic Wolf Ranger
 
-The creator now uses a responsive framed portrait studio and one exact-match asset catalogue for previews and exports. **No premium artwork is bundled yet:** the supplied Wolf Ranger image and UI mockup were not available. Existing illustrations remain explicitly labelled vector prototypes, including in exported PNGs. The new UI is a RobinHoot-styled foundation pending the supplied mockup, not a claimed reproduction.
+Wolf + Ranger now uses the owner-uploaded original `public/characters/wolf/ranger/portrait.png` (1030×1536), unchanged. One shared resolver supplies the live portrait, WANTED poster, Outlaw Profile, character PNG and Guild Passport. All renderers contain the full image without stretching or cropping.
 
-Upload the original portrait to `public/characters/wolf/ranger/portrait.png` and mockup to `docs/references/robinhoot-cinematic-ui.png`. Confirm its depicted outfit and provenance before enabling the pending entry in `lib/character/portraits.json`. See [the cinematic asset contract and remaining acceptance steps](docs/CINEMATIC_ASSETS.md). `npm run validate:art` runs automatically before production builds and rejects missing or invalid ready assets. No draft migration, wallet change, new dependency or art-generation service is introduced.
+The depicted worn cloak is registered as **Patched Cloak**. Selecting another outfit keeps this supplied Wolf Ranger base portrait and explicitly states that the selected outfit is saved but not depicted. No outfit variant is fabricated. Other species/classes retain labelled vector prototypes. Drafts, wallet behavior and downloads are preserved.
+
+The cinematic UI reference is still missing at `docs/references/robinhoot-cinematic-ui.png`; reference-matching remains pending. See [the asset contract](docs/CINEMATIC_ASSETS.md). `npm run validate:art` runs before production builds; `npm run test:assets` checks publishing guards.

@@ -3,11 +3,12 @@
     "id": "wolf-ranger",
     "species": "Wolf",
     "class": "Ranger",
-    "status": "awaiting-artwork",
+    "status": "ready",
     "src": "/characters/wolf/ranger/portrait.png",
-    "width": 0,
-    "height": 0,
-    "credit": "",
-    "outfit": null
+    "width": 1030,
+    "height": 1536,
+    "credit": "Original artwork uploaded by repository owner HuRiKh4n in commit deb7bc8; supplied for RobinHoot integration.",
+    "outfit": "Patched Cloak",
+    "baseForClass": true
   }
 ]

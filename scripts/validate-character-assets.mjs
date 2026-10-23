@@ -7,7 +7,7 @@ const assets = JSON.parse(await readFile(path.join(root, 'lib/character/portrait
 const species = ['Fox', 'Wolf', 'Raccoon', 'Bear', 'Rabbit', 'Badger', 'Owl'];
 const classes = ['Scout', 'Ranger', 'Trickster', 'Guardian', 'Rogue', 'Warrior', 'Mage'];
 const outfits = ['Patched Cloak', 'Ragged Hood', 'Worn Leather Vest'];
-const identities = new Set(); const coverage = new Set();
+const identities = new Set(); const coverage = new Set(); const bases = new Set();
 if (!Array.isArray(assets)) throw new Error('Portrait catalogue must be an array.');
 for (const asset of assets) {
   const fail = message => { throw new Error(`Character asset ${asset.id ?? '(no id)'}: ${message}`); };
@@ -18,6 +18,12 @@ for (const asset of assets) {
   if (!/^\/characters\/[a-z0-9/-]+\.png$/.test(asset.src)) fail('use a same-origin /characters/… PNG path');
   if (asset.outfit !== null && !outfits.includes(asset.outfit)) fail('unknown outfit');
   if (asset.status !== 'ready') continue;
+  if (asset.baseForClass !== undefined && typeof asset.baseForClass !== 'boolean') fail('baseForClass must be boolean');
+  if (asset.baseForClass) {
+    const base = `${asset.species}/${asset.class}`;
+    if (bases.has(base)) fail(`ambiguous base portrait for ${base}`);
+    bases.add(base);
+  }
   if (!asset.outfit || !asset.credit?.trim()) fail('ready art requires an exact outfit and provenance');
   const key = `${asset.species}/${asset.class}/${asset.outfit}`;
   if (coverage.has(key)) fail(`ambiguous coverage for ${key}`);

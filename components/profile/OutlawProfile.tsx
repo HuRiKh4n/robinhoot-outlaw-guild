@@ -62,7 +62,7 @@ function DraftEditor({ accountId, dedicated }: { accountId?: string; dedicated: 
       </> : <h2>CREATE YOUR OUTLAW</h2>}
       <p>{dedicated ? "Edit your local identity and carry a Guild Passport preview. No wallet is required; connection only selects a separate local draft." : "Choose your identity and preview your WANTED poster. Wallet connection is optional. Your selected artwork follows you from poster to passport; guild registration is not active."}</p>
       <a href={dedicated ? "#passport-title" : "#profile"} className="profile-inline-link">{dedicated ? "PREVIEW GUILD PASSPORT ↓" : "VIEW YOUR OUTLAW PROFILE ↓"}</a>
-      <p className="character-art-note">Cinematic collection · {portraits.some(asset => asset.status === 'ready') ? 'select portraits available' : 'artwork pending'}. Unsupported combinations use clearly labelled vector prototypes. Cinematic class and outfit changes require their own artwork.</p>
+      <p className="character-art-note">Cinematic collection · {portraits.some(asset => asset.status === 'ready') ? 'select portraits available' : 'artwork pending'}. Wolf Ranger uses the supplied cinematic portrait. Other classes and species use labelled vector prototypes. Cinematic class and outfit changes require their own artwork.</p>
       <div className="builder-stage cinematic-builder">
         <div className="portrait-pane">
           <p className="eyebrow">THE OUTLAW CHRONICLES · CHARACTER STUDIO</p>

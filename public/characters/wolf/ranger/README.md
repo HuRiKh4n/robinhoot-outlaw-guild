@@ -1,19 +1,10 @@
-# Wolf Ranger artwork upload
+# Wolf Ranger original artwork
 
-Place the supplied original Wolf Ranger portrait at:
+`portrait.png` is the owner-uploaded original from commit `deb7bc8`, integrated without modification.
 
-`public/characters/wolf/ranger/portrait.png`
+- Dimensions: 1030×1536; size: 1,848,193 bytes.
+- SHA-256: `bb00b8a3d99fd1d83189b54f9718c1daf4cd744230c33dddc16e914fc369127e`.
+- Registered as Wolf / Ranger / Patched Cloak in `lib/character/portraits.json`.
+- Explicit class-base portrait: other outfit selections stay saved, with a visible notice that their appearance is not depicted. Separate art is required for actual outfit variations.
 
-No Wolf Ranger image was provided or found in the repository. There is deliberately no substitute image at that path. Do not copy the existing fox mascot or synthesize a replacement.
-
-Use a real PNG (recommended 1440×1860 or larger, minimum 960×1240, maximum 10 MB). Preserve the supplied artwork and aspect ratio. Keep any important details within the image; the shared renderer contains rather than crops it.
-
-Then update `lib/character/portraits.json`:
-
-- Record the image's real pixel width and height.
-- Set `outfit` to the exact existing outfit depicted: `Patched Cloak`, `Ragged Hood` or `Worn Leather Vest`. If none matches, keep it pending until an explicit product/art mapping is agreed. Do not invent coverage.
-- Add artist/source and permission/provenance information to `credit` (public-safe information only).
-- Set `status` to `ready` only after visual and rights review.
-- Run `npm run validate:art`, TypeScript, build and browser tests.
-
-Changing `status` alone cannot publish a missing image: the production build validates the PNG, its size, dimensions and coverage. The current `awaiting-artwork` record is intentionally not loaded by the browser.
+Do not alter the source file during integration. All previews and exports use aspect-preserving containment. See `docs/CINEMATIC_ASSETS.md` for the shared renderer and remaining UI-reference/artwork limitations.

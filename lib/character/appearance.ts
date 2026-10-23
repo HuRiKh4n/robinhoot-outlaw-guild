@@ -12,20 +12,24 @@ export interface PortraitAsset {
   width: number;
   height: number;
   credit: string;
+  baseForClass?: boolean;
 }
 
 export const portraits = catalogue as PortraitAsset[];
 
-/** Resolve exact artwork coverage. Never reuse a portrait for a different class/outfit. */
+/** Prefer exact coverage; an explicit class base may be shown with an outfit-mismatch disclosure. */
 export function resolveAppearance(draft: OutlawDraft, assets: readonly PortraitAsset[] = portraits) {
   const portrait = assets.find(asset => asset.status === 'ready' && asset.species === draft.species
-    && asset.class === draft.class && asset.outfit === draft.outfit);
+    && asset.class === draft.class && asset.outfit === draft.outfit)
+    ?? assets.find(asset => asset.status === 'ready' && asset.species === draft.species
+      && asset.class === draft.class && asset.baseForClass);
+  const outfitMatches = portrait?.outfit === draft.outfit;
   if (portrait) return {
     kind: 'cinematic' as const, src: portrait.src, width: portrait.width, height: portrait.height,
-    alt: `${draft.species} ${draft.class} wearing ${draft.outfit}. Cinematic character artwork.`,
-    label: 'Cinematic character artwork',
-    note: 'Selected portrait artwork. Personality is a saved story detail; it does not change this portrait.',
-    exportLabel: 'CINEMATIC PORTRAIT · LOCAL DRAFT',
+    alt: `${draft.species} ${draft.class} wearing ${portrait.outfit}. Cinematic character artwork.${outfitMatches ? '' : ` Selected ${draft.outfit} is not depicted.`}`,
+    label: outfitMatches ? 'Cinematic character artwork' : 'Cinematic base portrait · outfit preview unavailable',
+    note: `${outfitMatches ? 'Selected portrait artwork.' : `Showing the supplied ${portrait.outfit} portrait. Selected ${draft.outfit} is saved but not depicted; its artwork is unavailable.`} Personality is a saved story detail; it does not change this portrait.`,
+    exportLabel: outfitMatches ? 'CINEMATIC PORTRAIT · LOCAL DRAFT' : 'BASE PORTRAIT · SELECTED OUTFIT NOT DEPICTED',
   };
   return {
     kind: 'prototype' as const,

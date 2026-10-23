@@ -20,7 +20,7 @@ export default function CharacterCard({ draft, accountId }: { draft: OutlawDraft
   const appearance = resolveAppearance(draft);
   const fingerprint = JSON.stringify([draft, displayedAccount]);
   const currentAsset = asset?.fingerprint === fingerprint ? asset : undefined;
-  const shareText = `ROBINHOOT · GUILD PASSPORT\n${draft.name || 'UNKNOWN OUTLAW'}\n${draft.class} · ${draft.species}\n${draft.outfit} · ${draft.personality}${displayedAccount ? `\nNEAR: ${displayedAccount}` : ''}\n${appearance.label}\nPREVIEW / NOT MINTED / NOT REGISTERED\nLocal draft only. Wallet connection is not proof of ownership or authentication. No on-chain or server verification.`;
+  const shareText = `ROBINHOOT · GUILD PASSPORT\n${draft.name || 'UNKNOWN OUTLAW'}\n${draft.class} · ${draft.species}\n${draft.outfit} · ${draft.personality}${displayedAccount ? `\nNEAR: ${displayedAccount}` : ''}\n${appearance.label}\n${appearance.note}\nPREVIEW / NOT MINTED / NOT REGISTERED\nLocal draft only. Wallet connection is not proof of ownership or authentication. No on-chain or server verification.`;
 
   useEffect(() => {
     let active = true;
