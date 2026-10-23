@@ -36,6 +36,18 @@ These are editable local prototypes: a connected wallet is **NOT authenticated o
 
 The mobile wallet header truncates account IDs on one line while exposing the full ID to assistive technology and the wallet dialog. All wallet actions remain account-only; no persistence server, points, missions, signing, access keys or approvals were added.
 
+## My Outlaw and Guild Passport (Issue #4)
+
+Open **My Outlaw / Passport** from the hero, navigation or profile section, or visit `/my-outlaw`. This dedicated view reuses the same creator options and versioned local draft keys as the landing page. It distinguishes a new/sample identity, account-connected mode and a separate disconnected draft. Changes follow you between the landing creator and My Outlaw view.
+
+The Character Card / Guild Passport uses the original RobinHoot fox artwork and your selected identity details. It is explicitly marked **Preview / Not minted / Not registered**, including inside the exported image. The fox is a fixed guild motif, not a generated image of the selected species. It grants no membership, authentication, rewards or on-chain status.
+
+**Download Card PNG** exports the same 840×1120 browser canvas shown in the preview. It uses only the existing same-origin artwork and system fonts, with no new dependency, remote renderer or backend. The shortened NEAR account is hidden by default; opt in to include it in both image and shared text. Account changes reset that choice and discard/revoke the previous image URL. Edits invalidate the previous download until its replacement is ready.
+
+**Share / Copy Details** uses the browser's native share sheet where available, then the clipboard. Cancellation is harmless. If clipboard access is denied, a focused, selected text field supports manual copying. If canvas/image export is unavailable, the identity details and share/copy flow still work. If the original artwork fails to load, the card uses a fox emoji fallback. System-font and emoji appearance vary by device; mobile browsers may open the PNG rather than saving it directly. Shared text always carries the prototype and ownership disclaimers. Sharing is initiated only by the user's button press and never authenticates a wallet.
+
+Phase 3 adds no dependencies or wallet operations. The Meteor client, keystore guard, wallet provider and public assets are unchanged. Existing upstream dependency advisories and physical Android/Meteor acceptance limitations still apply.
+
 ## Connection security
 
 RobinHoot requests only `near::sign_in` with the NEAR mainnet network target. It supplies no function-call-key definition, legacy contract or message parameters. It never calls transaction, signing, account-transfer or ownership-verification actions. A rejecting keystore prevents NEAR authorization-key storage; only account-only sessions are displayed/restored. Connection is not verified authentication or holder verification.
@@ -61,7 +73,7 @@ Current dependency audit limitations and patch overrides are documented in [the 
 
 ## Vercel preview review
 
-Use the Issue #2 feature-branch PR preview (Meteor's original investigation remains in PR #1). No production deployment is part of this phase.
+Use the Issue #4 feature-branch PR preview (Meteor's original investigation remains in PR #1). No production deployment is part of this phase.
 
 1. On desktop and physical Android Chrome, open the preview directly and edit a character before connecting.
 2. Select Meteor Web or the installed extension on desktop. On Android, test Meteor Web and Meteor Mobile pairing/PIN/Open/return when offered.
@@ -69,7 +81,8 @@ Use the Issue #2 feature-branch PR preview (Meteor's original investigation rema
 4. Verify the displayed account and mainnet label, then reload for restoration.
 5. Save different character drafts for two accounts, reload and switch between them. Confirm isolation and restoration. Test cancellation; switching disconnects the old session first.
 6. Disconnect and reload. Confirm the unconnected draft returns, separately from both wallet drafts. Check profile prototype/ownership labels and Edit Profile focus.
-7. Repeat with blocked popups, tab switching, long account IDs and keyboard navigation. Verify mobile bridge availability and error recovery on a real device.
+7. Open `/my-outlaw`, edit and reload a draft, test PNG download and share/copy (including cancellation and denied clipboard), and confirm account display is opt-in and the export includes all prototype labels.
+8. Repeat with blocked popups, tab switching, long account IDs and keyboard navigation. Verify mobile bridge availability and error recovery on a real device.
 
 Live wallet acceptance and physical Android handoff are not replaced by browser emulation.
 
