@@ -4,7 +4,7 @@ Responsive NEAR-community website built with Next.js App Router, React 19 and Ty
 
 ## Run locally
 
-Use Node.js 22 or 24 and npm. Install the committed dependency graph:
+Use Node.js 22 or 24 and npm:
 
 ```bash
 npm ci
@@ -15,25 +15,22 @@ Open http://localhost:3000. No environment variables or API keys are needed.
 
 ## Implemented
 
-- Landing page, manifesto and five-chapter roadmap
-- Local outlaw character preview with emoji placeholders; drafts survive reloads within the tab
-- Responsive wallet control and accessible native dialog
-- NEAR mainnet account connection, session restoration and disconnection via NEAR Wallet Selector
-- MyNearWallet account switching by disconnecting and reopening the wallet; an active-account dropdown is available if an adapter returns multiple accounts
+- Original landing page, manifesto, five-chapter roadmap and responsive design
+- Local character creator with tab-persistent drafts and emoji poster previews
+- Mainnet account-only connection through the official Meteor SDK 3.24.0
+- Account display, session restoration, switching through reconnection and disconnect
+- Desktop Meteor Web/extension options and Android Meteor Web/mobile pairing options
+- Accessible RobinHoot dialog, SDK popup handoff, retryable cancellation and storage errors
 
-## Wallet boundaries and compatibility
+MyNearWallet has been removed. The legacy Meteor Wallet Selector adapters still depend on older SDKs; they do not expose the new supported account-only API. This revision uses the official Meteor SDK directly instead. See [the integration investigation](docs/METEOR_REVIEW.md) for official sources, inspected code paths, permissions and compatibility limitations.
 
-Selector core and MyNearWallet are pinned to `10.1.4`, the current npm release when implemented. The SDK is dynamically imported after client mount, with shared initialization and subscription cleanup for React Strict Mode. No wallet code runs during server rendering. A small custom dialog avoids requiring a contract ID for the standard Selector transaction-oriented modal.
+## Connection security
 
-This phase calls only `signIn({})`, `getAccounts` (through Selector restoration), `signOut` and `setActiveAccount`. It never supplies `createAccessKeyFor`, `contractId` or method permissions and never calls signing, transaction or ownership-verification APIs. No token approvals or on-chain transactions are requested. The connection facade does not expose signing methods. Account state is not authenticated identity or holder verification; persisted browser state can be edited by its user.
+RobinHoot requests only `near::sign_in` with the NEAR mainnet network target. It supplies no function-call-key definition, legacy contract or message parameters. It never calls transaction, signing, account-transfer or ownership-verification actions. A rejecting keystore prevents NEAR authorization-key storage; only account-only sessions are displayed/restored. Connection is not verified authentication or holder verification.
 
-MyNearWallet uses `https://app.mynearwallet.com/login/` in a popup/new tab and returns through the adapter's wallet-origin message flow. Desktop and Android Chrome must allow popups and preserve the opener relationship. Open Vercel previews as a top-level page, not in an embedded iframe. No extension is required. There is no custom deep-link scheme or callback parser. If the browser blocks the popup, or the user closes it, the dialog provides a retry. Switching disconnects first, so cancellation leaves the site disconnected. Disconnect clears the application's adapter session; it does not log the user out of the wallet website or revoke unrelated on-chain keys. Closing the RobinHoot dialog does not cancel an already open wallet tab.
+The SDK's mobile transport can persist identity keys for encrypted bridge communication. These are not NEAR account access keys and do not authorize NEAR transactions. Disconnect removes RobinHoot's connected-account records, not the user's wallet account or unrelated on-chain keys. Browser account metadata is untrusted.
 
-**Meteor limitation:** the current `@near-wallet-selector/meteor-wallet@10.1.4` depends on `@meteorwallet/sdk@1.0.24`, whose login generates a key pair, sends a public key with an `ALL_METHODS`/`SELECTED_METHODS` access request and persists that key. It has no explicit account-only login mode. Meteor is therefore excluded from this read-only phase rather than requesting unintended access. Re-evaluate when a maintained adapter offers a documented account-only flow.
-
-Browser automation exercises the actual Selector/MyNearWallet packages with a simulated external wallet response on desktop Chromium and Pixel 7 Chromium emulation. It is not a real Android device or a live wallet acceptance test. Real MyNearWallet login/account selection, wallet-side UI and Android tab-return behavior still need manual verification on the Vercel preview. No mainnet signing should be accepted or needed.
-
-The existing Google Fonts import remains. This phase does not add a backend, membership registration, AI generation, NFT minting or treasury operations.
+The SDK is dynamically initialized after client mount and provides its own isolated popup. Use a top-level page and allow wallet popups. Android users can use Meteor Web or the supported Meteor Mobile pairing/Open button when the bridge is reachable. No custom deep links or permission bypasses are used. The original Google Fonts import remains.
 
 ## Validation
 
@@ -44,29 +41,30 @@ npx playwright install chromium
 npm run test:e2e
 ```
 
-The browser tests start the production server, so build first. Environments with system Chromium can use `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium npm run test:e2e`.
+Build before browser testing; tests start the production server. For system Chromium, set `PLAYWRIGHT_CHROMIUM_EXECUTABLE_PATH=/usr/bin/chromium`.
 
-Tests cover permission-free wallet login URLs, account restoration, switching, disconnect persistence, creator preservation, blocked popups, cancelled handoff and unavailable storage. Wallet UI is mocked; tests use no private keys or real funds.
+Tests exercise the real Meteor SDK with mocked external wallet responses on desktop Chromium and Pixel 7 emulation. They check mainnet account-only login payloads, restoration, switching, disconnect, creator preservation, popup errors, cancellation and storage failure. Desktop extension transport has a separate test; Android Chrome does not support desktop extensions.
 
-Next.js's PostCSS dependency is overridden to patched `8.5.31` to address audit findings without a framework major upgrade. Selector's transitive elliptic/secp256k1 dependency still has a low-severity advisory; no cryptographic signing is used by this phase. Review upstream fixes before adding signing capabilities.
+Current dependency audit limitations and patch overrides are documented in [the investigation](docs/METEOR_REVIEW.md).
 
-## Preview review and deployment
+## Vercel preview review
 
-Open the feature branch PR and use its Vercel preview integration. No production deployment is part of Phase 1. No wallet environment configuration is needed; the network is intentionally fixed to mainnet.
+Continue review through PR #1's feature-branch previews. No production deployment is part of this phase.
 
-On desktop and a physical Android device:
+1. On desktop and physical Android Chrome, open the preview directly and edit a character before connecting.
+2. Select Meteor Web or the installed extension on desktop. On Android, test Meteor Web and Meteor Mobile pairing/PIN/Open/return when offered.
+3. Confirm account sharing only. Do not accept a key-addition, transaction, token-approval or message-signing prompt.
+4. Verify the displayed account and mainnet label, then reload for restoration.
+5. Switch accounts, including cancellation; switching disconnects the old session first.
+6. Disconnect and reload. Confirm the creator and draft still work.
+7. Repeat with blocked popups, tab switching, long account IDs and keyboard navigation. Verify mobile bridge availability and error recovery on a real device.
 
-1. Open the preview directly and confirm the original page and creator work without a wallet.
-2. Connect through MyNearWallet. Confirm the wallet requests account sharing only: no transaction, access-key addition or signature.
-3. Return to RobinHoot, verify the account and mainnet label, and reload to check restoration.
-4. Switch accounts, including cancelling the wallet window. Confirm the previous account is disconnected before the new selection.
-5. Disconnect, reload, and verify the account is no longer displayed.
-6. Repeat with popups blocked, browser Back/tab switching and a long account ID. Check keyboard focus and narrow-screen dialog usability.
+Live wallet acceptance and physical Android handoff are not replaced by browser emulation.
 
 ## Planned (not live)
 
 - Verified wallet authentication and holder verification
-- AI-generated character PFPs and downloadable WANTED posters
+- AI-generated PFPs and downloadable posters
 - Database-backed profiles, bounties and treasury distributions
 
-Never enter a seed phrase into RobinHoot. No transactions occur in this phase.
+Never enter a seed phrase into RobinHoot. No on-chain transactions occur in this phase.

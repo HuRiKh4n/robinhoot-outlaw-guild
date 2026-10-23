@@ -1,12 +1,11 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import type { WalletSelectorState } from '@near-wallet-selector/core';
-import { getWalletConnection, type WalletConnection } from '@/lib/near/wallet';
+import { getWalletConnection, type WalletConnection, type WalletState } from '@/lib/near/wallet';
 
 export default function WalletControl() {
   const [connection, setConnection] = useState<WalletConnection>();
-  const [state, setState] = useState<WalletSelectorState>();
+  const [state, setState] = useState<WalletState>();
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const [attempt, setAttempt] = useState(0);
@@ -40,6 +39,8 @@ export default function WalletControl() {
     running.current = true;
     setBusy(true);
     setError('');
+    // The SDK mounts its own accessible popup outside this native dialog.
+    if (action !== 'disconnect') dialog.current?.close();
     try {
       if (action !== 'connect') await connection.disconnect();
       if (action !== 'disconnect') await connection.connect();
@@ -48,7 +49,8 @@ export default function WalletControl() {
       // Do not render wallet payloads or log callback/account data.
       setError(action === 'disconnect'
         ? 'Wallet disconnection failed. Please try again.'
-        : 'Wallet connection was not completed. Allow popups for this site, return to this tab, and try again.');
+        : 'Meteor connection was not completed. Allow popups or use Meteor Mobile, return here, and try again.');
+      if (!dialog.current?.open) dialog.current?.showModal();
     } finally {
       running.current = false;
       setBusy(false);
@@ -58,7 +60,7 @@ export default function WalletControl() {
   return (
     <div className="wallet-control">
       <button ref={trigger} type="button" className="connect wallet-trigger"
-        disabled={!connection && !error} aria-haspopup="dialog"
+        disabled={busy || (!connection && !error)} aria-haspopup="dialog"
         onClick={() => dialog.current?.showModal()}>
         {accountLabel ? accountLabel : connection || error ? 'CONNECT WALLET' : 'LOADING WALLET…'}
       </button>
@@ -72,7 +74,7 @@ export default function WalletControl() {
         <p id="wallet-description">Share your account with RobinHoot. No transactions, token approvals, access keys, or signatures are requested.</p>
         {account ? <>
           <p className="wallet-account">{account.accountId}</p>
-          <p>Connected with MyNearWallet</p>
+          <p>Connected with Meteor Wallet</p>
           {(state?.accounts.length ?? 0) > 1 && <label className="wallet-account-select">Active account
             <select value={account.accountId} disabled={busy} onChange={event => {
               try { connection?.switchAccount(event.target.value); }
@@ -82,11 +84,11 @@ export default function WalletControl() {
             </select>
           </label>}
           <button type="button" className="button" disabled={busy} onClick={() => void run('reconnect')}>SWITCH ACCOUNT</button>
-          <p className="note">MyNearWallet shares one account at a time. Switching disconnects this account, then opens the wallet to choose another.</p>
+          <p className="note">Switching disconnects the current session, then opens Meteor to choose an account.</p>
           <button type="button" className="button wallet-disconnect" disabled={busy} onClick={() => void run('disconnect')}>DISCONNECT WALLET</button>
         </> : <>
-          <button type="button" className="button" disabled={!connection || busy} onClick={() => void run('connect')}>CONTINUE WITH MYNEARWALLET ↗</button>
-          <p className="note">Opens the wallet in a popup or new browser tab, including on Android. Allow popups and return here after connecting.</p>
+          <button type="button" className="button" disabled={!connection || busy} onClick={() => void run('connect')}>CONTINUE WITH METEOR WALLET ↗</button>
+          <p className="note">Choose Meteor Web or the browser extension on desktop. On Android, use Meteor Web or pair with Meteor Mobile using its Open button. Return here after connecting.</p>
         </>}
         {!connection && error && <button type="button" className="button" onClick={() => setAttempt(value => value + 1)}>RETRY WALLET SETUP</button>}
         <p className="note">Connection does not verify ownership or register guild membership. Never share your seed phrase with this site.</p>

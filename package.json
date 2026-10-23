@@ -10,8 +10,8 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
-    "@near-wallet-selector/core": "10.1.4",
-    "@near-wallet-selector/my-near-wallet": "10.1.4",
+    "@meteorwallet/sdk": "3.24.0",
+    "@near-js/keystores": "2.2.5",
     "next": "^15.5.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
@@ -29,6 +29,9 @@
   "overrides": {
     "next": {
       "postcss": "8.5.31"
+    },
+    "@meteorwallet/sdk": {
+      "nanoid": "5.1.16"
     }
   }
 }
