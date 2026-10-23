@@ -33,4 +33,3 @@ export async function openMeteor(page: Page) {
   await page.getByRole('button', { name: 'CONTINUE WITH METEOR WALLET' }).click();
   await expect(page.getByRole('dialog', { name: 'Meteor Connect', exact: true })).toBeVisible();
 }
-
