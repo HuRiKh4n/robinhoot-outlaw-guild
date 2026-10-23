@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import WalletControl from "@/components/wallet/WalletControl";
 
 const animals = ["Raccoon", "Wolf", "Rabbit", "Fox", "Badger", "Owl"];
 const outfits = ["Patched Cloak", "Ragged Hood", "Worn Leather Vest"];
@@ -11,7 +12,28 @@ export default function Home() {
   const [outfit, setOutfit] = useState("Patched Cloak");
   const [trait, setTrait] = useState("Cunning");
   const [name, setName] = useState("The Broke Bandit");
+  const [draftReady, setDraftReady] = useState(false);
   const posterId = "PREVIEW-001";
+
+  useEffect(() => {
+    try {
+      const draft = JSON.parse(sessionStorage.getItem('robinhoot:outlaw-draft') || 'null');
+      if (draft && typeof draft === 'object') {
+        if (typeof draft.name === 'string') setName(draft.name.slice(0, 32));
+        if (animals.includes(draft.animal)) setAnimal(draft.animal);
+        if (outfits.includes(draft.outfit)) setOutfit(draft.outfit);
+        if (traits.includes(draft.trait)) setTrait(draft.trait);
+      }
+    } catch { /* A missing or invalid draft must not block the preview. */ }
+    setDraftReady(true);
+  }, []);
+
+  useEffect(() => {
+    if (!draftReady) return;
+    try {
+      sessionStorage.setItem('robinhoot:outlaw-draft', JSON.stringify({ name, animal, outfit, trait }));
+    } catch { /* The creator also works when browser storage is unavailable. */ }
+  }, [draftReady, name, animal, outfit, trait]);
 
   return (
     <main>
@@ -22,7 +44,7 @@ export default function Home() {
           <a href="#guild">The Guild</a>
           <a href="#roadmap">Roadmap</a>
         </div>
-        <a className="connect" href="#guild">JOIN THE GUILD ↗</a>
+        <WalletControl />
       </nav>
 
       <section className="hero" id="legend">
@@ -55,7 +77,7 @@ export default function Home() {
       <section id="guild" className="guild">
         <p className="eyebrow">CHAPTER II · ASSEMBLE THE GUILD</p>
         <h2>CREATE YOUR OUTLAW</h2>
-        <p>Choose your identity and preview your WANTED poster. Wallet sign-in and AI image generation are coming in a later release.</p>
+        <p>Choose your identity and preview your WANTED poster. Connect your NEAR wallet above. AI image generation and guild registration are coming in a later release.</p>
         <div className="creator">
           <div className="controls">
             <label>YOUR OUTLAW NAME
@@ -76,7 +98,7 @@ export default function Home() {
                 {traits.map(x => <option key={x}>{x}</option>)}
               </select>
             </label>
-            <p className="note">⚒ Preview only: no wallet connection, AI generation, or registration is active yet.</p>
+            <p className="note">⚒ Character preview only: AI generation and registration are not active yet. Wallet connection is optional.</p>
           </div>
           <div className="poster">
             <div className="wanted">WANTED</div>
