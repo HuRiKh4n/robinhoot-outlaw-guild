@@ -1,38 +1,19 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import { getWalletConnection, type WalletConnection, type WalletState } from '@/lib/near/wallet';
+import { useRef, useState } from 'react';
+import { useWalletState } from '@/hooks/useWalletState';
 
 export default function WalletControl() {
-  const [connection, setConnection] = useState<WalletConnection>();
-  const [state, setState] = useState<WalletState>();
+  const { connection, state, account, error: setupError, retry } = useWalletState();
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
-  const [attempt, setAttempt] = useState(0);
   const running = useRef(false);
   const dialog = useRef<HTMLDialogElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
-  const account = state?.accounts.find(item => item.active) ?? state?.accounts[0];
-  const accountLabel = account && (account.accountId.length > 22
-    ? `${account.accountId.slice(0, 10)}…${account.accountId.slice(-9)}`
+  const accountLabel = account && (account.accountId.length > 16
+    ? `${account.accountId.slice(0, 5)}…${account.accountId.slice(-4)}`
     : account.accountId);
-
-  useEffect(() => {
-    let mounted = true;
-    let unsubscribe: (() => void) | undefined;
-    setError('');
-    getWalletConnection().then(client => {
-      if (!mounted) return;
-      unsubscribe = client.subscribe(next => setState(next));
-      setConnection(client);
-    }).catch(() => {
-      if (mounted) setError('Wallet setup failed. Allow browser storage and try again.');
-    });
-    return () => {
-      mounted = false;
-      unsubscribe?.();
-    };
-  }, [attempt]);
+  const message = error || setupError;
 
   async function run(action: 'connect' | 'disconnect' | 'reconnect') {
     if (!connection || running.current) return;
@@ -60,9 +41,11 @@ export default function WalletControl() {
   return (
     <div className="wallet-control">
       <button ref={trigger} type="button" className="connect wallet-trigger"
-        disabled={busy || (!connection && !error)} aria-haspopup="dialog"
+        disabled={busy || (!connection && !setupError)} aria-haspopup="dialog" aria-busy={busy}
+        aria-label={account ? `Wallet connected: ${account.accountId}. Manage wallet` : connection || setupError ? 'CONNECT WALLET' : 'LOADING WALLET'}
+        title={account?.accountId}
         onClick={() => dialog.current?.showModal()}>
-        {accountLabel ? accountLabel : connection || error ? 'CONNECT WALLET' : 'LOADING WALLET…'}
+        <span className="wallet-label">{busy ? 'PLEASE WAIT…' : accountLabel || (connection || setupError ? 'CONNECT WALLET' : 'LOADING WALLET…')}</span>
       </button>
       <dialog ref={dialog} className="wallet-dialog" aria-labelledby="wallet-title" aria-describedby="wallet-description"
         onClose={() => trigger.current?.focus()}>
@@ -90,10 +73,10 @@ export default function WalletControl() {
           <button type="button" className="button" disabled={!connection || busy} onClick={() => void run('connect')}>CONTINUE WITH METEOR WALLET ↗</button>
           <p className="note">Choose Meteor Web or the browser extension on desktop. On Android, use Meteor Web or pair with Meteor Mobile using its Open button. Return here after connecting.</p>
         </>}
-        {!connection && error && <button type="button" className="button" onClick={() => setAttempt(value => value + 1)}>RETRY WALLET SETUP</button>}
+        {!connection && setupError && <button type="button" className="button" onClick={retry}>RETRY WALLET SETUP</button>}
         <p className="note">Connection does not verify ownership or register guild membership. Never share your seed phrase with this site.</p>
         <p role="status" aria-live="polite">{busy ? 'Waiting for wallet…' : ''}</p>
-        {error && <p role="alert" className="wallet-error">{error}</p>}
+        {message && <p role="alert" className="wallet-error">{message}</p>}
       </dialog>
     </div>
   );
