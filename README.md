@@ -123,3 +123,7 @@ The replacement Warrior originals are genuine 1024×1536 PNGs at the requested p
 ### Wallet-associated local character continuity
 
 Connected drafts already persist across sessions in the same browser and origin, separately per mainnet account. An empty connected account can now explicitly **USE GUEST CHARACTER FOR THIS ACCOUNT**; the guest original remains separate and existing saved account drafts are protected. This is local association, not wallet authentication, on-chain registration or cross-device sync. See [the identity audit and next-phase plan](docs/OUTLAW_IDENTITY.md) for current boundaries, storage behavior and future requirements.
+
+### Phase 6 — Bounty Board preview
+
+Visit `/bounties` from the main navigation (including the visible mobile row) or home-page callout. Six Creative, Social and Guild mission previews have category filters and dedicated contract pages describing proposed requirements and future evidence. Every contract is **PREVIEW / COMING SOON**. Reputation, badges, verification, submissions and rewards are not live; no completion, points, leaderboard or reward claim is simulated. The roadmap now reflects these boundaries. See [Bounty Board architecture and future requirements](docs/BOUNTY_BOARD.md).

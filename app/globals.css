@@ -199,3 +199,76 @@ input:focus-visible, textarea:focus-visible { outline: 3px solid #df9950; outlin
 @media(prefers-reduced-motion:reduce) { .portrait-reveal { animation:none; } }
 
 .guest-draft-copy .button { width:100%; min-height:52px; line-height:1.5; white-space:normal; overflow-wrap:anywhere; }
+
+/* Bounty Board: editorial contract previews, never completion or reward controls. */
+.nav-bounties-mobile { display:none; }
+.bounty-page { background:radial-gradient(ellipse at 80% 12%,#315b4326,transparent 48%),#101613; color:#e9dfc9; }
+.bounty-page h1,.bounty-page h2,.bounty-page h3,.bounty-home-callout h2 { font-family:Georgia,'Times New Roman',serif; font-weight:normal; }
+.bounty-hero { position:relative; padding:28px 20px 46px; max-width:1240px; margin:auto; }
+.bounty-back { display:inline-flex; align-items:center; min-height:44px; color:#bcd4c2; font-size:11px; letter-spacing:1px; font-weight:700; }
+.bounty-hero > .eyebrow { margin-top:36px; color:#a1c6ae; }
+.bounty-kicker { font-size:10px; letter-spacing:2px; color:#a8b5a9; margin-top:30px; }
+.bounty-hero h1 { font-size:clamp(58px,12vw,118px); line-height:.97; letter-spacing:-2px; margin:20px 0 26px; color:#f1dfbb; text-shadow:0 12px 60px #bba56822; }
+.bounty-hero h1 em { color:#a6c4ab; font-style:normal; }
+.bounty-lead { max-width:610px; font:18px/1.8 Georgia,serif; color:#c3c8b7; }
+.bounty-preview-notice { max-width:680px; margin-top:30px; padding:18px 20px; border:1px solid #53735e; border-left:3px solid #a0bf9f; background:linear-gradient(120deg,#28433266,#121b16); }
+.bounty-preview-notice strong { color:#c0d8bd; font-size:11px; letter-spacing:2px; }
+.bounty-preview-notice p { margin:10px 0 0; font-size:13px; line-height:1.8; color:#c4ccb9; }
+.bounty-hero-links { display:flex; flex-wrap:wrap; gap:12px 24px; margin-top:20px; }
+.bounty-hero-links a,.bounty-text-link { display:inline-flex; align-items:center; min-height:44px; color:#c5d5b9; font-size:11px; font-weight:700; letter-spacing:1px; line-height:1.6; }
+.bounty-content { max-width:1240px; margin:auto; padding:0 20px 60px; }
+.bounty-section-heading { display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:12px; }
+.bounty-section-heading .eyebrow { font-size:10px; letter-spacing:2px; }
+.bounty-section-heading h2 { font-size:clamp(28px,4vw,42px); margin:10px 0 4px; }
+.bounty-count { font-size:12px; color:#a5b8a7; padding-bottom:4px; }
+.bounty-filters { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin-top:26px; }
+.bounty-filters button { min-height:48px; padding:10px 12px; border:1px solid #4a6050; background:#16211a; color:#c8d2bd; font-size:12px; cursor:pointer; }
+.bounty-filters button[aria-pressed=true] { background:#31543c; border-color:#a0c09d; color:#f0ebd8; box-shadow:inset 0 -2px #a0c09d; }
+.bounty-filter-description { font-size:13px; line-height:1.8; color:#aab8a9; min-height:46px; margin:18px 0 26px; }
+.bounty-grid { display:grid; grid-template-columns:minmax(0,1fr); gap:24px; }
+.bounty-contract,.bounty-detail { position:relative; isolation:isolate; color:#352b20; padding:24px; border:1px solid #9c8159; background:radial-gradient(ellipse at 45% 25%,#efe2bf99,transparent 70%),repeating-linear-gradient(4deg,transparent 0 17px,#6b4e2510 18px 19px),linear-gradient(115deg,#b99a65,#e3cfa3 22%,#d0b47c 95%); box-shadow:inset 0 0 35px #71512625,0 16px 40px #0005; }
+.bounty-contract::before,.bounty-detail::before { content:''; position:absolute; inset:7px; border:1px solid #785c3780; z-index:-1; pointer-events:none; }
+.bounty-contract { display:flex; flex-direction:column; }
+.contract-topline { display:flex; justify-content:space-between; align-items:center; gap:10px; font-size:10px; letter-spacing:1px; font-weight:700; color:#57452b; }
+.contract-seal { display:grid; place-items:center; width:40px; height:40px; border:3px double #4d6043; border-radius:50%; color:#344b37; font:bold 13px Georgia,serif; transform:rotate(-10deg); flex-shrink:0; }
+.contract-status { font-size:10px; letter-spacing:1px; color:#294b34; font-weight:800; margin:20px 0 10px; }
+.bounty-contract h3 { font-size:30px; line-height:1.13; margin:0 0 16px; }
+.contract-description { font-size:14px; line-height:1.8; margin:0 0 24px; flex:1; }
+.contract-meta { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; padding:18px 0; border-top:1px solid #83653e66; margin:0; }
+.contract-meta dt { font-size:9px; letter-spacing:1px; text-transform:uppercase; color:#675031; font-weight:700; }
+.contract-meta dd { font-size:12px; font-weight:700; margin:6px 0 0; line-height:1.7; }
+.contract-link { display:flex; justify-content:space-between; align-items:center; gap:12px; min-height:48px; padding:12px 14px; background:#233f2d; color:#f3e5c6; border:1px solid #476148; font-size:11px; letter-spacing:1px; font-weight:700; }
+.bounty-page a:focus-visible,.bounty-page button:focus-visible,.nav-bounties-mobile:focus-visible,.bounty-home-callout a:focus-visible { outline:3px solid #b8d8be; outline-offset:4px; }
+.bounty-page .contract-link:focus-visible,.bounty-detail a:focus-visible { outline-color:#233f2d; }
+.bounty-future { margin-top:60px; border:1px solid #48614c; padding:26px; background:radial-gradient(ellipse at 0 0,#34564155,transparent 75%),#172019; display:grid; gap:28px; scroll-margin-top:24px; }
+.bounty-future h2,.bounty-rewards h2 { font-size:clamp(30px,4vw,46px); margin:12px 0 20px; }
+.bounty-future h3 { font-size:24px; margin-top:0; }
+.future-label { display:inline-block; font-size:10px; letter-spacing:1px; color:#b9cfac; border-bottom:1px solid #7a8e65; padding-bottom:9px; }
+.bounty-future p,.bounty-future li,.bounty-rewards p,.bounty-next p { font-size:14px; line-height:1.9; color:#bbc4b2; }
+.bounty-future ul { padding-left:20px; }
+.bounty-future li { margin-bottom:10px; }
+.bounty-rewards { padding:44px 0; max-width:760px; }
+.bounty-next { border-top:1px solid #455b46; padding:30px 0; }
+.bounty-next h2 { font-size:28px; }
+.bounty-page .button,.bounty-home-callout .button { display:inline-flex; align-items:center; justify-content:center; min-height:48px; background:linear-gradient(#36583e,#233c2c); border:1px solid #99b590; color:#f1e5ca; line-height:1.7; text-align:center; }
+.bounty-detail-shell { max-width:950px; margin:auto; padding:28px 20px 70px; }
+.bounty-detail { margin-top:24px; padding:28px; }
+.bounty-detail h1 { font-size:clamp(38px,7vw,66px); letter-spacing:-1px; margin:16px 0; }
+.detail-lead { font:18px/1.8 Georgia,serif; }
+.bounty-detail section { margin-top:30px; }
+.bounty-detail section h2 { font-size:26px; margin:0 0 14px; }
+.bounty-detail section p,.bounty-detail li { font-size:14px; line-height:1.9; }
+.bounty-detail ul { padding-left:20px; }
+.bounty-detail li { margin-bottom:12px; }
+.contract-closed { padding:22px; border:1px solid #5c6449; background:#4a593419; }
+.bounty-detail-footer { display:flex; align-items:center; flex-wrap:wrap; gap:20px; margin-top:28px; }
+.bounty-home-callout { padding:60px max(7vw,25px); background:radial-gradient(ellipse at top right,#365c4255,transparent 70%),#17221a; border-top:1px solid #48604b; border-bottom:1px solid #48604b; display:flex; align-items:center; flex-wrap:wrap; gap:24px; }
+.bounty-home-callout > div { flex:1 1 400px; }
+.bounty-home-callout h2 { font-size:clamp(32px,4vw,52px); margin:14px 0; }
+.bounty-home-callout p:not(.eyebrow) { max-width:650px; font-size:14px; line-height:1.9; color:#bcc5b1; }
+.roadmap-status { display:block; font-size:10px; line-height:1.8; color:#b8cfae; letter-spacing:1px; }
+#contracts-title { scroll-margin-top:24px; }
+@media(min-width:700px) { .bounty-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .bounty-filters { display:flex; flex-wrap:wrap; } .bounty-filters button { padding-inline:22px; } .bounty-hero { padding:40px 35px 65px; } .bounty-content { padding-inline:35px; } .bounty-future { grid-template-columns:1fr 1fr; padding:36px; } .bounty-detail { padding:48px; } }
+@media(min-width:1150px) { .bounty-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+@media(max-width:1050px) { .site-header { display:grid; grid-template-columns:minmax(0,1fr) minmax(44px,min(40%,180px)); } .nav-bounties-mobile { grid-column:1 / -1; display:flex; justify-content:space-between; align-items:center; gap:12px; order:3; flex:1 0 100%; min-height:44px; border-top:1px solid #435c47; padding-top:12px; color:#d8e4ca; font-size:11px; font-weight:700; letter-spacing:1px; } .nav-bounties-mobile span { color:#a7bb9e; font-size:8px; } }
+@media(prefers-reduced-motion:no-preference) { .contract-link,.bounty-filters button { transition:background-color .15s ease,border-color .15s ease; } .contract-link:hover { background:#35573c; } }

@@ -39,20 +39,26 @@ export default function Home() {
 
       <OutlawProfile />
 
+      <section className="bounty-home-callout" aria-labelledby="home-bounty-title">
+        <div><p className="eyebrow">CHAPTER III · CONTRACT PREVIEWS</p><h2 id="home-bounty-title">THE BOUNTY BOARD</h2><p>Creative work. Original stories. A guild built together. Explore six mission concepts; submissions, reputation and rewards are not live.</p></div>
+        <Link className="button" href="/bounties">EXPLORE THE BOUNTY BOARD →</Link>
+      </section>
+
       <section id="roadmap" className="roadmap">
         <p className="eyebrow">THE OUTLAW ROADMAP</p>
         <h2>FROM ONE BROKE FOX<br />TO AN ARMY OF OUTLAWS.</h2>
         <div className="chapters">
           {[
-            ["I", "THE BROKE FOX", "Launch the legend and community."],
-            ["II", "ASSEMBLE THE GUILD", "Wallet profiles, AI outlaws and WANTED posters."],
-            ["III", "THE BOUNTY HUNT", "Community missions and reputation."],
-            ["IV", "LOOT FOR THE TRENCHES", "Transparent, rule-based treasury rewards."],
-            ["V", "KINGDOM WITHOUT KINGS", "Expand stories, characters and community proposals."]
-          ].map(([n, t, d]) => (
+            ["I", "THE BROKE FOX", "Website and manifesto available. Community growth is ongoing.", "SITE AVAILABLE"],
+            ["II", "ASSEMBLE THE GUILD", "Cinematic creator, 12 Wolf variants, local profiles, WANTED posters and passport PNGs available. Meteor is account-only; no authenticated or on-chain identity. No live AI generation.", "LOCAL PROTOTYPE AVAILABLE"],
+            ["III", "THE BOUNTY HUNT", "Bounty Board and mission details available as previews. Submissions, verification, reputation and badges are not live.", "BOARD PREVIEW AVAILABLE"],
+            ["IV", "LOOT FOR THE TRENCHES", "Reward rules, eligibility and any funding remain undefined. Nothing to claim; no guaranteed token distributions or returns.", "PLANNED · NOT LIVE"],
+            ["V", "KINGDOM WITHOUT KINGS", "Future stories, collaborative challenges and community proposals. No governance system is live.", "PLANNED · NOT LIVE"]
+          ].map(([n, t, d, status]) => (
             <article key={n}>
               <b>CHAPTER {n}</b>
               <h3>{t}</h3>
+              <span className="roadmap-status">{status}</span>
               <p>{d}</p>
             </article>
           ))}
