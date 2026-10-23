@@ -2,6 +2,7 @@ import { choose, selected } from './creator-helpers';
 import { expect, test } from '@playwright/test';
 import { resolveAppearance, type PortraitAsset } from '../lib/character/appearance';
 import { createHash } from 'node:crypto';
+import { readFile } from 'node:fs/promises';
 import { defaultDraft } from '../lib/profile/draft';
 
 test('cinematic catalogue only covers exact ready species/class/outfit combinations', () => {
@@ -16,52 +17,78 @@ test('cinematic catalogue only covers exact ready species/class/outfit combinati
     expect(resolveAppearance(selection, [entry]).kind).toBe('unavailable');
   }
   expect(resolveAppearance(wolf, [{ ...entry, status: 'awaiting-artwork' }]).kind).toBe('unavailable');
-  expect(resolveAppearance(wolf).src).toBe('/characters/wolf/ranger/portrait.png');
+  expect(resolveAppearance(wolf).src).toBe('/characters/wolf/ranger/patched-cloak.png');
   expect(resolveAppearance({ ...wolf, outfit: 'Ragged Hood' }).note).toContain('no other character or outfit is substituted');
 });
 
-test('uploaded Wolf PNG loads unchanged and stays synchronized through previews, outfits and passport', async ({ page }, testInfo) => {
-  const response = await page.request.get('/characters/wolf/ranger/portrait.png');
-  expect(response.ok()).toBe(true);
-  expect(createHash('sha256').update(await response.body()).digest('hex')).toBe('bb00b8a3d99fd1d83189b54f9718c1daf4cd744230c33dddc16e914fc369127e');
+const variants = [
+  ['Ranger', 'Patched Cloak', '/characters/wolf/ranger/patched-cloak.png', '799fe7d245d58e77c15eea6c79cdb0321bf0234da76334baa3b526fcfd74134e'],
+  ['Ranger', 'Leather Vest', '/characters/wolf/ranger/leather-vest.png', '40a85cc3cfe290c3f0d81efef43bb796c9fafd14798c677ec7a0ac9fcdec6674'],
+  ['Ranger', 'Forest Hood', '/characters/wolf/ranger/forest-hood.png', '6fc8e8c4b1c1e57a9e43475427ec7c487f5d76dca717ed62fb37fa9e491618fc'],
+  ['Mage', 'Arcane Robes', '/characters/wolf/mage/arcane-robes.png', '44959834c1c7692650ee8bef504d3a2d460dffe8354db99a96dd465bdfc545c3'],
+];
+
+test('all four actual Wolf images switch without reload and synchronize live, Wanted and profile', async ({ page }) => {
   await page.goto('/');
+  await page.evaluate(() => Reflect.set(window, '__robinhootPreviewMarker', 'same-document'));
   await choose(page, 'SPECIES', 'Wolf');
-  await choose(page, 'CLASS', 'Ranger');
-  const source = '/characters/wolf/ranger/portrait.png';
-  for (const selector of ['.character-preview-large img', '.poster img', '.profile-emblem img']) {
-    await expect(page.locator(selector)).toHaveAttribute('src', source);
-    await expect.poll(() => page.locator(selector).evaluate(image => (image as HTMLImageElement).naturalWidth)).toBe(1030);
-    expect(await page.locator(selector).evaluate(image => getComputedStyle(image).objectFit)).toBe('contain');
+  const sources = new Set<string>();
+  for (const [job, outfit, source, checksum] of variants) {
+    const response = await page.request.get(source); expect(response.ok()).toBe(true);
+    expect(createHash('sha256').update(await response.body()).digest('hex')).toBe(checksum);
+    await choose(page, 'CLASS', job); await choose(page, 'OUTFIT', outfit);
+    for (const selector of ['.character-preview-large img', '.poster img', '.profile-emblem img']) {
+      const image = page.locator(selector);
+      await expect(image).toHaveAttribute('src', source);
+      await expect.poll(() => image.evaluate(element => (element as HTMLImageElement).naturalWidth)).toBe(1030);
+      expect(await image.evaluate(element => ({ height: (element as HTMLImageElement).naturalHeight, fit: getComputedStyle(element).objectFit }))).toEqual({height:1536, fit:'contain'});
+    }
+    sources.add((await page.locator('.character-preview-large img').getAttribute('src'))!);
   }
-  await expect(page.getByRole('button', { name: 'DOWNLOAD CHARACTER', exact: true })).toBeEnabled();
-  await page.setViewportSize({ width: 393, height: 851 });
-  await page.locator('.builder-stage').screenshot({ path: testInfo.outputPath('wolf-ranger-mobile.png') });
-  await page.goto('/my-outlaw');
-  await selected(page, 'SPECIES', 'Wolf');
-  await expect(page.getByRole('button', { name: 'DOWNLOAD GUILD PASSPORT', exact: true })).toBeEnabled();
-  // Independently rasterize the unmodified PNG with the same aspect-preserving containment;
-  // compare the actual passport image region, not just its metadata or source URL.
-  expect(await page.locator('.passport canvas').evaluate(async element => {
-    const image = new Image(); image.src = '/characters/wolf/ranger/portrait.png'; await image.decode();
-    const reference = document.createElement('canvas'); reference.width = 840; reference.height = 1120;
-    const ctx = reference.getContext('2d')!; ctx.fillStyle = '#17201b'; ctx.fillRect(65,173,710,345);
-    const scale = Math.min(710/image.naturalWidth,345/image.naturalHeight);
-    const w=image.naturalWidth*scale,h=image.naturalHeight*scale;
-    ctx.drawImage(image,65+(710-w)/2,173+(345-h)/2,w,h);
-    const expected=ctx.getImageData(65,173,710,345).data;
-    const actual=(element as HTMLCanvasElement).getContext('2d')!.getImageData(65,173,710,345).data;
-    return actual.every((value,index)=>value===expected[index]);
-  })).toBe(true);
-  for (const outfit of ['Forest Hood', 'Leather Vest']) {
-    await choose(page, 'OUTFIT', outfit);
-    await expect(page.locator('.character-preview-large img')).toHaveCount(0);
-    await expect(page.locator('.art-availability')).toContainText(`No cinematic artwork is available for Wolf / Ranger / ${outfit}`);
-    await expect(page.locator('.passport-tools')).toContainText('Cinematic artwork not yet available');
-    await expect(page.getByRole('button', { name: 'DOWNLOAD GUILD PASSPORT', exact: true })).toBeEnabled();
-  }
-  await choose(page, 'CLASS', 'Mage');
+  expect(sources.size).toBe(4);
+  expect(await page.evaluate(() => Reflect.get(window, '__robinhootPreviewMarker'))).toBe('same-document');
+  await choose(page, 'CLASS', 'Rogue');
   await expect(page.locator('.character-preview-large img')).toHaveCount(0);
   await expect(page.locator('.art-availability')).toContainText('No cinematic artwork');
+});
+
+test('all four Wolf variants render into passport and both real PNG downloads', async ({ page }, testInfo) => {
+  await page.goto('/my-outlaw'); await choose(page, 'SPECIES', 'Wolf');
+  const signatures = new Set<string>();
+  for (const [index, [job, outfit, source]] of variants.entries()) {
+    await choose(page, 'CLASS', job); await choose(page, 'OUTFIT', outfit);
+    await expect(page.locator('.character-preview-large img')).toHaveAttribute('src',source);
+    for (const label of ['DOWNLOAD CHARACTER', 'DOWNLOAD GUILD PASSPORT']) {
+      const button=page.getByRole('button',{name:label,exact:true}); await expect(button).toBeEnabled();
+      const signature=await page.locator('.passport canvas').evaluate(canvas=>(canvas as HTMLCanvasElement).toDataURL());
+      const event=page.waitForEvent('download'); await button.click(); const file=await event;
+      const path=testInfo.outputPath(`variant-${index}-${label==='DOWNLOAD CHARACTER'?'wanted':'passport'}.png`);
+      await file.saveAs(path); const bytes=await readFile(path);
+      expect(bytes.readUInt32BE(16)).toBe(840); expect(bytes.readUInt32BE(20)).toBe(1120);
+      if(label==='DOWNLOAD GUILD PASSPORT') {
+        expect(`data:image/png;base64,${bytes.toString('base64')}`).toBe(signature);
+        signatures.add(createHash('sha256').update(bytes).digest('hex'));
+      }
+      // Independently rasterize the selected original and compare its entire contained image region
+      // against the actual downloaded card. This catches stale images and accidental fixed artwork.
+      expect(await page.evaluate(async ({source,png})=>{
+        const original=new Image(); original.src=source; await original.decode();
+        const downloaded=new Image(); downloaded.src=`data:image/png;base64,${png}`; await downloaded.decode();
+        const reference=document.createElement('canvas'); reference.width=840; reference.height=1120;
+        const ctx=reference.getContext('2d')!; ctx.fillStyle='#17201b'; ctx.fillRect(65,173,710,345);
+        const scale=Math.min(710/original.naturalWidth,345/original.naturalHeight);
+        const w=original.naturalWidth*scale,h=original.naturalHeight*scale;
+        ctx.drawImage(original,65+(710-w)/2,173+(345-h)/2,w,h);
+        const expected=ctx.getImageData(65,173,710,345).data;
+        ctx.drawImage(downloaded,0,0); const actual=ctx.getImageData(65,173,710,345).data;
+        return actual.every((value,i)=>value===expected[i]);
+      },{source,png:bytes.toString('base64')})).toBe(true);
+    }
+    await page.locator('.builder-stage').screenshot({path:testInfo.outputPath(`wolf-variant-${index}.png`),animations:'disabled'});
+  }
+  expect(signatures.size).toBe(4);
+  await page.reload(); await selected(page,'CLASS','Mage'); await selected(page,'OUTFIT','Arcane Robes');
+  await expect(page.locator('.character-preview-large img')).toHaveAttribute('src','/characters/wolf/mage/arcane-robes.png');
 });
 
 test('cinematic studio stays usable at narrow Android and desktop sizes', async ({ page }, testInfo) => {

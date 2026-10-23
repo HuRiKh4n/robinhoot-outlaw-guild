@@ -44,4 +44,4 @@ The vector work above remains an explicitly labelled fallback. The new cinematic
 
 ## Current cinematic wardrobe revision
 
-The historical vectors described above are no longer displayed as substitutes in the cinematic creator. Exact ready registry matches or a same-outfit legacy fallback are used; unsupported choices display no illustration. All four newly requested originals are missing and documented in CINEMATIC_ASSETS.md. Class wardrobes and legacy alias migration are now registry-driven.
+The historical vectors described above are no longer displayed as substitutes in the cinematic creator. Exact ready registry matches or a same-outfit legacy fallback are used; unsupported choices display no illustration. All four approved Wolf originals are now active at their exact registry paths; see CINEMATIC_ASSETS.md for checksums and real mobile browser/export validation. Class wardrobes and legacy alias migration are now registry-driven.

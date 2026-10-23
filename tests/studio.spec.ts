@@ -11,13 +11,14 @@ test('choice deck supports keyboard tabs and honest artwork cards', async ({ pag
   const wolf = page.getByRole('radio', { name: 'Wolf', exact: true });
   await wolf.focus(); await page.keyboard.press('Space'); await expect(wolf).toBeChecked();
   await choose(page, 'CLASS', 'Ranger');
-  await expect(page.locator('.character-preview-large img')).toHaveAttribute('src', '/characters/wolf/ranger/portrait.png');
+  await expect(page.locator('.character-preview-large img')).toHaveAttribute('src', '/characters/wolf/ranger/patched-cloak.png');
   await choose(page, 'OUTFIT', 'Forest Hood');
-  await expect(page.locator('.art-availability')).toContainText('No cinematic artwork is available');
-  await expect(page.locator('.choice-card.is-selected')).toContainText('Artwork unavailable');
-  await expect(page.locator('.choice-card.is-selected img')).toHaveCount(0);
+  await expect(page.locator('.character-preview-large img')).toHaveAttribute('src','/characters/wolf/ranger/forest-hood.png');
+  await expect(page.locator('.choice-card.is-selected')).toContainText('Cinematic artwork');
+  await expect(page.locator('.choice-card.is-selected img')).toHaveCount(1);
   await choose(page, 'CLASS', 'Mage');
-  await expect(page.locator('.choice-card.is-selected')).toContainText('Artwork unavailable');
+  await expect(page.locator('.character-preview-large img')).toHaveAttribute('src','/characters/wolf/mage/arcane-robes.png');
+  await expect(page.locator('.choice-card.is-selected')).toContainText('Cinematic artwork');
 });
 
 test('mobile portrait leads compact controls and parchment poster remains downloadable', async ({ page }, testInfo) => {
@@ -40,5 +41,5 @@ test('mobile portrait leads compact controls and parchment poster remains downlo
   await expect(page.getByRole('button',{name:'DOWNLOAD CHARACTER',exact:true})).toBeEnabled();
   await expect(page.getByRole('button',{name:'DOWNLOAD GUILD PASSPORT',exact:true})).toBeEnabled();
   await page.getByRole('button',{name:'SAVE DRAFT',exact:true}).click();
-  await page.reload(); await expect(page.locator('.character-preview-large img')).toHaveAttribute('src','/characters/wolf/ranger/portrait.png');
+  await page.reload(); await expect(page.locator('.character-preview-large img')).toHaveAttribute('src','/characters/wolf/ranger/patched-cloak.png');
 });

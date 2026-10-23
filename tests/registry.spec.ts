@@ -5,12 +5,13 @@ import { classDraft, defaultDraft, outfitsFor, parseDraft } from '../lib/profile
 import { choose, selected } from './creator-helpers';
 
 const variants = portraits.filter(asset => !asset.fallback);
-test('all four exact approved paths are registered; ready fixture variants resolve without cross-class substitution', async () => {
+test('all four exact approved paths are registered; active variants resolve without cross-class substitution', async () => {
   expect(variants.map(asset=>asset.src)).toEqual([
     '/characters/wolf/ranger/patched-cloak.png', '/characters/wolf/ranger/leather-vest.png',
     '/characters/wolf/ranger/forest-hood.png', '/characters/wolf/mage/arcane-robes.png',
   ]);
-  const ready: PortraitAsset[] = variants.map(asset=>({...asset,status:'ready',width:1030,height:1536}));
+  const ready: PortraitAsset[] = variants;
+  expect(ready.every(asset=>asset.status==='ready')).toBe(true);
   for (const asset of ready) {
     const draft={...defaultDraft,species:'Wolf' as const,class:asset.class as 'Ranger'|'Mage',outfit:asset.outfit!};
     expect(resolveAppearance(draft,ready).src).toBe(asset.src);

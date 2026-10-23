@@ -4,44 +4,44 @@
     "species": "Wolf",
     "class": "Ranger",
     "outfit": "Patched Cloak",
-    "status": "awaiting-artwork",
+    "status": "ready",
     "src": "/characters/wolf/ranger/patched-cloak.png",
-    "width": 0,
-    "height": 0,
-    "credit": "Approved path supplied by repository owner; original file not yet available."
+    "width": 1030,
+    "height": 1536,
+    "credit": "Approved original Wolf artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
   },
   {
     "id": "wolf-leather-vest",
     "species": "Wolf",
     "class": "Ranger",
     "outfit": "Leather Vest",
-    "status": "awaiting-artwork",
+    "status": "ready",
     "src": "/characters/wolf/ranger/leather-vest.png",
-    "width": 0,
-    "height": 0,
-    "credit": "Approved path supplied by repository owner; original file not yet available."
+    "width": 1030,
+    "height": 1536,
+    "credit": "Approved original Wolf artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
   },
   {
     "id": "wolf-forest-hood",
     "species": "Wolf",
     "class": "Ranger",
     "outfit": "Forest Hood",
-    "status": "awaiting-artwork",
+    "status": "ready",
     "src": "/characters/wolf/ranger/forest-hood.png",
-    "width": 0,
-    "height": 0,
-    "credit": "Approved path supplied by repository owner; original file not yet available."
+    "width": 1030,
+    "height": 1536,
+    "credit": "Approved original Wolf artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
   },
   {
     "id": "wolf-arcane-robes",
     "species": "Wolf",
     "class": "Mage",
     "outfit": "Arcane Robes",
-    "status": "awaiting-artwork",
+    "status": "ready",
     "src": "/characters/wolf/mage/arcane-robes.png",
-    "width": 0,
-    "height": 0,
-    "credit": "Approved path supplied by repository owner; original file not yet available."
+    "width": 1030,
+    "height": 1536,
+    "credit": "Approved original Wolf artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
   },
   {
     "id": "wolf-ranger-legacy-fallback",
