@@ -1,0 +1,13 @@
+[
+  {
+    "id": "wolf-ranger",
+    "species": "Wolf",
+    "class": "Ranger",
+    "status": "awaiting-artwork",
+    "src": "/characters/wolf/ranger/portrait.png",
+    "width": 0,
+    "height": 0,
+    "credit": "",
+    "outfit": null
+  }
+]

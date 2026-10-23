@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "validate:art": "node scripts/validate-character-assets.mjs",
+    "test:assets": "node --test scripts/validate-character-assets.test.mjs",
+    "prebuild": "npm run validate:art",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

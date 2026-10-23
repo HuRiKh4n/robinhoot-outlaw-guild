@@ -30,7 +30,7 @@ test('every species, class and outfit has distinct reusable local visual layers'
     clothes.add((await preview.getAttribute('src'))!);
   }
   expect(clothes.size).toBe(outfits.length);
-  await expect(page.getByText('Final painted, cinematic character artwork is still pending', { exact: false })).toBeVisible();
+  await expect(page.getByText('Cinematic class and outfit changes require their own artwork', { exact: false })).toBeVisible();
   await page.setViewportSize({ width: 393, height: 851 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(393);
   await page.locator('.builder-stage').screenshot({ path: testInfo.outputPath('illustration-preview.png') });

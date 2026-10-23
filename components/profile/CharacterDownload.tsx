@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import type { OutlawDraft } from '@/lib/profile/draft';
-import { characterImage } from '@/lib/character/render';
+import { resolveAppearance } from '@/lib/character/appearance';
 import { drawPassport } from './CharacterCard';
 import DownloadPngButton from './DownloadPngButton';
 
@@ -30,7 +30,7 @@ export default function CharacterDownload({ draft }: { draft: OutlawDraft }) {
       } catch { setFailed(true); }
     };
     image.onerror = () => { if (active) setFailed(true); };
-    image.src = characterImage(draft);
+    image.src = resolveAppearance(draft).src;
     return () => { active = false; image.onload = null; image.onerror = null; if (url) URL.revokeObjectURL(url); };
   }, [fingerprint]);
   return <DownloadPngButton url={asset?.fingerprint === fingerprint ? asset.url : undefined} filename="robinhoot-character.png" label="DOWNLOAD CHARACTER" failed={failed} />;

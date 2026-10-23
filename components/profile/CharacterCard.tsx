@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import type { OutlawDraft } from '@/lib/profile/draft';
-import { characterImage } from '@/lib/character/render';
+import { resolveAppearance } from '@/lib/character/appearance';
 import DownloadPngButton from './DownloadPngButton';
 
 const shortAccount = (value: string) => value.length > 24 ? `${value.slice(0, 10)}…${value.slice(-9)}` : value;
@@ -17,9 +17,10 @@ export default function CharacterCard({ draft, accountId }: { draft: OutlawDraft
   const [status, setStatus] = useState('');
   const [manual, setManual] = useState(false);
   const displayedAccount = includeAccount && accountId ? shortAccount(accountId) : undefined;
+  const appearance = resolveAppearance(draft);
   const fingerprint = JSON.stringify([draft, displayedAccount]);
   const currentAsset = asset?.fingerprint === fingerprint ? asset : undefined;
-  const shareText = `ROBINHOOT · GUILD PASSPORT\n${draft.name || 'UNKNOWN OUTLAW'}\n${draft.class} · ${draft.species}\n${draft.outfit} · ${draft.personality}${displayedAccount ? `\nNEAR: ${displayedAccount}` : ''}\nPREVIEW / NOT MINTED / NOT REGISTERED\nLocal draft only. Wallet connection is not proof of ownership or authentication. No on-chain or server verification.`;
+  const shareText = `ROBINHOOT · GUILD PASSPORT\n${draft.name || 'UNKNOWN OUTLAW'}\n${draft.class} · ${draft.species}\n${draft.outfit} · ${draft.personality}${displayedAccount ? `\nNEAR: ${displayedAccount}` : ''}\n${appearance.label}\nPREVIEW / NOT MINTED / NOT REGISTERED\nLocal draft only. Wallet connection is not proof of ownership or authentication. No on-chain or server verification.`;
 
   useEffect(() => {
     let active = true;
@@ -43,7 +44,10 @@ export default function CharacterCard({ draft, accountId }: { draft: OutlawDraft
     }
     image.onload = () => { void render(image); };
     image.onerror = () => { if (active) setFailed(true); };
-    image.src = characterImage(draft);
+    // Clear the old portrait immediately; a failed replacement must not show stale artwork.
+    const context = canvas.current?.getContext('2d');
+    context?.clearRect(0, 0, 840, 1120);
+    image.src = resolveAppearance(draft).src;
     return () => { active = false; image.onload = null; image.onerror = null; if (url) URL.revokeObjectURL(url); };
   // The fingerprint represents every value painted onto the image.
   }, [fingerprint]);
@@ -66,7 +70,7 @@ export default function CharacterCard({ draft, accountId }: { draft: OutlawDraft
     <div className="profile-heading"><div><p className="eyebrow">CARRY THE LEGEND</p><h2 id="passport-title">GUILD PASSPORT</h2></div><span className="prototype-badge">CHARACTER CARD PREVIEW</span></div>
     <div className="passport-layout">
       <div className="passport-art">
-        <canvas ref={canvas} width={840} height={1120} role="img" aria-label={`Guild Passport preview for ${draft.name || 'UNKNOWN OUTLAW'}, ${draft.class}, ${draft.species}, ${draft.outfit}, ${draft.personality}${displayedAccount ? `, NEAR ${displayedAccount}` : ''}. Preview, not minted, not registered.`}>Your passport identity is listed alongside this image.</canvas>
+        <canvas ref={canvas} width={840} height={1120} role="img" aria-label={`Guild Passport preview for ${draft.name || 'UNKNOWN OUTLAW'}, ${draft.class}, ${draft.species}, ${draft.outfit}, ${draft.personality}${displayedAccount ? `, NEAR ${displayedAccount}` : ''}. ${appearance.label}. Preview, not minted, not registered.`}>Your passport identity is listed alongside this image.</canvas>
         <DownloadPngButton url={currentAsset?.url} filename="robinhoot-passport-preview.png" label="DOWNLOAD GUILD PASSPORT" failed={failed} />
       </div>
       <div className="passport-tools">
@@ -74,7 +78,7 @@ export default function CharacterCard({ draft, accountId }: { draft: OutlawDraft
         <p className="passport-flags">Preview / Not minted / Not registered</p>
         <dl><div><dt>NAME</dt><dd>{draft.name || 'UNKNOWN OUTLAW'}</dd></div><div><dt>IDENTITY</dt><dd>{draft.class} · {draft.species}</dd></div><div><dt>OUTFIT</dt><dd>{draft.outfit}</dd></div><div><dt>PERSONALITY</dt><dd>{draft.personality}</dd></div></dl>
         {accountId && <label className="passport-account-option"><input type="checkbox" checked={includeAccount} onChange={event => setIncludeAccount(event.target.checked)} />Include shortened NEAR account on the card and shared text</label>}
-        <p>Uses the same selected species, class equipment and outfit layers as your live preview. Original vector prototype artwork; final painted assets are pending. No AI generation service is connected.</p>
+        <p>{appearance.label}. {appearance.note} The same artwork is used in every preview and PNG.</p>
         {failed && <p className="note">Image download is unavailable. Share or copy your details instead.</p>}
         <button type="button" className="button passport-share" onClick={() => void share()}>SHARE / COPY DETAILS ↗</button>
         <p className="note" role="status">{status}</p>
@@ -92,8 +96,10 @@ export function drawPassport(ctx: CanvasRenderingContext2D, draft: OutlawDraft, 
   ctx.textAlign = 'center'; ctx.fillStyle = '#402619'; ctx.font = 'bold 24px sans-serif'; ctx.fillText('ROBINHOOT · OUTLAW GUILD', 420, 79);
   ctx.font = 'bold 51px serif'; ctx.fillText(title, 420, 143);
   ctx.fillStyle = '#17201b'; ctx.fillRect(65, 173, 710, 345);
-  ctx.drawImage(character, 286, 173, 267, 345);
-  ctx.fillStyle = '#a93624'; ctx.font = 'bold 20px sans-serif'; ctx.fillText('CHARACTER CARD · LOCAL DRAFT', 420, 560);
+  const scale = Math.min(710 / character.naturalWidth, 345 / character.naturalHeight);
+  const width = character.naturalWidth * scale; const height = character.naturalHeight * scale;
+  ctx.drawImage(character, 65 + (710 - width) / 2, 173 + (345 - height) / 2, width, height);
+  ctx.fillStyle = '#a93624'; ctx.font = 'bold 20px sans-serif'; ctx.fillText(resolveAppearance(draft).exportLabel, 420, 560, 710);
   ctx.fillStyle = '#402619';
   const name = draft.name || 'UNKNOWN OUTLAW';
   let fontSize = 49;

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import CharacterCard from './CharacterCard';
 import CharacterDownload from './CharacterDownload';
 import CharacterPreview from '@/components/character/CharacterPreview';
+import { portraits, resolveAppearance } from '@/lib/character/appearance';
 import { useWalletState } from '@/hooks/useWalletState';
 import { classes, defaultDraft, draftKey, outfits, parseDraft, personalities, species, type OutlawDraft } from '@/lib/profile/draft';
 
@@ -50,6 +51,8 @@ function DraftEditor({ accountId, dedicated }: { accountId?: string; dedicated: 
     } catch { setSaved('Could not save locally: browser storage is unavailable or full. Edits remain for this visit only.'); }
   }
 
+  const appearance = resolveAppearance(draft);
+
   return <>
     <section id="guild" className={dedicated ? "guild my-outlaw" : "guild"}>
       <p className="eyebrow">CHAPTER II · ASSEMBLE THE GUILD</p>
@@ -57,12 +60,19 @@ function DraftEditor({ accountId, dedicated }: { accountId?: string; dedicated: 
         <p className="identity-mode">{accountId ? 'CONNECTED · ACCOUNT-ONLY' : 'DISCONNECTED · UNCONNECTED DRAFT'}</p>
         {loaded && !hasDraft && <div className="identity-empty"><strong>Your outlaw story is unwritten.</strong><p>No saved draft {accountId ? 'for this account on this browser' : 'in this tab'} yet. Start with the sample below and make it yours.</p></div>}
       </> : <h2>CREATE YOUR OUTLAW</h2>}
-      <p>{dedicated ? "Edit your local identity and carry a Guild Passport preview. No wallet is required; connection only selects a separate local draft." : "Choose your identity and preview your WANTED poster. Wallet connection is optional. Character artwork is assembled locally; guild registration is not active."}</p>
+      <p>{dedicated ? "Edit your local identity and carry a Guild Passport preview. No wallet is required; connection only selects a separate local draft." : "Choose your identity and preview your WANTED poster. Wallet connection is optional. Your selected artwork follows you from poster to passport; guild registration is not active."}</p>
       <a href={dedicated ? "#passport-title" : "#profile"} className="profile-inline-link">{dedicated ? "PREVIEW GUILD PASSPORT ↓" : "VIEW YOUR OUTLAW PROFILE ↓"}</a>
-      <p className="character-art-note">Illustrated character system: original local vector prototypes. Final painted, cinematic character artwork is still pending; this is not an AI image-generation service.</p>
-      <div className="builder-stage"><CharacterPreview draft={draft} large /><div className="builder-stage-copy"><p className="eyebrow">CHARACTER CREATOR 2.0</p><h2>BUILD YOUR LEGEND.</h2><p>Choose a species, equip a class and layer your worn outfit. Every selection updates the illustration and passport.</p><p className="note">Your original drafts and options are preserved. Nothing is minted or registered.</p></div></div>
-      <div className="creator">
+      <p className="character-art-note">Cinematic collection · {portraits.some(asset => asset.status === 'ready') ? 'select portraits available' : 'artwork pending'}. Unsupported combinations use clearly labelled vector prototypes. Cinematic class and outfit changes require their own artwork.</p>
+      <div className="builder-stage cinematic-builder">
+        <div className="portrait-pane">
+          <p className="eyebrow">THE OUTLAW CHRONICLES · CHARACTER STUDIO</p>
+          <CharacterPreview draft={draft} large />
+          <p className="portrait-identity">{draft.name || 'UNKNOWN OUTLAW'}</p>
+          <p className="portrait-story">{draft.outfit} / {draft.personality}</p>
+          <div className="art-availability" role="status"><strong>{appearance.kind === 'cinematic' ? 'PORTRAIT EQUIPPED' : 'CINEMATIC PORTRAIT PENDING'}</strong><p>{appearance.note}</p></div>
+        </div>
         <div className="controls" aria-busy={!loaded}>
+          <div className="studio-heading"><p className="eyebrow">FORGE YOUR IDENTITY</p><h2>BUILD YOUR LEGEND.</h2><p>Choose your origin, calling and worn attire. Your story starts here.</p></div>
           <label>YOUR OUTLAW NAME<input ref={input} maxLength={32} value={draft.name} disabled={!loaded} onChange={event => update('name', event.target.value)} /></label>
           <label>YOUR CLASS<select value={draft.class} disabled={!loaded} onChange={event => update('class', event.target.value as OutlawDraft['class'])}>{classes.map(value => <option key={value}>{value}</option>)}</select></label>
           <label>YOUR SPECIES<select value={draft.species} disabled={!loaded} onChange={event => update('species', event.target.value as OutlawDraft['species'])}>{species.map(value => <option key={value}>{value}</option>)}</select></label>
@@ -72,6 +82,8 @@ function DraftEditor({ accountId, dedicated }: { accountId?: string; dedicated: 
           <p className="note" role="status">{saved}</p>
           <p className="note">Character preview only: no registration, authentication or minting. Wallet connection is optional.</p>
         </div>
+      </div>
+      <div className="creator cinematic-keepsakes">
         {dedicated ? <><div className="poster-group"><div className="poster"><div className="wanted">WANTED</div><CharacterPreview draft={draft} /><h3>{draft.name || 'UNKNOWN OUTLAW'}</h3><p>{draft.class} · {draft.species} · {draft.outfit}</p><p>{draft.personality} · LOCAL PREVIEW / NOT REGISTERED</p></div><CharacterDownload draft={draft} /></div><CharacterCard draft={draft} accountId={accountId} /></> : <div className="poster-group"><div className="poster">
           <div className="wanted">WANTED</div>
           <CharacterPreview draft={draft} />

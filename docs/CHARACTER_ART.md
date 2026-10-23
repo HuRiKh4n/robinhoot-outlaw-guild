@@ -37,3 +37,7 @@ No schema or storage key was changed. Existing options remain available, with Be
 Browser tests verify distinct SVG sources for every species/class/outfit, actual PNG pixel changes for species/equipment/clothing, equality between the downloaded PNG and displayed passport canvas, shared poster/profile sources, legacy drafts, keyboard use and responsive layouts. Existing wallet permission, account-switching, reload, disconnect and account-isolation tests remain in place.
 
 Vector art uses browser-native SVG/canvas with no new package or paid API. It needs visual/artist review in addition to automated tests. Physical Android download/share and live Meteor handoff remain manual acceptance checks. Existing upstream dependency advisories remain documented separately in METEOR_REVIEW.md.
+
+## Phase 5 follow-up
+
+The vector work above remains an explicitly labelled fallback. The new cinematic catalogue and shared resolver are documented in [CINEMATIC_ASSETS.md](CINEMATIC_ASSETS.md). Supplied Wolf Ranger and UI-reference files are missing, so there are zero ready cinematic portraits. The pipeline does not treat the mascot or a vector recreation as the requested Wolf artwork. New production entries require exact species/class/outfit coverage and real same-origin PNG files.
