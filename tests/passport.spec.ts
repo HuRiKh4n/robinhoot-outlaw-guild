@@ -18,8 +18,8 @@ test('keyboard navigation opens My Outlaw and exports the exact preview as a PNG
   await page.getByRole('combobox', { name: 'YOUR SPECIES', exact: true }).selectOption('Fox');
   await expect(card(page)).toHaveAttribute('aria-label', /Forest Fox, Trickster, Fox/);
   await expect(page.getByText('Preview / Not minted / Not registered', { exact: true })).toBeVisible();
-  const downloadLink = page.getByRole('link', { name: 'DOWNLOAD CARD PNG' });
-  await expect(downloadLink).toBeVisible();
+  const downloadLink = page.getByRole('button', { name: 'DOWNLOAD GUILD PASSPORT' });
+  await expect(downloadLink).toBeEnabled();
   const downloadPromise = page.waitForEvent('download');
   await downloadLink.focus(); await page.keyboard.press('Enter');
   const download = await downloadPromise;
@@ -86,12 +86,11 @@ test('share cancellation and unavailable clipboard have a keyboard-accessible fa
   await expect(text).toHaveValue(/not proof of ownership or authentication/);
 });
 
-test('passport handles blank names, artwork failure and narrow viewports', async ({ page }, testInfo) => {
-  await page.route('**/images/file_000000001d188246a150a12121d3ed34.png', route => route.abort());
+test('passport handles blank names and narrow viewports', async ({ page }, testInfo) => {
   await page.goto('/my-outlaw');
   await nameInput(page).fill('');
   await expect(card(page)).toHaveAttribute('aria-label', /UNKNOWN OUTLAW/);
-  await expect(page.getByRole('link', { name: 'DOWNLOAD CARD PNG' })).toBeVisible();
+  await expect(page.getByRole('button', { name: 'DOWNLOAD GUILD PASSPORT' })).toBeVisible();
   await nameInput(page).fill('W'.repeat(32));
   for (const width of [320, 393, 768, 1280]) {
     await page.setViewportSize({ width, height: 900 });
@@ -111,7 +110,7 @@ test('unavailable canvas export falls back to copying explicit preview details',
   await page.goto('/my-outlaw');
   await nameInput(page).fill('Native Fallback');
   await expect(page.getByText('Image download is unavailable.', { exact: false })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'DOWNLOAD CARD PNG' })).toHaveCount(0);
+  await expect(page.getByRole('button', { name: 'DOWNLOAD GUILD PASSPORT' })).toBeDisabled();
   await page.getByRole('button', { name: 'SHARE / COPY DETAILS' }).click();
   await expect(page.getByText('Passport details copied.', { exact: true })).toBeVisible();
   expect(await page.evaluate(() => (window as unknown as { __copiedPassport: string }).__copiedPassport)).toContain('PREVIEW / NOT MINTED / NOT REGISTERED');

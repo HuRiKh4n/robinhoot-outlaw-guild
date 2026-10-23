@@ -2,8 +2,9 @@
 
 import { useEffect, useRef, useState } from 'react';
 import type { OutlawDraft } from '@/lib/profile/draft';
+import { characterImage } from '@/lib/character/render';
+import DownloadPngButton from './DownloadPngButton';
 
-const foxPath = '/images/file_000000001d188246a150a12121d3ed34.png';
 const shortAccount = (value: string) => value.length > 24 ? `${value.slice(0, 10)}…${value.slice(-9)}` : value;
 
 /** The preview and PNG share this canvas, with no external font or rendering library. */
@@ -27,11 +28,11 @@ export default function CharacterCard({ draft, accountId }: { draft: OutlawDraft
     setStatus('');
     setManual(false);
     const image = new Image();
-    async function render(fox?: HTMLImageElement) {
+    async function render(character: HTMLImageElement) {
       if (!active || !canvas.current) return;
       const ctx = canvas.current.getContext('2d');
       if (!ctx) { setFailed(true); return; }
-      drawPassport(ctx, draft, displayedAccount, fox);
+      drawPassport(ctx, draft, displayedAccount, character);
       try {
         const blob = await new Promise<Blob | null>(resolve => canvas.current?.toBlob(resolve, 'image/png'));
         if (!active) return;
@@ -41,8 +42,8 @@ export default function CharacterCard({ draft, accountId }: { draft: OutlawDraft
       } catch { if (active) setFailed(true); }
     }
     image.onload = () => { void render(image); };
-    image.onerror = () => { void render(); };
-    image.src = foxPath;
+    image.onerror = () => { if (active) setFailed(true); };
+    image.src = characterImage(draft);
     return () => { active = false; image.onload = null; image.onerror = null; if (url) URL.revokeObjectURL(url); };
   // The fingerprint represents every value painted onto the image.
   }, [fingerprint]);
@@ -66,14 +67,15 @@ export default function CharacterCard({ draft, accountId }: { draft: OutlawDraft
     <div className="passport-layout">
       <div className="passport-art">
         <canvas ref={canvas} width={840} height={1120} role="img" aria-label={`Guild Passport preview for ${draft.name || 'UNKNOWN OUTLAW'}, ${draft.class}, ${draft.species}, ${draft.outfit}, ${draft.personality}${displayedAccount ? `, NEAR ${displayedAccount}` : ''}. Preview, not minted, not registered.`}>Your passport identity is listed alongside this image.</canvas>
+        <DownloadPngButton url={currentAsset?.url} filename="robinhoot-passport-preview.png" label="DOWNLOAD GUILD PASSPORT" failed={failed} />
       </div>
       <div className="passport-tools">
         <h3>YOUR OUTLAW, ON A CARD.</h3>
         <p className="passport-flags">Preview / Not minted / Not registered</p>
         <dl><div><dt>NAME</dt><dd>{draft.name || 'UNKNOWN OUTLAW'}</dd></div><div><dt>IDENTITY</dt><dd>{draft.class} · {draft.species}</dd></div><div><dt>OUTFIT</dt><dd>{draft.outfit}</dd></div><div><dt>PERSONALITY</dt><dd>{draft.personality}</dd></div></dl>
         {accountId && <label className="passport-account-option"><input type="checkbox" checked={includeAccount} onChange={event => setIncludeAccount(event.target.checked)} />Include shortened NEAR account on the card and shared text</label>}
-        <p>Uses the original RobinHoot fox artwork as a guild motif. Your choices change the identity details; no new character artwork is generated.</p>
-        {currentAsset ? <a className="button passport-download" href={currentAsset.url} download="robinhoot-passport-preview.png">DOWNLOAD CARD PNG ↓</a> : <p className="note" role="status">{failed ? 'Image download is unavailable. Share or copy your details instead.' : 'Preparing your card image…'}</p>}
+        <p>Uses the same selected species, class equipment and outfit layers as your live preview. Original vector prototype artwork; final painted assets are pending. No AI generation service is connected.</p>
+        {failed && <p className="note">Image download is unavailable. Share or copy your details instead.</p>}
         <button type="button" className="button passport-share" onClick={() => void share()}>SHARE / COPY DETAILS ↗</button>
         <p className="note" role="status">{status}</p>
         {manual && <label className="passport-copy-label">Passport text to copy<textarea ref={manualCopy} readOnly value={shareText} rows={8} /></label>}
@@ -83,15 +85,14 @@ export default function CharacterCard({ draft, accountId }: { draft: OutlawDraft
   </section>;
 }
 
-function drawPassport(ctx: CanvasRenderingContext2D, draft: OutlawDraft, account: string | undefined, fox?: HTMLImageElement) {
+export function drawPassport(ctx: CanvasRenderingContext2D, draft: OutlawDraft, account: string | undefined, character: HTMLImageElement, title: 'GUILD PASSPORT' | 'WANTED' = 'GUILD PASSPORT') {
   ctx.fillStyle = '#dec28d'; ctx.fillRect(0, 0, 840, 1120);
   ctx.strokeStyle = '#a77c4b'; ctx.lineWidth = 14; ctx.strokeRect(14, 14, 812, 1092);
   ctx.strokeStyle = '#8e6b43'; ctx.lineWidth = 2; ctx.strokeRect(32, 32, 776, 1056);
   ctx.textAlign = 'center'; ctx.fillStyle = '#402619'; ctx.font = 'bold 24px sans-serif'; ctx.fillText('ROBINHOOT · OUTLAW GUILD', 420, 79);
-  ctx.font = 'bold 51px serif'; ctx.fillText('GUILD PASSPORT', 420, 143);
-  ctx.fillStyle = '#000000'; ctx.fillRect(65, 173, 710, 345);
-  if (fox) { const height = 330; const width = height * fox.width / fox.height; ctx.drawImage(fox, (840 - width) / 2, 181, width, height); }
-  else { ctx.font = '140px sans-serif'; ctx.fillText('🦊', 420, 410); }
+  ctx.font = 'bold 51px serif'; ctx.fillText(title, 420, 143);
+  ctx.fillStyle = '#17201b'; ctx.fillRect(65, 173, 710, 345);
+  ctx.drawImage(character, 286, 173, 267, 345);
   ctx.fillStyle = '#a93624'; ctx.font = 'bold 20px sans-serif'; ctx.fillText('CHARACTER CARD · LOCAL DRAFT', 420, 560);
   ctx.fillStyle = '#402619';
   const name = draft.name || 'UNKNOWN OUTLAW';

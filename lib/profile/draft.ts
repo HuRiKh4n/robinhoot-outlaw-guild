@@ -1,5 +1,5 @@
-export const species = ['Raccoon', 'Wolf', 'Rabbit', 'Fox', 'Badger', 'Owl'] as const;
-export const classes = ['Scout', 'Ranger', 'Trickster', 'Guardian'] as const;
+export const species = ['Raccoon', 'Wolf', 'Rabbit', 'Fox', 'Badger', 'Owl', 'Bear'] as const;
+export const classes = ['Scout', 'Ranger', 'Trickster', 'Guardian', 'Rogue', 'Warrior', 'Mage'] as const;
 export const outfits = ['Patched Cloak', 'Ragged Hood', 'Worn Leather Vest'] as const;
 export const personalities = ['Cunning', 'Fearless', 'Chaotic', 'Loyal'] as const;
 export interface OutlawDraft {
