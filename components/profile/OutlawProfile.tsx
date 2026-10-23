@@ -3,10 +3,9 @@
 import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import CharacterCard from './CharacterCard';
+import CharacterPreview from '@/components/character/CharacterPreview';
 import { useWalletState } from '@/hooks/useWalletState';
 import { classes, defaultDraft, draftKey, outfits, parseDraft, personalities, species, type OutlawDraft } from '@/lib/profile/draft';
-
-const portraits = { Raccoon: '🦝', Wolf: '🐺', Rabbit: '🐰', Fox: '🦊', Badger: '🦡', Owl: '🦉' };
 
 export default function OutlawProfile({ dedicated = false }: { dedicated?: boolean }) {
   const { account, ready } = useWalletState();
@@ -50,8 +49,10 @@ function DraftEditor({ accountId, dedicated }: { accountId?: string; dedicated: 
         <p className="identity-mode">{accountId ? 'CONNECTED · ACCOUNT-ONLY' : 'DISCONNECTED · UNCONNECTED DRAFT'}</p>
         {loaded && !hasDraft && <div className="identity-empty"><strong>Your outlaw story is unwritten.</strong><p>No saved draft {accountId ? 'for this account on this browser' : 'in this tab'} yet. Start with the sample below and make it yours.</p></div>}
       </> : <h2>CREATE YOUR OUTLAW</h2>}
-      <p>{dedicated ? "Edit your local identity and carry a Guild Passport preview. No wallet is required; connection only selects a separate local draft." : "Choose your identity and preview your WANTED poster. Wallet connection is optional. AI image generation and guild registration are coming in a later release."}</p>
+      <p>{dedicated ? "Edit your local identity and carry a Guild Passport preview. No wallet is required; connection only selects a separate local draft." : "Choose your identity and preview your WANTED poster. Wallet connection is optional. Character artwork is assembled locally; guild registration is not active."}</p>
       <a href={dedicated ? "#passport-title" : "#profile"} className="profile-inline-link">{dedicated ? "PREVIEW GUILD PASSPORT ↓" : "VIEW YOUR OUTLAW PROFILE ↓"}</a>
+      <p className="character-art-note">Illustrated character system: original local vector prototypes. Final painted, cinematic character artwork is still pending; this is not an AI image-generation service.</p>
+      <div className="builder-stage"><CharacterPreview draft={draft} large /><div className="builder-stage-copy"><p className="eyebrow">CHARACTER CREATOR 2.0</p><h2>BUILD YOUR LEGEND.</h2><p>Choose a species, equip a class and layer your worn outfit. Every selection updates the illustration and passport.</p><p className="note">Your original drafts and options are preserved. Nothing is minted or registered.</p></div></div>
       <div className="creator">
         <div className="controls" aria-busy={!loaded}>
           <label>YOUR OUTLAW NAME<input ref={input} maxLength={32} value={draft.name} disabled={!loaded} onChange={event => update('name', event.target.value)} /></label>
@@ -60,11 +61,11 @@ function DraftEditor({ accountId, dedicated }: { accountId?: string; dedicated: 
           <label>YOUR OUTFIT<select value={draft.outfit} disabled={!loaded} onChange={event => update('outfit', event.target.value as OutlawDraft['outfit'])}>{outfits.map(value => <option key={value}>{value}</option>)}</select></label>
           <label>YOUR PERSONALITY<select value={draft.personality} disabled={!loaded} onChange={event => update('personality', event.target.value as OutlawDraft['personality'])}>{personalities.map(value => <option key={value}>{value}</option>)}</select></label>
           <p className="note" role="status">{saved}</p>
-          <p className="note">⚒ Character preview only: AI generation and registration are not active yet. Wallet connection is optional.</p>
+          <p className="note">Character preview only: no registration, authentication or minting. Wallet connection is optional.</p>
         </div>
         {dedicated ? <CharacterCard draft={draft} accountId={accountId} /> : <div className="poster">
           <div className="wanted">WANTED</div>
-          <div className="portrait" role="img" aria-label={draft.species}>{portraits[draft.species]}</div>
+          <CharacterPreview draft={draft} />
           <h3>{draft.name || 'UNKNOWN OUTLAW'}</h3>
           <p>{draft.class.toUpperCase()} · {draft.species.toUpperCase()} · {draft.outfit.toUpperCase()}</p>
           <p>KNOWN FOR: {draft.personality.toUpperCase()} MISCHIEF</p>
@@ -80,7 +81,7 @@ function DraftEditor({ accountId, dedicated }: { accountId?: string; dedicated: 
         <span className="prototype-badge">LOCAL PROTOTYPE</span>
       </div>
       <div className="profile-card">
-        <div className="profile-emblem" role="img" aria-label={`${draft.species} character`}>{portraits[draft.species]}</div>
+        <div className="profile-emblem"><CharacterPreview draft={draft} /></div>
         <div className="profile-details">
           <p className="eyebrow">{accountId ? 'ACCOUNT DRAFT · MAINNET' : 'UNCONNECTED DRAFT MODE'}</p>
           <h3>{draft.name || 'UNKNOWN OUTLAW'}</h3>

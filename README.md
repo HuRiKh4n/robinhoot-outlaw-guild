@@ -16,7 +16,7 @@ Open http://localhost:3000. No environment variables or API keys are needed.
 ## Implemented
 
 - Original landing page, manifesto, five-chapter roadmap and responsive design
-- Local character creator with class, species, outfit, personality and emoji poster previews
+- Local character creator with class, species, outfit, personality and layered vector illustration previews
 - Outlaw Profile preview/edit section, with browser-local drafts separated by mainnet wallet account
 - Separate tab-persistent unconnected draft mode
 - Mainnet account-only connection through the official Meteor SDK 3.24.0
@@ -40,13 +40,19 @@ The mobile wallet header truncates account IDs on one line while exposing the fu
 
 Open **My Outlaw / Passport** from the hero, navigation or profile section, or visit `/my-outlaw`. This dedicated view reuses the same creator options and versioned local draft keys as the landing page. It distinguishes a new/sample identity, account-connected mode and a separate disconnected draft. Changes follow you between the landing creator and My Outlaw view.
 
-The Character Card / Guild Passport uses the original RobinHoot fox artwork and your selected identity details. It is explicitly marked **Preview / Not minted / Not registered**, including inside the exported image. The fox is a fixed guild motif, not a generated image of the selected species. It grants no membership, authentication, rewards or on-chain status.
+The Character Card / Guild Passport uses the selected character composition and identity details. It is explicitly marked **Preview / Not minted / Not registered**, including inside the exported image. The original fox mascot remains on the landing page; creator artwork is composed from local illustrated layers. It grants no membership, authentication, rewards or on-chain status.
 
-**Download Card PNG** exports the same 840×1120 browser canvas shown in the preview. It uses only the existing same-origin artwork and system fonts, with no new dependency, remote renderer or backend. The shortened NEAR account is hidden by default; opt in to include it in both image and shared text. Account changes reset that choice and discard/revoke the previous image URL. Edits invalidate the previous download until its replacement is ready.
+**Download Card PNG** exports the same 840×1120 browser canvas shown in the preview. It uses only the self-contained local SVG illustrations and system fonts, with no new dependency, remote renderer or backend. The shortened NEAR account is hidden by default; opt in to include it in both image and shared text. Account changes reset that choice and discard/revoke the previous image URL. Edits invalidate the previous download until its replacement is ready.
 
-**Share / Copy Details** uses the browser's native share sheet where available, then the clipboard. Cancellation is harmless. If clipboard access is denied, a focused, selected text field supports manual copying. If canvas/image export is unavailable, the identity details and share/copy flow still work. If the original artwork fails to load, the card uses a fox emoji fallback. System-font and emoji appearance vary by device; mobile browsers may open the PNG rather than saving it directly. Shared text always carries the prototype and ownership disclaimers. Sharing is initiated only by the user's button press and never authenticates a wallet.
+**Share / Copy Details** uses the browser's native share sheet where available, then the clipboard. Cancellation is harmless. If clipboard access is denied, a focused, selected text field supports manual copying. If canvas/image export is unavailable, the identity details and share/copy flow still work. If the character illustration fails to render, PNG download is unavailable and the text share/copy flow remains available; it does not silently substitute an emoji or the mascot. System-font and emoji appearance vary by device; mobile browsers may open the PNG rather than saving it directly. Shared text always carries the prototype and ownership disclaimers. Sharing is initiated only by the user's button press and never authenticates a wallet.
 
 Phase 3 adds no dependencies or wallet operations. The Meteor client, keystore guard, wallet provider and public assets are unchanged. Existing upstream dependency advisories and physical Android/Meteor acceptance limitations still apply.
+
+## Phase 4: Character Creator 2.0
+
+The large live illustration, WANTED poster, profile and downloadable passport now derive their appearance from the same reusable species, clothing and equipment layers. Fox, Wolf, Raccoon, Bear, Rabbit, Badger and Owl are supported. Ranger, Rogue, Warrior, Mage and all previous classes have distinct equipment; each existing outfit changes visible clothing. Existing choices, fields and account/guest draft keys are retained, including legacy animal/trait reads. No destructive data migration is needed.
+
+**Visual status:** functional local vector illustration prototypes are implemented. Final cinematic painted artwork, richer species anatomy and production clothing/equipment polish still require an artist. This limitation is stated in the creator UI; do not treat the final production artwork requirement as complete. See [the art status and layer contract](docs/CHARACTER_ART.md) for the exact completed/missing work. This is not an AI-generation service and adds no paid API or package.
 
 ## Connection security
 

@@ -86,8 +86,7 @@ test('share cancellation and unavailable clipboard have a keyboard-accessible fa
   await expect(text).toHaveValue(/not proof of ownership or authentication/);
 });
 
-test('passport handles blank names, artwork failure and narrow viewports', async ({ page }, testInfo) => {
-  await page.route('**/images/file_000000001d188246a150a12121d3ed34.png', route => route.abort());
+test('passport handles blank names and narrow viewports', async ({ page }, testInfo) => {
   await page.goto('/my-outlaw');
   await nameInput(page).fill('');
   await expect(card(page)).toHaveAttribute('aria-label', /UNKNOWN OUTLAW/);

@@ -92,3 +92,19 @@ input:focus-visible, textarea:focus-visible { outline: 3px solid #df9950; outlin
 @media(max-width:850px) { .my-outlaw .creator { grid-template-columns: minmax(0,1fr); } }
 @media(min-width:1500px) { .my-outlaw .creator { grid-template-columns: minmax(260px,1fr) minmax(0,1.4fr); } .passport-layout { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 22px; align-items: start; } .passport-tools { margin-top: 0; } }
 .identity-disclaimer-title { font-size: clamp(30px,4vw,46px); margin: 0 0 20px; }
+
+/* Shared character layers are used in all previews and the PNG compositor. */
+.character-preview { margin: 0; min-width: 0; width: 100%; }
+.character-preview img { display: block; width: 100%; height: auto; max-height: 520px; object-fit: contain; }
+.builder-stage { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); align-items: center; gap: 40px; padding: 28px; margin-top: 25px; background: #20271f; border: 1px solid #766143; }
+.builder-stage h2 { font-size: clamp(32px,5vw,58px); }
+.builder-stage-copy p { line-height: 1.8; color: #c7bba2; }
+.character-preview-large { max-width: 480px; justify-self: center; }
+.character-preview figcaption { display: grid; gap: 8px; padding: 18px; text-align: center; }
+.character-preview figcaption strong { font: 700 25px Oswald,sans-serif; color: #e0ba7b; }
+.character-preview figcaption span, .character-art-note { font-size: 12px; line-height: 1.7; color: #c3b59a; }
+.character-art-note { max-width: 850px; border-left: 3px solid #bd874b; padding-left: 16px; }
+.poster > .character-preview { max-width: 300px; margin: 18px auto; }
+.profile-emblem { padding: 15px; background: #20271f; }
+.controls select { min-height: 48px; }
+@media(max-width:650px) { .builder-stage { grid-template-columns: minmax(0,1fr); gap: 10px; padding: 14px; } .builder-stage-copy { padding: 6px 12px; } .builder-stage-copy h2 { margin: 10px 0; } }
