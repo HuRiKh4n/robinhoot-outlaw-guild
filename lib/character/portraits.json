@@ -142,5 +142,181 @@
     "credit": "Original artwork uploaded by repository owner HuRiKh4n in commit deb7bc8; supplied for RobinHoot integration.",
     "outfit": "Patched Cloak",
     "fallback": true
+  },
+  {
+    "id": "fox-mage-arcane-robes",
+    "species": "Fox",
+    "class": "Mage",
+    "outfit": "Arcane Robes",
+    "status": "ready",
+    "src": "/characters/fox/mage/arcane-robes.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "fox-mage-dark-sorcerer",
+    "species": "Fox",
+    "class": "Mage",
+    "outfit": "Dark Sorcerer",
+    "status": "ready",
+    "src": "/characters/fox/mage/dark-sorcerer.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "fox-mage-mystic-hood",
+    "species": "Fox",
+    "class": "Mage",
+    "outfit": "Mystic Hood",
+    "status": "ready",
+    "src": "/characters/fox/mage/mystic-hood.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "fox-ranger-forest-hood",
+    "species": "Fox",
+    "class": "Ranger",
+    "outfit": "Forest Hood",
+    "status": "ready",
+    "src": "/characters/fox/ranger/forest-hood.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "fox-ranger-leather-vest",
+    "species": "Fox",
+    "class": "Ranger",
+    "outfit": "Leather Vest",
+    "status": "ready",
+    "src": "/characters/fox/ranger/leather-vest.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "fox-ranger-patched-cloak",
+    "species": "Fox",
+    "class": "Ranger",
+    "outfit": "Patched Cloak",
+    "status": "ready",
+    "src": "/characters/fox/ranger/patched-cloak.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "fox-rogue-assassin-gear",
+    "species": "Fox",
+    "class": "Rogue",
+    "outfit": "Assassin Gear",
+    "status": "ready",
+    "src": "/characters/fox/rogue/assassin-gear.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "fox-rogue-shadow-hood",
+    "species": "Fox",
+    "class": "Rogue",
+    "outfit": "Shadow Hood",
+    "status": "ready",
+    "src": "/characters/fox/rogue/shadow-hood.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "fox-rogue-thief-cloak",
+    "species": "Fox",
+    "class": "Rogue",
+    "outfit": "Thief Cloak",
+    "status": "ready",
+    "src": "/characters/fox/rogue/thief-cloak.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "fox-scout-wanderer-pack",
+    "species": "Fox",
+    "class": "Scout",
+    "outfit": "Wanderer Pack",
+    "status": "ready",
+    "src": "/characters/fox/scout/wanderer-pack.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "fox-scout-dust-hood",
+    "species": "Fox",
+    "class": "Scout",
+    "outfit": "Dust Hood",
+    "status": "ready",
+    "src": "/characters/fox/scout/dust-hood.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "fox-trickster-card-sharp",
+    "species": "Fox",
+    "class": "Trickster",
+    "outfit": "Card Sharp",
+    "status": "ready",
+    "src": "/characters/fox/trickster/card-sharp.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "fox-trickster-jester-motley",
+    "species": "Fox",
+    "class": "Trickster",
+    "outfit": "Jester Motley",
+    "status": "ready",
+    "src": "/characters/fox/trickster/jester-motley.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "fox-warrior-battle-armor",
+    "species": "Fox",
+    "class": "Warrior",
+    "outfit": "Battle Armor",
+    "status": "ready",
+    "src": "/characters/fox/warrior/battle-armor.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "fox-warrior-berserker",
+    "species": "Fox",
+    "class": "Warrior",
+    "outfit": "Berserker",
+    "status": "ready",
+    "src": "/characters/fox/warrior/berserker.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "fox-warrior-royal-guard",
+    "species": "Fox",
+    "class": "Warrior",
+    "outfit": "Royal Guard",
+    "status": "ready",
+    "src": "/characters/fox/warrior/royal-guard.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
   }
 ]
