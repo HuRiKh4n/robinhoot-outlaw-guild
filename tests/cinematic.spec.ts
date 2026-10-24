@@ -126,3 +126,16 @@ test('cinematic studio stays usable at narrow Android and desktop sizes', async 
   await page.setViewportSize({ width: 393, height: 851 });
   await page.locator('.builder-stage').screenshot({ path: testInfo.outputPath('cinematic-mobile-foundation.png') });
 });
+
+test('all sixteen Fox variants, including Scout and Trickster, show their own original artwork', async ({ page }) => {
+  const fox = portraits.filter(asset => asset.species === 'Fox' && asset.status === 'ready');
+  expect(fox).toHaveLength(16);
+  await page.goto('/my-outlaw'); await choose(page, 'SPECIES', 'Fox');
+  for (const asset of fox) {
+    await choose(page, 'CLASS', asset.class); await choose(page, 'OUTFIT', asset.outfit!);
+    await expect(page.locator('.character-preview-large img')).toHaveAttribute('src', asset.src);
+    await expect(page.locator('.poster')).toContainText(asset.outfit!.toUpperCase());
+  }
+  await choose(page, 'SPECIES', 'Wolf'); await choose(page, 'CLASS', 'Trickster');
+  await expect(page.locator('.character-preview-large img')).toHaveCount(0);
+});

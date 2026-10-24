@@ -109,11 +109,11 @@ test('malformed local data cannot create membership or replace allowed creator c
   })));
   await page.goto('/');
   await expect(nameInput(page)).toHaveValue('Local Imposter');
-  await selected(page, 'CLASS', 'Scout');
-  await selected(page, 'SPECIES', 'Raccoon');
+  await selected(page, 'CLASS', 'Ranger');
+  await selected(page, 'SPECIES', 'Wolf');
   await expect(page.getByRole('region', { name: 'OUTLAW PROFILE', exact: true })).toContainText('do not establish reputation or membership');
   await nameInput(page).fill('Valid Local Draft');
-  expect(await page.evaluate(() => JSON.parse(sessionStorage.getItem('robinhoot:outlaw-draft')!))).toEqual({ name: 'Valid Local Draft', class: 'Scout', species: 'Raccoon', outfit: 'Patched Cloak', personality: 'Cunning' });
+  expect(await page.evaluate(() => JSON.parse(sessionStorage.getItem('robinhoot:outlaw-draft')!))).toEqual({ name: 'Valid Local Draft', class: 'Ranger', species: 'Wolf', outfit: 'Patched Cloak', personality: 'Cunning' });
 });
 
 test('explicit guest copy preserves the full character across a new browser session without another wallet request', async ({ page, context, browser }, testInfo) => {

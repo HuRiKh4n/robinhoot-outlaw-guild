@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "validate:art": "node scripts/validate-character-assets.mjs",
+    "register:art": "node scripts/register-character-art.mjs",
     "test:assets": "node --test scripts/validate-character-assets.test.mjs",
     "prebuild": "npm run validate:art",
     "dev": "next dev",

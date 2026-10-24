@@ -20,6 +20,33 @@ All twelve approved originals are now present at the exact case-sensitive paths 
 
 These exact paths are now registered as `ready` with their actual dimensions (1030×1536; Mystic Hood and Rogue originals 1031×1536; Warrior originals 1024×1536) and repository-owner source attribution. The creator uses all twelve original images for their corresponding selections. No image was modified during activation. Do not upload a renamed Ranger image as Mage or a different outfit. The lower-priority same-outfit fallback remains the original `public/characters/wolf/ranger/portrait.png` from deb7bc8: 1030×1536, 1,848,193 bytes; SHA-256 `bb00b8a3d99fd1d83189b54f9718c1daf4cd744230c33dddc16e914fc369127e`. It is unchanged and explicitly registered as the same-outfit Patched Cloak fallback.
 
+## Fox roster (sixteen originals) and class changes
+
+Sixteen approved original Fox PNGs (1024×1536) were added unchanged under `public/characters/fox/<class>/<outfit>.png`: all twelve Ranger/Mage/Rogue/Warrior outfits plus two new Scout outfits (Wanderer Pack, Dust Hood) and two new Trickster outfits (Jester Motley, Card Sharp). Registering these outfits gives Scout and Trickster their own cinematic wardrobes; for species without that art (e.g. Wolf Scout) the creator still shows the explicit unavailable state.
+
+Guardian has no artwork or wardrobe yet and is no longer offered. Old drafts that stored `Guardian` read as `Warrior` (outfit normalized to its first valid choice) without rewriting storage. The default new character is Wolf / Ranger / Patched Cloak so first-time visitors see real artwork.
+
+New artwork can be dropped at the exact path and registered with `npm run register:art`, which records real PNG dimensions and `status: ready`, activates matching pending entries and never modifies images. Prompts for the remaining 84 combinations are in `docs/CHARACTER_PROMPTS.md`.
+
+| Combination | SHA-256 |
+| --- | --- |
+| Fox / Ranger / Patched Cloak | `6f476f23bfaf4f8de9c689add5e2b1814aebccedd43d1524bf0cdb63391c7163` |
+| Fox / Ranger / Leather Vest | `e1858823455da48fababd9b16152a777eb869fe54399f341d02b70fa2ca1355b` |
+| Fox / Ranger / Forest Hood | `ddfd328f255612c8fe2efda98174a1c5e0f75332ee76a3f3ff436f636cb28d38` |
+| Fox / Mage / Arcane Robes | `bf7ea08bf0925e7f6b031309d02b932188cc457e9ac93a20358350dc86c3ba17` |
+| Fox / Mage / Dark Sorcerer | `ab0d7eca80f1968e7e6c729dde2be95f23245c7bad616c71144f5032e74d54ad` |
+| Fox / Mage / Mystic Hood | `926a39065877277f6c1728c12d16ae842ca13c7abcf9311c96120a2d3285cc72` |
+| Fox / Rogue / Shadow Hood | `4d4453b695c010a67662ffb6382346895c3362ef2013c466a7573679b340d692` |
+| Fox / Rogue / Assassin Gear | `e282e3e2fb82d60bcd271b9c0c429ed36685570e89ef4cc01527a1978d1f99c7` |
+| Fox / Rogue / Thief Cloak | `3ac432f30714afe899fb7d84714ea80d760518a1db014b5e23e4d31d13b576ea` |
+| Fox / Warrior / Battle Armor | `c913781602bbb38a1b5fd5da29b7f31dfe9aed5c063db64cda20d73b45da1bc1` |
+| Fox / Warrior / Berserker | `24e46e3087e8d1ad26d1035ae997528536be65c7abca51fd2fefa5edd7415dc0` |
+| Fox / Warrior / Royal Guard | `c3ddbb3461d90a001f3971d603fca832d12ead1cf73aea5cf59f8b26d533f963` |
+| Fox / Scout / Wanderer Pack | `6f200c1022681a35ea0294ae63ef4185b3bf39b7bcfc0b1cc4cd4c53ce3946ed` |
+| Fox / Scout / Dust Hood | `1a0824b622ae78c2bead3671f4072dfb49b4d8e0ea0c5a89386134a2f91b4839` |
+| Fox / Trickster / Jester Motley | `0722893c1dc415caa41a7680ae0ade3f53f99af3f6704ba0a09ebd08798a7c04` |
+| Fox / Trickster / Card Sharp | `f61cdc72ffcda044a8e9413337f75c92a7f7421388b97bd294483d5f575fa398` |
+
 ## Exact selection contract
 
 `resolveAppearance` prefers ready exact species/class/outfit artwork, then an explicitly registered fallback for that **same** combination. It never reuses Ranger for Mage, Rogue or Warrior, nor Patched Cloak for a different outfit. Unsupported choices display a typographic unavailable state, with no SVG/cartoon/emoji replacement. Original unused vector source remains in the repository for historical compatibility but is no longer used by the cinematic creator or exports.
