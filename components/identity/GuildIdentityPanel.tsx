@@ -179,76 +179,82 @@ function IdentityEditor({ active }: { active: RefObject<string | undefined> }) {
       setBusy(false);
     }
   }
+  const sameDraft = Boolean(saved && candidate && JSON.stringify(saved.draft) === JSON.stringify(candidate));
   return (
-    <div className="prototype-notice">
-      <p className="identity-mode">
-        {verified ? "SERVER SESSION VERIFIED" : "NO VERIFIED SERVER SESSION"}
-      </p>
-      <p>
-        Connected account: {account?.accountId ?? "None"}. Account sharing alone
-        is not authentication.
-      </p>
-      <button
-        className="button"
-        disabled={!account || !connection || busy}
-        onClick={() => void authenticate()}
-      >
-        VERIFY WALLET OWNERSHIP
-      </button>
+    <div className="prototype-notice" style={{ display: "grid", gap: 20 }}>
+      <div style={{ display: "grid", gap: 8 }}>
+        <p className="identity-mode" style={{ margin: 0 }}>
+          {verified ? "✓ WALLET VERIFIED" : "WALLET VERIFICATION"}
+        </p>
+        <p style={{ margin: 0, overflowWrap: "anywhere" }}>
+          {account?.accountId ?? "Connect your NEAR wallet to begin"}
+        </p>
+        <p style={{ margin: 0, opacity: 0.8, fontSize: "0.95rem" }}>
+          {verified
+            ? "Your secure Guild session is active."
+            : "Connect and verify your wallet with a free off-chain signature."}
+        </p>
+        {!verified && (
+          <button className="button" disabled={!account || !connection || busy} onClick={() => void authenticate()}>
+            {busy ? "VERIFYING…" : "VERIFY MY WALLET"}
+          </button>
+        )}
+      </div>
       {verified && (
-        <>
-          <button
-            className="button"
-            disabled={busy}
-            onClick={() => void signOut()}
-          >
-            SIGN OUT OF SERVER
-          </button>
-          <h2>Server character</h2>
-          {saved ? (
-            <>
-              <p>Revision {saved.revision}</p>
-              <pre className="identity-review">
-                {JSON.stringify(saved.draft, null, 2)}
-              </pre>
-            </>
+        <section style={{ display: "grid", gap: 16 }}>
+          <div style={{ borderTop: "1px solid rgba(230,208,168,.25)", paddingTop: 18 }}>
+            <p className="eyebrow" style={{ marginBottom: 6 }}>YOUR GUILD PASSPORT</p>
+            <h2 style={{ margin: "0 0 12px" }}>{saved ? saved.draft.name.trim() : "Create your outlaw"}</h2>
+            {saved ? (
+              <>
+                <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 12 }}>
+                  {[saved.draft.species, saved.draft.class, saved.draft.outfit, saved.draft.personality].map((item, index) => (
+                    <span key={index} style={{ border: "1px solid rgba(230,208,168,.35)", padding: "6px 10px", borderRadius: 6, fontSize: "0.9rem" }}>{item}</span>
+                  ))}
+                </div>
+                <p style={{ margin: 0 }}>✓ Saved to your Guild account</p>
+                <p style={{ margin: "4px 0 0", opacity: 0.65, fontSize: "0.85rem" }}>Profile revision {saved.revision} · Off-chain</p>
+              </>
+            ) : (
+              <p>No Guild character saved yet. Create one in My Outlaw, then save it here.</p>
+            )}
+          </div>
+          {!candidate ? (
+            <button className="button" disabled={busy} onClick={reviewLocal}>
+              {saved ? "REVIEW CHARACTER CHANGES" : "SAVE MY CHARACTER TO GUILD"}
+            </button>
           ) : (
-            <p>No server character saved for this verified account.</p>
+            <div style={{ border: "1px solid rgba(230,208,168,.35)", borderRadius: 8, padding: 16, display: "grid", gap: 12 }}>
+              <h3 style={{ margin: 0 }}>Review before saving</h3>
+              <p style={{ margin: 0, fontWeight: 700 }}>{candidate.name.trim()}</p>
+              <p style={{ margin: 0 }}>{candidate.species} · {candidate.class} · {candidate.outfit} · {candidate.personality}</p>
+              {sameDraft ? (
+                <p style={{ margin: 0 }}>This character already matches your saved Guild profile. No update is needed.</p>
+              ) : (
+                <>
+                  <p style={{ margin: 0 }}>{saved ? "This will replace your saved profile and keep a revision history." : "This will create your Guild profile linked to your verified wallet."}</p>
+                  <label className="passport-account-option">
+                    <input type="checkbox" checked={confirmed} onChange={(event) => setConfirmed(event.target.checked)} />
+                    I have reviewed this character and want to save it.
+                  </label>
+                  <button className="button" disabled={!confirmed || busy} onClick={() => void save()}>
+                    {busy ? "SAVING…" : saved ? "SAVE PROFILE CHANGES" : "CONFIRM AND SAVE PROFILE"}
+                  </button>
+                </>
+              )}
+              <button type="button" onClick={() => { setCandidate(undefined); setConfirmed(false); }} style={{ background: "transparent", color: "inherit", border: "1px solid currentColor", padding: "10px 14px", cursor: "pointer" }}>
+                CANCEL
+              </button>
+            </div>
           )}
-          <button className="button" disabled={busy} onClick={reviewLocal}>
-            REVIEW LOCAL DRAFT FOR IMPORT
+          <button type="button" disabled={busy} onClick={() => void signOut()} style={{ justifySelf: "start", background: "transparent", color: "inherit", border: "none", textDecoration: "underline", padding: "8px 0", cursor: "pointer", opacity: 0.8 }}>
+            Sign out of Guild session
           </button>
-        </>
+        </section>
       )}
-      {verified && candidate && (
-        <>
-          <h3>Proposed import</h3>
-          <pre className="identity-review">
-            {JSON.stringify(candidate, null, 2)}
-          </pre>
-          <label className="passport-account-option">
-            <input
-              type="checkbox"
-              checked={confirmed}
-              onChange={(event) => setConfirmed(event.target.checked)}
-            />
-            {saved
-              ? "Replace my existing server character with this reviewed draft. A revision will be retained."
-              : "Create my server character from this reviewed local draft."}
-          </label>
-          <button
-            className="button"
-            disabled={!confirmed || busy}
-            onClick={() => void save()}
-          >
-            CONFIRM IMPORT
-          </button>
-        </>
-      )}
-      <p role="status">{status}</p>
-      <p>
-        Local character data remains in this browser. A server record is not an
-        NFT, guild membership or on-chain identity.
+      {status && <p role="status" style={{ margin: 0 }}>{status}</p>}
+      <p style={{ fontSize: "0.85rem", opacity: 0.75, margin: 0 }}>
+        Guild profiles are stored securely off-chain. No NFT, token transfer or gas fee is required.
       </p>
     </div>
   );
