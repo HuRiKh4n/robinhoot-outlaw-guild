@@ -1,0 +1,146 @@
+[
+  {
+    "id": "wolf-patched-cloak",
+    "species": "Wolf",
+    "class": "Ranger",
+    "outfit": "Patched Cloak",
+    "status": "ready",
+    "src": "/characters/wolf/ranger/patched-cloak.png",
+    "width": 1030,
+    "height": 1536,
+    "credit": "Approved original Wolf artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "wolf-leather-vest",
+    "species": "Wolf",
+    "class": "Ranger",
+    "outfit": "Leather Vest",
+    "status": "ready",
+    "src": "/characters/wolf/ranger/leather-vest.png",
+    "width": 1030,
+    "height": 1536,
+    "credit": "Approved original Wolf artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "wolf-forest-hood",
+    "species": "Wolf",
+    "class": "Ranger",
+    "outfit": "Forest Hood",
+    "status": "ready",
+    "src": "/characters/wolf/ranger/forest-hood.png",
+    "width": 1030,
+    "height": 1536,
+    "credit": "Approved original Wolf artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "wolf-arcane-robes",
+    "species": "Wolf",
+    "class": "Mage",
+    "outfit": "Arcane Robes",
+    "status": "ready",
+    "src": "/characters/wolf/mage/arcane-robes.png",
+    "width": 1030,
+    "height": 1536,
+    "credit": "Approved original Wolf artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "wolf-dark-sorcerer",
+    "species": "Wolf",
+    "class": "Mage",
+    "outfit": "Dark Sorcerer",
+    "status": "ready",
+    "src": "/characters/wolf/mage/dark-sorcerer.png",
+    "width": 1030,
+    "height": 1536,
+    "credit": "Original Wolf Mage artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "wolf-mystic-hood",
+    "species": "Wolf",
+    "class": "Mage",
+    "outfit": "Mystic Hood",
+    "status": "ready",
+    "src": "/characters/wolf/mage/mystic-hood.png",
+    "width": 1031,
+    "height": 1536,
+    "credit": "Original Wolf Mage artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "wolf-shadow-hood",
+    "species": "Wolf",
+    "class": "Rogue",
+    "outfit": "Shadow Hood",
+    "status": "ready",
+    "src": "/characters/wolf/rogue/shadow-hood.png",
+    "width": 1031,
+    "height": 1536,
+    "credit": "Original Wolf Rogue artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "wolf-assassin-gear",
+    "species": "Wolf",
+    "class": "Rogue",
+    "outfit": "Assassin Gear",
+    "status": "ready",
+    "src": "/characters/wolf/rogue/assassin-gear.png",
+    "width": 1031,
+    "height": 1536,
+    "credit": "Original Wolf Rogue artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "wolf-thief-cloak",
+    "species": "Wolf",
+    "class": "Rogue",
+    "outfit": "Thief Cloak",
+    "status": "ready",
+    "src": "/characters/wolf/rogue/thief-cloak.png",
+    "width": 1031,
+    "height": 1536,
+    "credit": "Original Wolf Rogue artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "wolf-battle-armor",
+    "species": "Wolf",
+    "class": "Warrior",
+    "outfit": "Battle Armor",
+    "status": "ready",
+    "src": "/characters/wolf/warrior/battle-armor.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Original Wolf Warrior PNG uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "wolf-berserker",
+    "species": "Wolf",
+    "class": "Warrior",
+    "outfit": "Berserker",
+    "status": "ready",
+    "src": "/characters/wolf/warrior/berserker.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Original Wolf Warrior PNG uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "wolf-royal-guard",
+    "species": "Wolf",
+    "class": "Warrior",
+    "outfit": "Royal Guard",
+    "status": "ready",
+    "src": "/characters/wolf/warrior/royal-guard.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Original Wolf Warrior PNG uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "wolf-ranger-legacy-fallback",
+    "species": "Wolf",
+    "class": "Ranger",
+    "status": "ready",
+    "src": "/characters/wolf/ranger/portrait.png",
+    "width": 1030,
+    "height": 1536,
+    "credit": "Original artwork uploaded by repository owner HuRiKh4n in commit deb7bc8; supplied for RobinHoot integration.",
+    "outfit": "Patched Cloak",
+    "fallback": true
+  }
+]

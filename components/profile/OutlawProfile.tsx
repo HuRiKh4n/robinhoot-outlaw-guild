@@ -5,8 +5,10 @@ import Link from 'next/link';
 import CharacterCard from './CharacterCard';
 import CharacterDownload from './CharacterDownload';
 import CharacterPreview from '@/components/character/CharacterPreview';
+import { portraits, resolveAppearance } from '@/lib/character/appearance';
 import { useWalletState } from '@/hooks/useWalletState';
-import { classes, defaultDraft, draftKey, outfits, parseDraft, personalities, species, type OutlawDraft } from '@/lib/profile/draft';
+import ChoiceDeck from '@/components/character/ChoiceDeck';
+import { classDraft, defaultDraft, draftKey, parseDraft, type OutlawDraft } from '@/lib/profile/draft';
 
 export default function OutlawProfile({ dedicated = false }: { dedicated?: boolean }) {
   const { account, ready } = useWalletState();
@@ -20,6 +22,7 @@ function DraftEditor({ accountId, dedicated }: { accountId?: string; dedicated: 
   const [loaded, setLoaded] = useState(false);
   const [saved, setSaved] = useState('');
   const [hasDraft, setHasDraft] = useState(false);
+  const [guestAvailable, setGuestAvailable] = useState(false);
   const input = useRef<HTMLInputElement>(null);
   useEffect(() => {
     try {
@@ -28,13 +31,14 @@ function DraftEditor({ accountId, dedicated }: { accountId?: string; dedicated: 
       setDraft(parseDraft(raw));
       setHasDraft(raw !== null);
       setSaved(accountId ? 'Wallet draft stays on this browser.' : 'Unconnected draft stays in this tab.');
+      if (accountId && raw === null) setGuestAvailable(sessionStorage.getItem(draftKey()) !== null);
     } catch { setSaved('Storage unavailable. Edits work for this visit only.'); }
     setLoaded(true);
   }, [accountId]);
 
   function update<K extends keyof OutlawDraft>(field: K, value: OutlawDraft[K]) {
     if (!loaded) return;
-    const next = { ...draft, [field]: value };
+    const next = field === 'class' ? classDraft(draft, value as OutlawDraft['class']) : { ...draft, [field]: value };
     setDraft(next);
     setHasDraft(true);
     persist(next, false);
@@ -47,31 +51,62 @@ function DraftEditor({ accountId, dedicated }: { accountId?: string; dedicated: 
       setSaved(accountId
         ? `${explicit ? 'Saved locally' : 'Draft auto-saved'} on this browser for this account only. Not uploaded, registered or authenticated.`
         : `${explicit ? 'Saved locally' : 'Draft auto-saved'} in this browser tab only. No wallet, upload or on-chain registration.`);
-    } catch { setSaved('Could not save locally: browser storage is unavailable or full. Edits remain for this visit only.'); }
+      return true;
+    } catch { setSaved('Could not save locally: browser storage is unavailable or full. Edits remain for this visit only.'); return false; }
   }
+
+  function copyGuestDraft() {
+    if (!accountId || hasDraft) return;
+    try {
+      // Recheck storage on click: avoid overwriting an account draft saved by another tab.
+      if (localStorage.getItem(draftKey(accountId)) !== null) {
+        setGuestAvailable(false);
+        setSaved('This account already has a saved draft. Reload to load it; nothing was overwritten.');
+        return;
+      }
+      const raw = sessionStorage.getItem(draftKey());
+      if (raw === null) { setGuestAvailable(false); setSaved('No guest draft is available in this tab.'); return; }
+      const next = parseDraft(raw);
+      if (persist(next, true)) {
+        setDraft(next);
+        setGuestAvailable(false);
+      }
+    } catch { setSaved('Could not copy the guest draft: browser storage is unavailable. Nothing was overwritten.'); }
+  }
+
+  const appearance = resolveAppearance(draft);
 
   return <>
     <section id="guild" className={dedicated ? "guild my-outlaw" : "guild"}>
-      <p className="eyebrow">CHAPTER II · ASSEMBLE THE GUILD</p>
+      <p className="eyebrow">THE OUTLAW CHRONICLES · CHARACTER STUDIO</p>
       {dedicated ? <><Link className="profile-inline-link" href="/">← BACK TO THE LEGEND</Link><h1>MY OUTLAW</h1>
         <p className="identity-mode">{accountId ? 'CONNECTED · ACCOUNT-ONLY' : 'DISCONNECTED · UNCONNECTED DRAFT'}</p>
-        {loaded && !hasDraft && <div className="identity-empty"><strong>Your outlaw story is unwritten.</strong><p>No saved draft {accountId ? 'for this account on this browser' : 'in this tab'} yet. Start with the sample below and make it yours.</p></div>}
+        {loaded && !hasDraft && <p className="identity-empty"><strong>Your outlaw story is unwritten.</strong> Shape the sample below into your own outlaw.</p>}
       </> : <h2>CREATE YOUR OUTLAW</h2>}
-      <p>{dedicated ? "Edit your local identity and carry a Guild Passport preview. No wallet is required; connection only selects a separate local draft." : "Choose your identity and preview your WANTED poster. Wallet connection is optional. Character artwork is assembled locally; guild registration is not active."}</p>
-      <a href={dedicated ? "#passport-title" : "#profile"} className="profile-inline-link">{dedicated ? "PREVIEW GUILD PASSPORT ↓" : "VIEW YOUR OUTLAW PROFILE ↓"}</a>
-      <p className="character-art-note">Illustrated character system: original local vector prototypes. Final painted, cinematic character artwork is still pending; this is not an AI image-generation service.</p>
-      <div className="builder-stage"><CharacterPreview draft={draft} large /><div className="builder-stage-copy"><p className="eyebrow">CHARACTER CREATOR 2.0</p><h2>BUILD YOUR LEGEND.</h2><p>Choose a species, equip a class and layer your worn outfit. Every selection updates the illustration and passport.</p><p className="note">Your original drafts and options are preserved. Nothing is minted or registered.</p></div></div>
-      <div className="creator">
-        <div className="controls" aria-busy={!loaded}>
+      <nav className="studio-nav" aria-label="Creator sections"><a href="#customize">CUSTOMIZE</a><a href="#wanted-poster">WANTED POSTER</a><a href={dedicated ? "#passport-title" : "#profile"}>{dedicated ? "PASSPORT" : "PROFILE"}</a></nav>
+      <details className="art-collection-info"><summary>About the artwork collection</summary><p className="character-art-note">Cinematic collection · {portraits.some(asset => asset.status === 'ready') ? 'select portraits available' : 'artwork pending'}. Wolf Ranger uses the supplied cinematic portrait. Registered variants appear only when their original files are available. Missing combinations display no substitute illustration.</p></details>
+      <div className="builder-stage cinematic-builder">
+        <div className="portrait-pane">
+          <p className="eyebrow">YOUR LEGEND, IN THE MAKING</p>
+          <CharacterPreview draft={draft} large />
+          <p className="portrait-identity">{draft.name || 'UNKNOWN OUTLAW'}</p>
+          <p className="portrait-story">{draft.outfit} / {draft.personality}</p>
+          <div className="art-availability" role="status"><strong>{appearance.kind === 'cinematic' ? 'PORTRAIT EQUIPPED' : 'CINEMATIC PORTRAIT PENDING'}</strong><p>{appearance.note}</p></div>
+        </div>
+        <div id="customize" className="controls" aria-busy={!loaded}>
+          <div className="studio-heading"><p className="eyebrow">MAKE IT YOURS</p><h2>SHAPE YOUR LEGEND.</h2></div>
           <label>YOUR OUTLAW NAME<input ref={input} maxLength={32} value={draft.name} disabled={!loaded} onChange={event => update('name', event.target.value)} /></label>
-          <label>YOUR CLASS<select value={draft.class} disabled={!loaded} onChange={event => update('class', event.target.value as OutlawDraft['class'])}>{classes.map(value => <option key={value}>{value}</option>)}</select></label>
-          <label>YOUR SPECIES<select value={draft.species} disabled={!loaded} onChange={event => update('species', event.target.value as OutlawDraft['species'])}>{species.map(value => <option key={value}>{value}</option>)}</select></label>
-          <label>YOUR OUTFIT<select value={draft.outfit} disabled={!loaded} onChange={event => update('outfit', event.target.value as OutlawDraft['outfit'])}>{outfits.map(value => <option key={value}>{value}</option>)}</select></label>
-          <label>YOUR PERSONALITY<select value={draft.personality} disabled={!loaded} onChange={event => update('personality', event.target.value as OutlawDraft['personality'])}>{personalities.map(value => <option key={value}>{value}</option>)}</select></label>
+          <ChoiceDeck draft={draft} disabled={!loaded} onChange={update} />
+          {accountId && guestAvailable && !hasDraft && <div className="guest-draft-copy">
+            <p className="note">This account has no saved character. You can copy your guest character from this tab. The guest original stays separate.</p>
+            <button type="button" className="button" disabled={!loaded} onClick={copyGuestDraft}>USE GUEST CHARACTER FOR THIS ACCOUNT</button>
+          </div>}
           <button type="button" className="button save-draft" disabled={!loaded} onClick={() => persist(draft, true)}>SAVE DRAFT</button>
           <p className="note" role="status">{saved}</p>
           <p className="note">Character preview only: no registration, authentication or minting. Wallet connection is optional.</p>
         </div>
+      </div>
+      <div id="wanted-poster" className="creator cinematic-keepsakes">
         {dedicated ? <><div className="poster-group"><div className="poster"><div className="wanted">WANTED</div><CharacterPreview draft={draft} /><h3>{draft.name || 'UNKNOWN OUTLAW'}</h3><p>{draft.class} · {draft.species} · {draft.outfit}</p><p>{draft.personality} · LOCAL PREVIEW / NOT REGISTERED</p></div><CharacterDownload draft={draft} /></div><CharacterCard draft={draft} accountId={accountId} /></> : <div className="poster-group"><div className="poster">
           <div className="wanted">WANTED</div>
           <CharacterPreview draft={draft} />
@@ -103,6 +138,7 @@ function DraftEditor({ accountId, dedicated }: { accountId?: string; dedicated: 
       </>}
       <div className="prototype-notice">
         <strong>A draft, not a guild registration.</strong>
+        {dedicated && <p><Link className="profile-inline-link" href="/guild-identity">GUILD IDENTITY FOUNDATION →</Link></p>}
         <p>A connected wallet is NOT authenticated ownership. Profiles are NOT registered on-chain or server-verified. These editable local drafts do not establish reputation or membership.</p>
         <p>{accountId ? 'Saved only on this browser, separately for each wallet account. Switching accounts loads that account’s own draft.' : 'Your unconnected draft is separate from wallet drafts and lasts for this browser tab. Connecting a wallet does not copy it into an account profile.'}</p>
       </div>
