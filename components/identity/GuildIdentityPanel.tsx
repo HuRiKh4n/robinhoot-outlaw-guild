@@ -32,6 +32,7 @@ function IdentityEditor({ active }: { active: RefObject<string | undefined> }) {
   const { account, connection } = useWalletState();
   const [verified, setVerified] = useState(false),
     [saved, setSaved] = useState<Saved | null>(null),
+    [guildId, setGuildId] = useState<string | null>(null),
     [candidate, setCandidate] = useState<OutlawDraft>(),
     [confirmed, setConfirmed] = useState(false),
     [status, setStatus] = useState(""),
@@ -41,6 +42,7 @@ function IdentityEditor({ active }: { active: RefObject<string | undefined> }) {
     let current = true;
     setVerified(false);
     setSaved(null);
+    setGuildId(null);
     setCandidate(undefined);
     setConfirmed(false);
     setStatus("");
@@ -55,6 +57,7 @@ function IdentityEditor({ active }: { active: RefObject<string | undefined> }) {
           if (current) {
             setVerified(true);
             setSaved(data.character);
+            setGuildId(typeof data.guildId === "string" ? data.guildId : null);
           }
         })
         .catch(() => {
@@ -107,6 +110,7 @@ function IdentityEditor({ active }: { active: RefObject<string | undefined> }) {
       const current = await request("character", "GET");
       setVerified(true);
       setSaved(current.character);
+      setGuildId(typeof current.guildId === "string" ? current.guildId : null);
       setStatus(
         "Wallet ownership verified for this server session. Not an on-chain registration.",
       );
@@ -128,6 +132,7 @@ function IdentityEditor({ active }: { active: RefObject<string | undefined> }) {
       await revokeGuildSession();
       setVerified(false);
       setSaved(null);
+      setGuildId(null);
       setCandidate(undefined);
       setConfirmed(false);
       setStatus(
@@ -207,6 +212,7 @@ function IdentityEditor({ active }: { active: RefObject<string | undefined> }) {
       {verified && (
         <section style={{ display: "grid", gap: 16 }}>
           <div style={{ borderTop: "1px solid rgba(230,208,168,.25)", paddingTop: 18 }}>
+            {guildId && <p style={{ fontSize: "0.8rem", opacity: 0.75, overflowWrap: "anywhere" }}>GUILD MEMBER ID · {guildId}</p>}
             <p className="eyebrow" style={{ marginBottom: 6 }}>YOUR GUILD PASSPORT</p>
             <h2 style={{ margin: "0 0 12px" }}>{saved ? saved.draft.name.trim() : "Create your outlaw"}</h2>
             {saved ? (
@@ -233,6 +239,11 @@ function IdentityEditor({ active }: { active: RefObject<string | undefined> }) {
             ) : (
               <p>No Guild character saved yet. Create one in My Outlaw, then save it here.</p>
             )}
+          </div>
+          <div style={{ display: "grid", gap: 6, borderTop: "1px solid rgba(230,208,168,.25)", paddingTop: 16 }}>
+            <p className="eyebrow" style={{ margin: 0 }}>REPUTATION · COMING SOON</p>
+            <p style={{ margin: 0 }}>Guild Reputation Points (RP) are not yet earnable. No points or $RHOOT rewards are active.</p>
+            <Link className="profile-inline-link" href="/bounties">EXPLORE THE BOUNTY BOARD →</Link>
           </div>
           {!candidate ? (
             <button className="button" disabled={busy} onClick={reviewLocal}>
