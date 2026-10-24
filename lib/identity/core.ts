@@ -301,7 +301,8 @@ export class GuildIdentity {
       "SELECT draft,revision,updated_at FROM outlaw_characters WHERE owner_account=$1",
       [session.linked_account],
     );
-    return { accountId: session.account_id, character: result.rows[0] ?? null };
+    const member = await this.db.query("SELECT user_id FROM near_accounts WHERE id=$1 AND network='mainnet'", [session.linked_account]);
+    return { accountId: session.account_id, guildId: member.rows[0]?.user_id ?? null, character: result.rows[0] ?? null };
   }
   async save(
     sessionToken: string,
