@@ -472,5 +472,27 @@
     "width": 1024,
     "height": 1536,
     "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "raccoon-mage-dark-sorcerer",
+    "species": "Raccoon",
+    "class": "Mage",
+    "outfit": "Dark Sorcerer",
+    "status": "ready",
+    "src": "/characters/raccoon/mage/dark-sorcerer.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "raccoon-rogue-thief-cloak",
+    "species": "Raccoon",
+    "class": "Rogue",
+    "outfit": "Thief Cloak",
+    "status": "ready",
+    "src": "/characters/raccoon/rogue/thief-cloak.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
   }
 ]
