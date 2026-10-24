@@ -1,5 +1,8 @@
 "use client";
 import { useEffect, useRef, useState, type RefObject } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { resolveAppearance } from "@/lib/character/appearance";
 import { waitForGuildLogout, revokeGuildSession } from "./logout";
 import { useWalletState } from "@/hooks/useWalletState";
 import { draftKey, parseDraft, type OutlawDraft } from "@/lib/profile/draft";
@@ -179,6 +182,7 @@ function IdentityEditor({ active }: { active: RefObject<string | undefined> }) {
       setBusy(false);
     }
   }
+  const portrait = saved ? resolveAppearance(saved.draft) : null;
   const sameDraft = Boolean(saved && candidate && JSON.stringify(saved.draft) === JSON.stringify(candidate));
   return (
     <div className="prototype-notice" style={{ display: "grid", gap: 20 }}>
@@ -207,12 +211,23 @@ function IdentityEditor({ active }: { active: RefObject<string | undefined> }) {
             <h2 style={{ margin: "0 0 12px" }}>{saved ? saved.draft.name.trim() : "Create your outlaw"}</h2>
             {saved ? (
               <>
+                <div style={{ border: "1px solid rgba(230,208,168,.3)", borderRadius: 12, overflow: "hidden", background: "#12140f", marginBottom: 16 }}>
+                  {portrait?.kind === "cinematic" && portrait.src ? (
+                    <Image src={portrait.src} alt={portrait.alt} width={portrait.width} height={portrait.height} priority style={{ display: "block", width: "100%", height: "auto", maxHeight: 520, objectFit: "contain" }} />
+                  ) : (
+                    <div style={{ padding: "60px 20px", textAlign: "center", color: "#e6d0a8" }}>
+                      <p style={{ fontSize: "2rem", margin: "0 0 8px" }}>✦</p>
+                      <p style={{ margin: 0 }}>Cinematic portrait not yet available for this outfit.</p>
+                    </div>
+                  )}
+                </div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 12 }}>
                   {[saved.draft.species, saved.draft.class, saved.draft.outfit, saved.draft.personality].map((item, index) => (
                     <span key={index} style={{ border: "1px solid rgba(230,208,168,.35)", padding: "6px 10px", borderRadius: 6, fontSize: "0.9rem" }}>{item}</span>
                   ))}
                 </div>
                 <p style={{ margin: 0 }}>✓ Saved to your Guild account</p>
+                <p style={{ margin: "8px 0 0" }}><Link className="profile-inline-link" href="/my-outlaw">EDIT CHARACTER IN STUDIO →</Link></p>
                 <p style={{ margin: "4px 0 0", opacity: 0.65, fontSize: "0.85rem" }}>Profile revision {saved.revision} · Off-chain</p>
               </>
             ) : (
