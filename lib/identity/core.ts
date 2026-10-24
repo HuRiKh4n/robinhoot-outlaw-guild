@@ -304,6 +304,38 @@ export class GuildIdentity {
     const member = await this.db.query("SELECT user_id FROM near_accounts WHERE id=$1 AND network='mainnet'", [session.linked_account]);
     return { accountId: session.account_id, guildId: member.rows[0]?.user_id ?? null, character: result.rows[0] ?? null };
   }
+  async submitBounty(sessionToken: string, expectedAccount: string, bountyId: unknown, evidenceUrl: unknown, description: unknown) {
+    if (typeof bountyId !== "string" || !/^RH-[CSG]0[12]$/.test(bountyId))
+      throw new IdentityError(400, "Unknown contract.");
+    if (typeof evidenceUrl !== "string" || evidenceUrl.length > 1000 || evidenceUrl.length < 12)
+      throw new IdentityError(400, "Provide a public evidence URL.");
+    let url: URL;
+    try { url = new URL(evidenceUrl); } catch { throw new IdentityError(400, "Invalid evidence URL."); }
+    if (url.protocol !== "https:" || url.username || url.password || url.hostname === "localhost" || !url.hostname.includes("."))
+      throw new IdentityError(400, "Use a public HTTPS evidence link.");
+    if (typeof description !== "string" || description.trim().length < 20 || description.length > 1500)
+      throw new IdentityError(400, "Add a description between 20 and 1500 characters.");
+    const session = await this.session(sessionToken, expectedAccount);
+    try {
+      const result = await this.db.query(
+        "INSERT INTO bounty_submissions(id,owner_account,bounty_id,evidence_url,description) VALUES($1,$2,$3,$4,$5) RETURNING id,status,created_at",
+        [randomUUID(),session.linked_account,bountyId,url.toString(),description.trim()],
+      );
+      return result.rows[0];
+    } catch(error) {
+      if ((error as {code?: string}).code === "23505")
+        throw new IdentityError(409,"You already submitted this contract. It is awaiting review.");
+      throw error;
+    }
+  }
+  async bountyStatus(sessionToken: string, expectedAccount: string) {
+    const session = await this.session(sessionToken, expectedAccount);
+    const result = await this.db.query(
+      "SELECT bounty_id,status,created_at FROM bounty_submissions WHERE owner_account=$1 ORDER BY created_at DESC LIMIT 20",
+      [session.linked_account],
+    );
+    return { submissions: result.rows };
+  }
   async save(
     sessionToken: string,
     expectedAccount: string,
