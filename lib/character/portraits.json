@@ -494,5 +494,181 @@
     "width": 1024,
     "height": 1536,
     "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "rabbit-mage-arcane-robes",
+    "species": "Rabbit",
+    "class": "Mage",
+    "outfit": "Arcane Robes",
+    "status": "ready",
+    "src": "/characters/rabbit/mage/arcane-robes.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "rabbit-mage-dark-sorcerer",
+    "species": "Rabbit",
+    "class": "Mage",
+    "outfit": "Dark Sorcerer",
+    "status": "ready",
+    "src": "/characters/rabbit/mage/dark-sorcerer.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "rabbit-mage-mystic-hood",
+    "species": "Rabbit",
+    "class": "Mage",
+    "outfit": "Mystic Hood",
+    "status": "ready",
+    "src": "/characters/rabbit/mage/mystic-hood.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "rabbit-ranger-forest-hood",
+    "species": "Rabbit",
+    "class": "Ranger",
+    "outfit": "Forest Hood",
+    "status": "ready",
+    "src": "/characters/rabbit/ranger/forest-hood.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "rabbit-ranger-leather-vest",
+    "species": "Rabbit",
+    "class": "Ranger",
+    "outfit": "Leather Vest",
+    "status": "ready",
+    "src": "/characters/rabbit/ranger/leather-vest.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "rabbit-ranger-patched-cloak",
+    "species": "Rabbit",
+    "class": "Ranger",
+    "outfit": "Patched Cloak",
+    "status": "ready",
+    "src": "/characters/rabbit/ranger/patched-cloak.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "rabbit-rogue-assassin-gear",
+    "species": "Rabbit",
+    "class": "Rogue",
+    "outfit": "Assassin Gear",
+    "status": "ready",
+    "src": "/characters/rabbit/rogue/assassin-gear.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "rabbit-rogue-shadow-hood",
+    "species": "Rabbit",
+    "class": "Rogue",
+    "outfit": "Shadow Hood",
+    "status": "ready",
+    "src": "/characters/rabbit/rogue/shadow-hood.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "rabbit-rogue-thief-cloak",
+    "species": "Rabbit",
+    "class": "Rogue",
+    "outfit": "Thief Cloak",
+    "status": "ready",
+    "src": "/characters/rabbit/rogue/thief-cloak.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "rabbit-scout-dust-hood",
+    "species": "Rabbit",
+    "class": "Scout",
+    "outfit": "Dust Hood",
+    "status": "ready",
+    "src": "/characters/rabbit/scout/dust-hood.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "rabbit-scout-wanderer-pack",
+    "species": "Rabbit",
+    "class": "Scout",
+    "outfit": "Wanderer Pack",
+    "status": "ready",
+    "src": "/characters/rabbit/scout/wanderer-pack.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "rabbit-trickster-card-sharp",
+    "species": "Rabbit",
+    "class": "Trickster",
+    "outfit": "Card Sharp",
+    "status": "ready",
+    "src": "/characters/rabbit/trickster/card-sharp.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "rabbit-trickster-jester-motley",
+    "species": "Rabbit",
+    "class": "Trickster",
+    "outfit": "Jester Motley",
+    "status": "ready",
+    "src": "/characters/rabbit/trickster/jester-motley.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "rabbit-warrior-battle-armor",
+    "species": "Rabbit",
+    "class": "Warrior",
+    "outfit": "Battle Armor",
+    "status": "ready",
+    "src": "/characters/rabbit/warrior/battle-armor.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "rabbit-warrior-berserker",
+    "species": "Rabbit",
+    "class": "Warrior",
+    "outfit": "Berserker",
+    "status": "ready",
+    "src": "/characters/rabbit/warrior/berserker.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "rabbit-warrior-royal-guard",
+    "species": "Rabbit",
+    "class": "Warrior",
+    "outfit": "Royal Guard",
+    "status": "ready",
+    "src": "/characters/rabbit/warrior/royal-guard.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
   }
 ]

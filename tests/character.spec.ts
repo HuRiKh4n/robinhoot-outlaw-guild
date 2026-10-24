@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 
-const speciesWithoutArt = ['Bear', 'Rabbit', 'Badger', 'Owl'];
+const speciesWithoutArt = ['Bear', 'Badger', 'Owl'];
 const classes = ['Ranger', 'Rogue', 'Warrior', 'Mage', 'Scout', 'Trickster'];
 
 test('unsupported species and classes show explicit unavailable states without fabricated art', async ({ page }, testInfo) => {
