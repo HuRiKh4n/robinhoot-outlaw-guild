@@ -31,8 +31,15 @@ test('Bounty Board navigation, category filters and responsive contracts are usa
     }
   }
   await page.setViewportSize({width:393,height:851});
-  await page.screenshot({path:testInfo.outputPath('bounty-board-mobile.png'),fullPage:true});
-  await expect(page.locator('#guild-reputation')).toContainText('CONCEPT PREVIEW · NOT LIVE');
+  await page.mouse.move(0,0);
+  await page.screenshot({path:testInfo.outputPath('bounty-board-mobile.png'),fullPage:true,animations:'disabled'});
+  await expect(page.locator('.badge-concept')).toHaveCount(3);
+  for (const label of ['CRAFT','STORY','SERVICE']) await expect(page.getByRole('heading',{name:label,exact:true})).toBeVisible();
+  await expect(page.locator('.badge-concept')).toHaveText(Array(3).fill('CONCEPT /NOT YET EARNABLE'));
+  await expect(page.getByRole('complementary',{name:'Bounty Board preview'})).toHaveCount(1);
+  await page.getByText('Availability & safety',{exact:true}).click();
+  await expect(page.getByText('Missions cannot be completed here.',{exact:false})).toBeVisible();
+  await page.getByText('Availability & safety',{exact:true}).click();
   await expect(page.locator('.bounty-rewards')).toContainText('No rewards are currently available.');
   await expect(page.locator('.bounty-rewards')).toContainText('no guaranteed token distribution');
   await expect(page.locator('input[type="file"], form')).toHaveCount(0);
@@ -48,9 +55,10 @@ test('every contract has real detail navigation, draft requirements, future evid
     await expect(page.locator('.bounty-detail .contract-status')).toHaveText('PREVIEW / COMING SOON');
     await expect(page.locator('.bounty-detail .contract-meta')).toContainText(mission.category);
     await expect(page.locator('.bounty-detail .contract-meta')).toContainText(mission.difficulty);
+    await page.getByText('Evidence a future submission could include',{exact:true}).click();
     for (const requirement of [...mission.requirements,...mission.futureEvidence]) await expect(page.getByText(requirement,{exact:true})).toBeVisible();
-    await expect(page.getByRole('heading',{name:'This contract is not accepting submissions.',exact:true})).toBeVisible();
-    await expect(page.locator('.contract-closed')).toContainText('no completion action, points balance or reward to claim');
+    await expect(page.getByRole('heading',{name:'Submissions closed',exact:true})).toBeVisible();
+    await expect(page.locator('.contract-closed')).toContainText('A submission and verification backend is required');
     await expect(page.locator('input[type="file"], form')).toHaveCount(0);
     await expect(page.getByRole('button',{name:/submit|complete|claim|earn/i})).toHaveCount(0);
     await page.setViewportSize({width:320,height:851});
@@ -59,7 +67,7 @@ test('every contract has real detail navigation, draft requirements, future evid
     await expect(page).toHaveURL(/\/bounties$/);
   }
   await page.goto(`/bounties/${bounties[0].slug}`);
-  await page.screenshot({path:testInfo.outputPath('bounty-contract-mobile.png'),fullPage:true});
+  await page.screenshot({path:testInfo.outputPath('bounty-contract-mobile.png'),fullPage:true,animations:'disabled'});
   const missing=await page.goto('/bounties/not-a-real-contract'); expect(missing?.status()).toBe(404);
 });
 
@@ -85,4 +93,52 @@ test('board browsing preserves wallet and full local character; roadmap reports 
   await expect(page.locator('#roadmap')).toContainText('Submissions, verification, reputation and badges are not live.');
   await expect(page.locator('#roadmap')).toContainText('No live AI generation.');
   await expect(page.locator('#roadmap')).toContainText('Nothing to claim');
+});
+
+
+test('hall decoration stays lightweight and stable; reduced motion and essential disclosures remain accessible', async ({page}, testInfo) => {
+  await page.emulateMedia({reducedMotion:'reduce'});
+  await page.addInitScript(() => {
+    Reflect.set(window,'__boardLayoutShift',0);
+    new PerformanceObserver(list => {
+      for (const entry of list.getEntries()) {
+        const shift=entry as PerformanceEntry & {hadRecentInput:boolean;value:number};
+        if (!shift.hadRecentInput) Reflect.set(window,'__boardLayoutShift',Reflect.get(window,'__boardLayoutShift')+shift.value);
+      }
+    }).observe({type:'layout-shift',buffered:true});
+  });
+  await page.goto('/bounties');
+  await expect(page.locator('.bounty-contract')).toHaveCount(6);
+  await expect(page.getByRole('button',{name:'CONNECT WALLET',exact:true})).toBeEnabled();
+  await page.evaluate(async()=>{await document.fonts.ready;await new Promise(requestAnimationFrame);await new Promise(requestAnimationFrame);});
+  expect(await page.evaluate(()=>Reflect.get(window,'__boardLayoutShift'))).toBeLessThanOrEqual(.01);
+  expect(await page.locator('.guild-hall-entry').evaluate(element=>getComputedStyle(element).animationName)).toBe('none');
+  expect(await page.locator('.bounty-hero').evaluate(element=>getComputedStyle(element,'::after').animationName)).toBe('none');
+  expect(await page.locator('.bounty-contract').first().evaluate(element=>getComputedStyle(element).transitionDuration)).toBe('0s');
+  expect(await page.evaluate(()=>getComputedStyle(document.documentElement).scrollBehavior)).toBe('auto');
+  let bytes=0;
+  for (const asset of ['guild-hall.svg','parchment-grain.svg']) {
+    const response=await page.request.get(`/bounties/${asset}`);expect(response.ok()).toBe(true);
+    expect(response.headers()['content-type']).toContain('image/svg+xml');bytes+=(await response.body()).length;
+  }
+  expect(bytes).toBeLessThan(20000);
+  expect(await page.evaluate(()=>performance.getEntriesByType('resource').some(entry=>entry.name.includes('/characters/')))).toBe(false);
+  const summary=page.getByText('Availability & safety',{exact:true});await summary.focus();await page.keyboard.press('Enter');
+  await expect(page.getByText('Missions cannot be completed here.',{exact:false})).toBeVisible();
+  const rewards=page.getByText('Future rewards & availability',{exact:true});await rewards.focus();await page.keyboard.press('Enter');
+  await expect(page.locator('.treasury-copy details p')).toBeVisible();
+  for (const width of [320,360,393,768,1280]) {
+    await page.setViewportSize({width,height:851});
+    expect(await page.evaluate(()=>document.documentElement.scrollWidth)).toBeLessThanOrEqual(width);
+    for (const heading of await page.locator('.bounty-page h1,.bounty-page h2,.bounty-page h3').all()) {
+      expect(await heading.evaluate(element=>element.scrollWidth<=element.clientWidth)).toBe(true);
+    }
+  }
+  await page.setViewportSize({width:393,height:851});
+  await page.getByText('Future rewards & availability',{exact:true}).click();
+  await page.getByText('Availability & safety',{exact:true}).click();
+  await page.mouse.move(0,0);
+  await page.locator('.bounty-hero').screenshot({path:testInfo.outputPath('guild-hall-reduced-motion.png')});
+  await page.locator('#guild-reputation').screenshot({path:testInfo.outputPath('recognition-concepts.png')});
+  await page.locator('.bounty-rewards').screenshot({path:testInfo.outputPath('sealed-treasury.png')});
 });

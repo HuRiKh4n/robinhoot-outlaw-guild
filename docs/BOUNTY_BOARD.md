@@ -28,3 +28,15 @@ No new API, database, storage key, signing capability, token transfer, NFT or on
 Run `npm run typecheck`, `npm run build`, `npm run test:assets` and `npm run test:e2e`. Bounty tests cover all category filters with keyboard activation, all six detail routes, invalid slugs, closed-submission messaging, no action forms, touch-target sizes and horizontal layout at 320/393/768/1280px. They also navigate from a saved wallet character through the board and back, checking preservation of account, local draft, selected artwork and roadmap status.
 
 Full browser regression tests include all 12 Wolf sources, portrait synchronization and both actual PNG exports. Automated Android checks use Pixel 7 Chromium emulation of the production app; live Meteor services and physical Android downloads still require device acceptance. The executor cannot browse Vercel directly under its network policy; Vercel build readiness is checked through GitHub status.
+
+## Phase 6.1 — Guild hall polish
+
+The board now uses an original local guild-hall SVG backdrop, a heraldic fox insignia, six mission-specific symbols and category-specific wax seals. Creative contracts use red wax, Social use blue-grey and Guild use forest green; category names remain visible so colour is not the only distinction. A shared, small local grain tile adds parchment material. These are original decorative vector designs, not copyrighted game artwork, generated character art or replacement Wolf portraits.
+
+CRAFT, STORY and SERVICE have distinct concept emblems, each labelled `CONCEPT / NOT YET EARNABLE`. A sealed chest and iron arch frame the planned treasury; there is no claim action. Detailed reputation/reward explanations are available in native keyboard-accessible disclosures rather than repeated paragraphs.
+
+A shared preview notice provides the page-wide availability statement and expandable safety details. Each contract retains its compact `PREVIEW / COMING SOON` stamp. Detail pages retain the full proposed brief, expandable future evidence and a compact submissions-closed message. No previous mission or category is removed. Filters, detail routes and IDs remain unchanged.
+
+Route-specific styles load through `app/bounties/layout.tsx`, leaving the creator styles separate. No dependencies, remote image requests, webfonts, paid services, new data stores or wallet permissions are added. Decorative SVGs have reserved dimensions or paint as backgrounds, and the hall's only continuous effect animates opacity. All introduced motion and hover transforms are restricted to `prefers-reduced-motion: no-preference`; reduced-motion users also get immediate anchor scrolling.
+
+Browser checks include keyboard-operated disclosures, all recognition/availability labels, header and heading reflow, touch targets, reduced-motion styles, an observed layout-shift budget (≤0.01 during local initial load) and a combined decorative asset size below 20 KB. These are local lab guards, not a Lighthouse score or a claim about physical-device field performance. Full character, wallet, draft and PNG regression checks still apply.

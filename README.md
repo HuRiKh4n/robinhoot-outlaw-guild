@@ -127,3 +127,5 @@ Connected drafts already persist across sessions in the same browser and origin,
 ### Phase 6 — Bounty Board preview
 
 Visit `/bounties` from the main navigation (including the visible mobile row) or home-page callout. Six Creative, Social and Guild mission previews have category filters and dedicated contract pages describing proposed requirements and future evidence. Every contract is **PREVIEW / COMING SOON**. Reputation, badges, verification, submissions and rewards are not live; no completion, points, leaderboard or reward claim is simulated. The roadmap now reflects these boundaries. See [Bounty Board architecture and future requirements](docs/BOUNTY_BOARD.md).
+
+Phase 6.1 refines the board into a guild hall with original local heraldry, textured category contracts, concept recognition emblems and a sealed treasury. Essential availability details remain accessible through compact, keyboard-friendly disclosures; all missions remain preview-only. Motion respects reduced-motion preferences and decoration adds no remote artwork or image service.
