@@ -58,7 +58,7 @@ export function identityHandler(
 ) {
   return async function handleIdentity(
     request: NextRequest,
-    action: "challenge" | "verify" | "session" | "character" | "logout",
+    action: "challenge" | "verify" | "session" | "character" | "logout" | "bounty",
   ) {
     try {
       const config = getConfig();
@@ -135,6 +135,13 @@ export function identityHandler(
           authenticated: true,
           onChain: false,
         });
+      }
+      if (action === "bounty") {
+        if (request.method === "GET")
+          return response(await service.bountyStatus(session, expected));
+        const data = await body(request);
+        fields(data, ["bountyId", "evidenceUrl", "description"]);
+        return response(await service.submitBounty(session, expected, data.bountyId, data.evidenceUrl, data.description));
       }
       if (request.method === "GET")
         return response(await service.read(session, expected));
