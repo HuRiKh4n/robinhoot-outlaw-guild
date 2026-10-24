@@ -1,4 +1,5 @@
-/** Only account connection operations leave this module; no signing APIs. */
+/** Normal connection is account-only. Identity proof is a separate explicit NEP-413 action. */
+export interface IdentityChallenge { accountId:string; message:string; nonce:string; recipient:string }
 export interface WalletState {
   accounts: Array<{ accountId: string; active: boolean }>;
 }
@@ -8,6 +9,7 @@ export interface WalletConnection {
   connect(): Promise<void>;
   disconnect(): Promise<void>;
   switchAccount(accountId: string): void;
+  signIdentityChallenge(challenge:IdentityChallenge):Promise<{accountId:string;publicKey:string;signature:string}>;
 }
 
 const storagePrefix = 'robinhoot:meteor:';
@@ -82,6 +84,31 @@ async function initialize(): Promise<WalletConnection> {
   };
   return {
     getState: () => state,
+    async signIdentityChallenge(challenge) {
+      const active = () => state.accounts.find(account => account.active)?.accountId;
+      if (active() !== challenge.accountId) throw new Error('Selected account changed.');
+      const nonce = Uint8Array.from(atob(challenge.nonce), character => character.charCodeAt(0));
+      if (nonce.length !== 32 || challenge.recipient !== window.location.host) {
+        throw new Error('Invalid identity challenge.');
+      }
+      const action = await meteor.createAction({
+        id: 'near::sign_message',
+        input: {
+          target: { ...target, accountId: challenge.accountId },
+          messageParams: { message: challenge.message, recipient: challenge.recipient, nonce },
+        },
+      });
+      // No contract, access key, callback URL, transaction or local key signing fallback.
+      const proof = await action.promptForExecution();
+      if (active() !== challenge.accountId || proof.accountId !== challenge.accountId) {
+        throw new Error('Selected account changed.');
+      }
+      return {
+        accountId: proof.accountId,
+        publicKey: proof.publicKey.toString(),
+        signature: btoa(String.fromCharCode(...proof.signature)),
+      };
+    },
     subscribe(listener) {
       if (listeners.size === 0) window.addEventListener('storage', onStorage);
       listeners.add(listener);

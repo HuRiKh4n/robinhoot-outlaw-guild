@@ -1,4 +1,6 @@
-# Wallet-associated Outlaw identity: audit and next phase
+# Wallet-associated Outlaw identity: pre-Phase-7 audit
+
+Historical local-profile audit. For the current gated signature/session/database foundation and external configuration requirements, see [Phase 7A](PHASE_7A_IDENTITY.md).
 
 Reviewed October 23, 2026. Current implementation is a local character prototype, not an authenticated identity service or guild registration.
 

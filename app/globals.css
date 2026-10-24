@@ -211,3 +211,8 @@ input:focus-visible, textarea:focus-visible { outline: 3px solid #df9950; outlin
 @media(max-width:1050px) { .site-header { display:grid; grid-template-columns:minmax(0,1fr) minmax(44px,min(40%,180px)); } .nav-bounties-mobile { grid-column:1 / -1; display:flex; justify-content:space-between; align-items:center; gap:12px; order:3; flex:1 0 100%; min-height:44px; border-top:1px solid #435c47; padding-top:12px; color:#d8e4ca; font-size:11px; font-weight:700; letter-spacing:1px; } .nav-bounties-mobile span { color:#a7bb9e; font-size:8px; } }
 
 @media(prefers-reduced-motion:reduce) { html { scroll-behavior:auto; } }
+
+.identity-review { white-space:pre-wrap; overflow-wrap:anywhere; font-size:13px; line-height:1.7; }
+
+.guild-identity-page .prototype-notice { overflow-wrap:anywhere; }
+.guild-identity-page .button { min-height:48px; max-width:100%; line-height:1.5; white-space:normal; }

@@ -138,6 +138,7 @@ function DraftEditor({ accountId, dedicated }: { accountId?: string; dedicated: 
       </>}
       <div className="prototype-notice">
         <strong>A draft, not a guild registration.</strong>
+        {dedicated && <p><Link className="profile-inline-link" href="/guild-identity">GUILD IDENTITY FOUNDATION →</Link></p>}
         <p>A connected wallet is NOT authenticated ownership. Profiles are NOT registered on-chain or server-verified. These editable local drafts do not establish reputation or membership.</p>
         <p>{accountId ? 'Saved only on this browser, separately for each wallet account. Switching accounts loads that account’s own draft.' : 'Your unconnected draft is separate from wallet drafts and lasts for this browser tab. Connecting a wallet does not copy it into an account profile.'}</p>
       </div>

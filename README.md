@@ -56,7 +56,7 @@ The large live illustration, WANTED poster, profile and downloadable passport no
 
 ## Connection security
 
-RobinHoot requests only `near::sign_in` with the NEAR mainnet network target. It supplies no function-call-key definition, legacy contract or message parameters. It never calls transaction, signing, account-transfer or ownership-verification actions. A rejecting keystore prevents NEAR authorization-key storage; only account-only sessions are displayed/restored. Connection is not verified authentication or holder verification.
+RobinHoot requests only `near::sign_in` with the NEAR mainnet network target. It supplies no function-call-key definition, legacy contract or message parameters. Normal Connect never calls transaction, signing, account-transfer or ownership-verification actions. The separately gated Phase 7A identity page can explicitly request a NEP-413 message proof; see the Phase 7A report below. A rejecting keystore prevents NEAR authorization-key storage; only account-only sessions are displayed/restored. Connection is not verified authentication or holder verification.
 
 The SDK's mobile transport can persist identity keys for encrypted bridge communication. These are not NEAR account access keys and do not authorize NEAR transactions. Disconnect removes RobinHoot's connected-account records, not the user's wallet account or unrelated on-chain keys. Browser account metadata is untrusted.
 
@@ -129,3 +129,9 @@ Connected drafts already persist across sessions in the same browser and origin,
 Visit `/bounties` from the main navigation (including the visible mobile row) or home-page callout. Six Creative, Social and Guild mission previews have category filters and dedicated contract pages describing proposed requirements and future evidence. Every contract is **PREVIEW / COMING SOON**. Reputation, badges, verification, submissions and rewards are not live; no completion, points, leaderboard or reward claim is simulated. The roadmap now reflects these boundaries. See [Bounty Board architecture and future requirements](docs/BOUNTY_BOARD.md).
 
 Phase 6.1 refines the board into a guild hall with original local heraldry, textured category contracts, concept recognition emblems and a sealed treasury. Essential availability details remain accessible through compact, keyboard-friendly disclosures; all missions remain preview-only. Motion respects reduced-motion preferences and decoration adds no remote artwork or image service.
+
+### Phase 7A — Secure Guild identity foundation (gated)
+
+`/guild-identity` introduces an optional NEP-413 proof flow, server-issued single-use challenges, key authorization checks, secure sessions and PostgreSQL-backed characters/revisions. It defaults to **not configured**: persistent registration is not operational on the preview. Regular Meteor connection remains account-only; a signature is requested only after explicit ownership verification on a configured deployment. Local drafts are never automatically uploaded or overwritten. No transaction, NFT or on-chain identity is added.
+
+Run `npm run test:security` for the SQL/cryptographic security tests. Provisioning, environment variables, migration/role requirements, Meteor limitations, validation boundaries and the exact Phase 7B checklist are in [the Phase 7A implementation report](docs/PHASE_7A_IDENTITY.md). `.env.example` contains placeholders only. Do not enable production from this phase.
