@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 850" fill="none">
+<defs><linearGradient id="wall" x2="0" y2="1"><stop stop-color="#26372c"/><stop offset="1" stop-color="#070e0b"/></linearGradient><linearGradient id="timber" x2="1" y2="1"><stop stop-color="#64573b"/><stop offset=".5" stop-color="#19271e"/><stop offset="1" stop-color="#080f0b"/></linearGradient><radialGradient id="fire"><stop stop-color="#d6b474" stop-opacity=".38"/><stop offset="1" stop-color="#a17c36" stop-opacity="0"/></radialGradient></defs>
+<path fill="url(#wall)" d="M0 0h1440v850H0z"/>
+<g stroke="#748065" stroke-opacity=".14"><path d="M0 110h1440M0 230h1440M0 350h1440M0 470h1440M0 590h1440M0 710h1440M160 0v110m220 0v120m-220 0v120m220 0v120m-220 0v120M1280 0v110m-220 0v120m220 0v120m-220 0v120m220 0v120"/></g>
+<path d="M220 850V290C220 100 445-2 720-80c275 78 500 180 500 370v560h-76V295c0-145-180-237-424-307C476 58 296 150 296 295v555Z" fill="url(#timber)" stroke="#6f7450" stroke-opacity=".3"/>
+<path d="M335 850V335C335 180 506 94 720 30c214 64 385 150 385 305v515h-37V335c0-130-150-211-348-268-198 57-348 138-348 268v515Z" fill="#233126" stroke="#8b8560" stroke-opacity=".2"/>
+<path d="M420 810V350C420 220 540 157 720 105c180 52 300 115 300 245v460Z" fill="#0c1711" stroke="#788565" stroke-opacity=".2"/>
+<path d="M480 750V350c0-95 100-155 240-198 140 43 240 103 240 198v400" stroke="#9b9560" stroke-opacity=".12"/>
+<path d="M720 154v650M480 350h480" stroke="#8d8c60" stroke-opacity=".15"/>
+<g fill="#112219" stroke="#7c7c50" stroke-opacity=".3"><path d="M104 95h105v420l-52-38-53 38Z"/><path d="M1231 95h105v420l-52-38-53 38Z"/></g>
+<g stroke="#a5945c" stroke-opacity=".4"><path d="m122 162 35 38 35-38-8 66-27 30-27-30Z M1249 162l35 38 35-38-8 66-27 30-27-30Z"/></g>
+<ellipse cx="275" cy="390" rx="230" ry="260" fill="url(#fire)"/><ellipse cx="1165" cy="390" rx="230" ry="260" fill="url(#fire)"/>
+<g stroke="#ad9256" stroke-opacity=".6"><path d="M263 395h24l-3 30h-18Zm902 0h24l-3 30h-18Z M275 425v66m902-66v66M258 448h34m868 0h34"/></g>
+<g fill="#d1b375"><path d="M275 397c-20-11-11-25-5-34 0 10 12 13 8-5 22 22 12 32-3 39Z"/><path d="M1177 397c-20-11-11-25-5-34 0 10 12 13 8-5 22 22 12 32-3 39Z"/></g>
+<path d="M0 850 500 700h440l500 150" fill="#111e16"/><g stroke="#6a7656" stroke-opacity=".1"><path d="m720 700-300 150m300-150 300 150m-700-60h800M180 830h1080"/></g>
+</svg>

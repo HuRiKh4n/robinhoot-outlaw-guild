@@ -56,7 +56,7 @@ The large live illustration, WANTED poster, profile and downloadable passport no
 
 ## Connection security
 
-RobinHoot requests only `near::sign_in` with the NEAR mainnet network target. It supplies no function-call-key definition, legacy contract or message parameters. It never calls transaction, signing, account-transfer or ownership-verification actions. A rejecting keystore prevents NEAR authorization-key storage; only account-only sessions are displayed/restored. Connection is not verified authentication or holder verification.
+RobinHoot requests only `near::sign_in` with the NEAR mainnet network target. It supplies no function-call-key definition, legacy contract or message parameters. Normal Connect never calls transaction, signing, account-transfer or ownership-verification actions. The separately gated Phase 7A identity page can explicitly request a NEP-413 message proof; see the Phase 7A report below. A rejecting keystore prevents NEAR authorization-key storage; only account-only sessions are displayed/restored. Connection is not verified authentication or holder verification.
 
 The SDK's mobile transport can persist identity keys for encrypted bridge communication. These are not NEAR account access keys and do not authorize NEAR transactions. Disconnect removes RobinHoot's connected-account records, not the user's wallet account or unrelated on-chain keys. Browser account metadata is untrusted.
 
@@ -107,3 +107,31 @@ The creator includes an explicit **SAVE DRAFT** button in addition to auto-save.
 **DOWNLOAD CHARACTER** sits directly below the WANTED poster on both `/` and `/my-outlaw` and exports `robinhoot-character.png`. **DOWNLOAD GUILD PASSPORT** sits directly below the passport image on `/my-outlaw` and exports `robinhoot-passport-preview.png`. Both are 840×1120 PNG files with the current character selections and prototype labels. Buttons remain visible while preparing and become enabled only for the current image.
 
 Downloads use a prepared blob and a synchronous, user-initiated HTML download action, including on Android Chrome. The page reports a download request, not an unobservable device-save success. Check Chrome's Downloads list; if browser settings open the image instead, use the visible **Open PNG if download does not start** link and the browser's save-image action. The site cannot force an OS folder or bypass device/browser policy. Physical Android saving still needs preview acceptance testing; automated mobile Chromium tests capture and validate the emitted PNG files.
+
+## Phase 5 — exact cinematic wardrobe registry
+
+The charcoal/emerald mobile RPG studio uses a large full-character portrait before compact keyboard-accessible choice cards. Class-dependent outfit cards are derived from `lib/character/portraits.json`: Ranger has Patched Cloak, Leather Vest and Forest Hood; Mage has Arcane Robes, Dark Sorcerer and Mystic Hood; Rogue has Shadow Hood, Assassin Gear and Thief Cloak; Warrior has Battle Armor, Berserker and Royal Guard. Class changes atomically choose the first valid outfit. Existing Ranger draft aliases migrate safely on read without rewriting storage.
+
+**All twelve approved Wolf variants are active:** Ranger / Patched Cloak, Leather Vest and Forest Hood, Mage / Arcane Robes, Dark Sorcerer and Mystic Hood; Rogue / Shadow Hood, Assassin Gear and Thief Cloak; and Warrior / Battle Armor, Berserker and Royal Guard. The unchanged original Wolf Ranger `portrait.png` remains a lower-priority fallback for Patched Cloak only. No Ranger image is used for Mage or any other outfit. Unsupported selections show a clear unavailable state, without cartoon or emoji substitutes. Character/passport PNG downloads remain available as clearly labelled identity-only cards when artwork is missing.
+
+The same resolver drives the live preview, Wanted Poster, Outlaw Profile, Guild Passport and PNGs. Actual artwork is contained without distortion or cropping. Wallet behavior, profile/passport routes and isolated guest/account drafts are preserved. No external image API or AI generation is introduced.
+
+See [the active asset inventory and rendering contract](docs/CINEMATIC_ASSETS.md). `npm run validate:art` runs before builds and verifies ready assets at their exact paths. Original images retain their actual dimensions and unchanged bytes (1030×1536; Mystic Hood and the Rogue originals are 1031×1536; Warrior originals are 1024×1536). New registered outfit names become options automatically. The cinematic UI mockup is also still missing; reference matching is not claimed.
+
+The replacement Warrior originals are genuine 1024×1536 PNGs at the requested paths. Their bytes and paths are preserved; strict PNG signature validation is restored, and browser canvas exports remain genuine PNG. Invalid legacy Warrior outfits normalize to Battle Armor on read; valid outfits, names and personality are preserved without rewriting storage.
+
+### Wallet-associated local character continuity
+
+Connected drafts already persist across sessions in the same browser and origin, separately per mainnet account. An empty connected account can now explicitly **USE GUEST CHARACTER FOR THIS ACCOUNT**; the guest original remains separate and existing saved account drafts are protected. This is local association, not wallet authentication, on-chain registration or cross-device sync. See [the identity audit and next-phase plan](docs/OUTLAW_IDENTITY.md) for current boundaries, storage behavior and future requirements.
+
+### Phase 6 — Bounty Board preview
+
+Visit `/bounties` from the main navigation (including the visible mobile row) or home-page callout. Six Creative, Social and Guild mission previews have category filters and dedicated contract pages describing proposed requirements and future evidence. Every contract is **PREVIEW / COMING SOON**. Reputation, badges, verification, submissions and rewards are not live; no completion, points, leaderboard or reward claim is simulated. The roadmap now reflects these boundaries. See [Bounty Board architecture and future requirements](docs/BOUNTY_BOARD.md).
+
+Phase 6.1 refines the board into a guild hall with original local heraldry, textured category contracts, concept recognition emblems and a sealed treasury. Essential availability details remain accessible through compact, keyboard-friendly disclosures; all missions remain preview-only. Motion respects reduced-motion preferences and decoration adds no remote artwork or image service.
+
+### Phase 7A — Secure Guild identity foundation (gated)
+
+`/guild-identity` introduces an optional NEP-413 proof flow, server-issued single-use challenges, key authorization checks, secure sessions and PostgreSQL-backed characters/revisions. It defaults to **not configured**: persistent registration is not operational on the preview. Regular Meteor connection remains account-only; a signature is requested only after explicit ownership verification on a configured deployment. Local drafts are never automatically uploaded or overwritten. No transaction, NFT or on-chain identity is added.
+
+Run `npm run test:security` for the SQL/cryptographic security tests. Provisioning, environment variables, migration/role requirements, Meteor limitations, validation boundaries and the exact Phase 7B checklist are in [the Phase 7A implementation report](docs/PHASE_7A_IDENTITY.md). `.env.example` contains placeholders only. Do not enable production from this phase.

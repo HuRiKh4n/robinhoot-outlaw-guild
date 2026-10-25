@@ -1,3 +1,4 @@
+import { choose, selected } from './creator-helpers';
 import { expect, test } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 import { mockMeteorWeb, openMeteor } from './helpers';
@@ -14,8 +15,8 @@ test('keyboard navigation opens My Outlaw and exports the exact preview as a PNG
   await expect(page.getByRole('heading', { name: 'MY OUTLAW', exact: true })).toBeVisible();
   await expect(nameInput(page)).toHaveValue('Forest Fox');
   await expect(page.getByText('DISCONNECTED · UNCONNECTED DRAFT', { exact: true })).toBeVisible();
-  await page.getByRole('combobox', { name: 'YOUR CLASS', exact: true }).selectOption('Trickster');
-  await page.getByRole('combobox', { name: 'YOUR SPECIES', exact: true }).selectOption('Fox');
+  await choose(page, 'CLASS', 'Trickster');
+  await choose(page, 'SPECIES', 'Fox');
   await expect(card(page)).toHaveAttribute('aria-label', /Forest Fox, Trickster, Fox/);
   await expect(page.getByText('Preview / Not minted / Not registered', { exact: true })).toBeVisible();
   const downloadLink = page.getByRole('button', { name: 'DOWNLOAD GUILD PASSPORT' });
@@ -31,7 +32,7 @@ test('keyboard navigation opens My Outlaw and exports the exact preview as a PNG
   expect(png.length).toBeGreaterThan(10000);
   await page.reload();
   await expect(nameInput(page)).toHaveValue('Forest Fox');
-  await expect(page.getByRole('combobox', { name: 'YOUR CLASS', exact: true })).toHaveValue('Trickster');
+  await selected(page, 'CLASS', 'Trickster');
   await expect(page.getByText('NOT registered on-chain or server-verified', { exact: false })).toBeVisible();
 });
 

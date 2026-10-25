@@ -1,0 +1,117 @@
+/* Original guild-hall decoration; no remote artwork, webfonts or animation runtime. */
+.bounty-page { --gold:#c6ab72; --vellum:#eddfbc; background:radial-gradient(ellipse at 0 35%,#263d2d40,transparent 55%),#0b120f; color:var(--vellum); }
+.bounty-page h1,.bounty-page h2,.bounty-page h3 { font-family:Georgia,'Times New Roman',serif; font-weight:normal; }
+.bounty-page .eyebrow { color:#bcaa7b; font-size:10px; letter-spacing:2px; line-height:1.7; }
+.bounty-page a:focus-visible,.bounty-page button:focus-visible,.bounty-page summary:focus-visible { outline:3px solid #d7c396; outline-offset:4px; }
+.bounty-page .site-header { background:#0a120ee8; position:relative; z-index:1; }
+.bounty-hero { position:relative; isolation:isolate; background:linear-gradient(0deg,#0b120f,transparent 35%,#0b120f30),url('/bounties/guild-hall.svg') center 45% / cover; border-bottom:1px solid #88724755; padding:14px 20px 30px; }
+.bounty-hero::before { content:''; position:absolute; inset:0; z-index:-1; background:radial-gradient(ellipse at 12% 40%,#b68d3c20,transparent 35%),radial-gradient(ellipse at 88% 40%,#b68d3c20,transparent 35%); pointer-events:none; }
+.bounty-hero::after { content:''; position:absolute; inset:0; z-index:-1; pointer-events:none; background:radial-gradient(circle at 22% 35%,#d9bd7a99 0 1px,transparent 2px),radial-gradient(circle at 76% 24%,#d9bd7a66 0 1px,transparent 2px),radial-gradient(circle at 65% 78%,#d9bd7a66 0 1px,transparent 2px); }
+.bounty-back { display:inline-flex; align-items:center; min-height:44px; font-size:10px; font-weight:700; letter-spacing:1px; color:#c2c8ad; line-height:1.5; }
+.guild-hall-entry { max-width:1020px; margin:12px auto 0; text-align:center; }
+.hall-insignia { display:grid; justify-items:center; gap:8px; }
+.guild-insignia { width:96px; height:108px; color:#bda16b; filter:drop-shadow(0 10px 18px #000a); }
+.hall-insignia > span { color:#bda779; font:9px Georgia,serif; letter-spacing:3px; }
+.hall-title > .eyebrow { margin:22px 0 12px; font-size:9px; }
+.bounty-hero h1 { font-size:clamp(40px,10.4vw,92px); line-height:1.04; letter-spacing:-1px; margin:0; text-shadow:0 4px 25px #000; color:#efe2c1; }
+.bounty-hero h1 em { color:#b9c6a9; font-style:normal; letter-spacing:5px; }
+.bounty-lead { font:italic 15px/1.7 Georgia,serif; color:#c6c3aa; margin:15px 0; }
+.bounty-hero-links { display:flex; align-items:center; justify-content:center; gap:8px 20px; flex-wrap:wrap; }
+.bounty-hero-links a,.bounty-text-link { gap:10px; display:inline-flex; align-items:center; justify-content:center; min-height:46px; font-size:10px; font-weight:700; letter-spacing:1px; color:#d1c7a5; line-height:1.6; }
+.hall-enter { border-block:1px solid #9f895b; padding:0 18px; gap:20px; background:linear-gradient(90deg,transparent,#75825c20,transparent); }
+.bounty-content { max-width:1220px; margin:auto; padding:0 18px 30px; }
+.bounty-preview-notice { display:grid; gap:2px; margin:20px 0 30px; padding:14px 16px; border-left:2px solid #8d8158; background:#a08e5a0b; }
+.bounty-preview-notice strong { color:#c9b47d; font-size:10px; letter-spacing:1px; }
+.bounty-preview-notice p { font-size:13px; line-height:1.65; color:#b9c1ae; margin:7px 0 0; }
+.bounty-preview-notice details { margin-top:2px; }
+.bounty-preview-notice summary { display:list-item; width:fit-content; min-height:44px; padding-block:12px; font-size:12px; color:#d2c6a8; cursor:pointer; }
+.bounty-preview-notice details p { max-width:780px; padding-bottom:8px; }
+.bounty-section-heading { display:flex; justify-content:space-between; align-items:center; gap:10px 20px; flex-wrap:wrap; }
+.bounty-section-heading .eyebrow { margin:0 0 6px; }
+.bounty-section-heading h2 { font-size:clamp(28px,4vw,40px); margin:0; }
+.bounty-count { font:italic 12px Georgia,serif; color:#acb39c; }
+.bounty-filters { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:6px; margin-top:20px; padding:5px; background:#050c09; border:1px solid #72654280; box-shadow:inset 0 2px 9px #0008; }
+.bounty-filters button { min-height:48px; padding:10px; background:linear-gradient(#273326,#172219); border:1px solid #6d705044; color:#c7ccb7; font:12px Georgia,serif; cursor:pointer; }
+.bounty-filters button[aria-pressed=true] { color:#f0dfb3; border-color:#b39b65; background:linear-gradient(#41462d,#263a29); box-shadow:inset 0 -2px #a38c56; }
+.bounty-filter-description { font-size:13px; color:#a8b69e; line-height:1.6; margin:12px 0 22px; min-height:42px; }
+.bounty-grid { display:grid; grid-template-columns:minmax(0,1fr); gap:22px; align-items:stretch; }
+.bounty-contract,.bounty-detail { --wax:#7c3228; --wax-light:#b46b48; --ink:#67372a; position:relative; isolation:isolate; min-width:0; color:#35281b; border:1px solid #977448; border-top:4px solid var(--ink); background:url('/bounties/parchment-grain.svg') repeat,radial-gradient(ellipse at 50% 15%,#f4e5c3aa,transparent 75%),linear-gradient(105deg,#b99760,#dfc894 20%,#e3cea3 75%,#b49562); box-shadow:inset 0 0 26px #63451f33,0 12px 25px #0006; }
+.contract-social { --wax:#344f60; --wax-light:#78908b; --ink:#364f55; }
+.contract-guild { --wax:#304e35; --wax-light:#768557; --ink:#3d5233; }
+.bounty-contract::before,.bounty-detail::before { content:''; position:absolute; inset:7px; border:1px solid #8a704880; pointer-events:none; z-index:-1; }
+.bounty-contract::after { content:''; position:absolute; inset:auto 11px -4px; height:5px; background:repeating-linear-gradient(115deg,#4d371f 0 2px,transparent 3px 12px); opacity:.3; pointer-events:none; }
+.bounty-contract { display:flex; flex-direction:column; padding:22px; }
+.contract-topline { display:flex; justify-content:space-between; align-items:center; gap:8px; font-size:10px; font-weight:700; letter-spacing:.8px; color:var(--ink); min-height:54px; }
+.contract-topline > span:first-child { max-width:calc(100% - 64px); }
+.contract-seal { position:relative; display:grid; place-items:center; width:54px; height:54px; flex-shrink:0; color:#e3cba0; border:2px solid var(--wax-light); border-radius:45% 51% 44% 52%; background:radial-gradient(circle at 36% 28%,var(--wax-light),var(--wax) 65%); box-shadow:inset 0 0 0 4px #0002,inset 0 -3px 6px #0006,2px 4px 5px #3a231e50; transform:rotate(-9deg); }
+.contract-seal svg { width:34px; height:34px; filter:drop-shadow(0 1px #0008); }
+.contract-watermark { position:absolute; right:34px; top:85px; width:95px; height:95px; color:var(--ink); opacity:.08; z-index:-1; transform:rotate(12deg); }
+.contract-watermark svg { width:100%; height:100%; }
+.contract-status { margin:10px 0 12px; font-size:10px; font-weight:800; letter-spacing:1px; color:#425333; }
+.bounty-contract h3 { font-size:clamp(26px,5vw,30px); line-height:1.14; margin:0 0 12px; text-wrap:balance; }
+.contract-description { font-size:14px; line-height:1.65; margin:0 0 18px; flex:1; }
+.contract-meta { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; border-top:1px solid #7c603755; padding:14px 0; margin:0; }
+.contract-meta dt { font-size:10px; text-transform:uppercase; letter-spacing:.5px; color:#644d30; }
+.contract-meta dd { font-size:12px; font-weight:700; margin:5px 0 0; line-height:1.55; }
+.contract-link { display:flex; justify-content:space-between; align-items:center; min-height:48px; padding:10px 13px; font-size:10px; font-weight:700; letter-spacing:1px; color:#f1e3bf; border:1px solid #5a6547; background:linear-gradient(#344631,#203223); }
+.bounty-page .contract-link:focus-visible,.bounty-detail summary:focus-visible { outline-color:#35492c; }
+.bounty-future { margin-top:38px; padding-top:30px; border-top:1px solid #87754977; scroll-margin-top:20px; }
+.future-label { display:inline-block; font-size:10px; letter-spacing:1px; color:#c1ad77; line-height:1.7; }
+.bounty-future .future-label { margin-top:6px; }
+.recognition-paths { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:7px; margin-top:22px; }
+.recognition-card { position:relative; min-width:0; text-align:center; padding:16px 5px 12px; background:linear-gradient(#1b281d,#0e1712); border-block:1px solid #69644777; }
+.recognition-emblem { width:min(85px,100%); aspect-ratio:100 / 110; margin:0 auto 14px; position:relative; color:#b59d62; }
+.emblem-frame { position:absolute; inset:0; width:100%; height:100%; }
+.recognition-emblem > svg:not(.emblem-frame) { position:absolute; width:55%; height:55%; top:20%; left:22.5%; }
+.emblem-story { color:#a7b8b6; }
+.emblem-story .emblem-frame { transform:rotate(4deg); }
+.emblem-service { color:#8da478; }
+.recognition-card h3 { font:600 12px Georgia,serif; letter-spacing:1.2px; margin:0 0 8px; color:#e5d4ad; }
+.recognition-card p { font-size:13px; color:#b1bba4; line-height:1.5; margin:0 0 12px; min-height:39px; }
+.badge-concept { display:block; font-size:10px; line-height:1.8; color:#d0bd8b; letter-spacing:.25px; }
+.recognition-card small { display:none; }
+.guild-fine-print { margin-top:12px; color:#adb89f; }
+.guild-fine-print summary { cursor:pointer; min-height:44px; padding-block:13px; font-size:12px; color:#c6c7ae; line-height:1.5; }
+.guild-fine-print p { margin:0 0 12px; font-size:13px; line-height:1.75; max-width:760px; }
+.bounty-rewards { display:grid; margin:25px 0 30px; position:relative; isolation:isolate; border-block:1px solid #74613b88; background:radial-gradient(ellipse at 50% 15%,#92713c25,transparent 60%),#0a110d; }
+.treasury-scene { position:relative; display:grid; place-items:center; min-height:230px; padding-top:10px; overflow:hidden; background:radial-gradient(ellipse at 50% 75%,#46604635,transparent 60%); }
+.treasury-arch { position:absolute; width:235px; height:290px; top:15px; border:18px solid #243125; border-bottom:0; border-radius:50% 50% 0 0; box-shadow:inset 0 0 0 1px #8b80544d,0 0 0 1px #8b805422; opacity:.8; }
+.treasury-chest { position:relative; width:min(360px,100%); height:auto; z-index:1; filter:drop-shadow(0 14px 18px #0008); }
+.treasury-seal { position:relative; margin-top:-8px; margin-bottom:14px; font-size:9px; letter-spacing:2px; color:#b5a174; z-index:1; }
+.treasury-copy { position:relative; padding:0 20px 20px; }
+.treasury-copy h2 { font-size:clamp(29px,4vw,42px); margin:8px 0 12px; }
+.treasury-copy > p:not(.eyebrow) { font-size:14px; line-height:1.7; color:#b7bfa8; margin:12px 0 0; }
+.bounty-next { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; padding:4px 0 20px; }
+.bounty-next h2 { font-size:24px; margin:6px 0; }
+.bounty-page .button { display:inline-flex; align-items:center; justify-content:center; min-height:48px; padding:12px 17px; background:linear-gradient(#3a4d32,#203526); border:1px solid #9b8a59; color:#eee0bc; font-size:11px; line-height:1.6; text-align:center; }
+.bounty-page footer { padding:32px 18px; border-top:1px solid #5c5c3c44; background:#080e0a; }
+.bounty-page footer b { font:16px Georgia,serif; letter-spacing:2px; }
+.bounty-page footer p { font-size:9px; letter-spacing:1px; }
+.bounty-detail-shell { max-width:860px; margin:auto; padding:18px 18px 40px; }
+.bounty-detail-shell > .bounty-preview-notice { margin-block:12px 22px; }
+.bounty-detail { padding:24px; }
+.bounty-detail .contract-seal { width:64px; height:64px; }
+.bounty-detail .contract-seal svg { width:40px; height:40px; }
+.bounty-detail h1 { font-size:clamp(32px,7vw,58px); line-height:1.1; letter-spacing:-.7px; margin:14px 0; text-wrap:balance; }
+.detail-lead { font:16px/1.7 Georgia,serif; margin-bottom:20px; }
+.bounty-detail .contract-meta > div:last-child { grid-column:1 / -1; }
+.bounty-detail section { margin-top:22px; }
+.bounty-detail section h2 { font-size:24px; margin:0 0 12px; }
+.bounty-detail li { font-size:14px; line-height:1.75; margin-bottom:10px; }
+.bounty-detail ul { padding-left:18px; margin-bottom:0; }
+.contract-evidence { margin-top:18px; border-block:1px solid #7c603755; }
+.contract-evidence summary { min-height:48px; padding-block:15px; color:#493c26; font:16px/1.5 Georgia,serif; cursor:pointer; }
+.contract-evidence ul { padding-bottom:12px; }
+.contract-closed { padding-top:18px; border-top:1px solid #7c603755; }
+.bounty-detail .contract-closed h2 { font-size:20px; margin:0 0 6px; }
+.contract-closed p { font-size:13px; line-height:1.65; margin:0; }
+.bounty-detail-footer { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-top:22px; }
+#contracts-title { scroll-margin-top:20px; }
+@media(min-width:700px) { .bounty-content { padding-inline:30px; } .bounty-hero { padding:16px 35px 45px; } .guild-hall-entry { display:grid; grid-template-columns:220px minmax(0,1fr); gap:55px; align-items:center; padding:28px 30px; text-align:left; } .guild-insignia { width:195px; height:220px; } .hall-title > .eyebrow { margin-top:0; } .bounty-hero h1 { font-size:clamp(55px,7.5vw,92px); } .bounty-hero-links { justify-content:flex-start; } .bounty-preview-notice { grid-template-columns:minmax(0,1fr) auto; align-items:start; gap:20px; } .bounty-preview-notice details { max-width:350px; } .bounty-preview-notice summary { white-space:nowrap; } .bounty-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } .bounty-filters { display:flex; } .bounty-filters button { flex:1; } .bounty-filter-description { min-height:0; } .recognition-paths { gap:20px; } .recognition-card { padding:20px; } .recognition-emblem { width:95px; } .recognition-card h3 { font-size:16px; } .recognition-card p { min-height:0; } .recognition-card small { display:block; font:italic 13px Georgia,serif; color:#a4b299; margin-top:14px; } .badge-concept { font-size:11px; } .bounty-rewards { grid-template-columns:1fr 1fr; align-items:center; } .treasury-scene { min-height:300px; } .treasury-arch { top:20px; height:360px; width:280px; } .treasury-copy { padding:28px; } .bounty-detail { padding:36px 42px; } .bounty-detail .contract-meta { grid-template-columns:repeat(3,minmax(0,1fr)); } .bounty-detail .contract-meta > div:last-child { grid-column:auto; } }
+@media(min-width:1100px) { .bounty-grid { grid-template-columns:repeat(3,minmax(0,1fr)); } }
+@media(prefers-reduced-motion:no-preference) { .guild-hall-entry { animation:hall-arrive .5s ease-out both; } .bounty-hero::after { animation:hall-light 7s ease-in-out infinite alternate; } .bounty-contract,.contract-link,.bounty-filters button { transition:transform .18s ease,box-shadow .18s ease,background-color .18s ease; } .bounty-contract:active { transform:translateY(1px); } .contract-link:hover { background:#43583b; } }
+@media(hover:hover) and (prefers-reduced-motion:no-preference) { .bounty-contract:hover,.bounty-contract:focus-within { transform:translateY(-4px); box-shadow:inset 0 0 26px #63451f33,0 18px 34px #0009; } }
+@keyframes hall-arrive { from { opacity:0; transform:translateY(5px); } to { opacity:1; transform:translateY(0); } }
+@keyframes hall-light { from { opacity:.3; } to { opacity:.65; } }
+
+.guild-arrow { flex-shrink:0; }

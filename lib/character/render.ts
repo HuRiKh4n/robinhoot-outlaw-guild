@@ -1,13 +1,11 @@
 import type { OutlawDraft } from '@/lib/profile/draft';
 import { clothing, ears, equipment, faceMarks, palette } from './layers';
 
-export const artStatus = 'Original vector illustration prototype · painted production artwork pending';
-
 /** All geometry is authored locally; no text input, external URLs or runtime art service. */
 export function characterSvg(draft: OutlawDraft): string {
   const animal = Object.prototype.hasOwnProperty.call(palette, draft.species) ? draft.species : 'Raccoon';
   const [fur, light, shadow] = palette[animal];
-  const wear = clothing[draft.outfit] ?? clothing['Patched Cloak'];
+  const wear = clothing[draft.outfit as keyof typeof clothing] ?? clothing['Patched Cloak'];
   const gear = equipment[draft.class] ?? equipment.Scout;
   const eye = draft.personality === 'Fearless' ? '#e9bc60' : draft.personality === 'Chaotic' ? '#a9c293' : '#c8b87d';
   return `<svg xmlns="http://www.w3.org/2000/svg" width="480" height="620" viewBox="0 0 480 620">
@@ -51,4 +49,3 @@ export function characterSvg(draft: OutlawDraft): string {
   <g fill="#d7ae63" opacity=".6"><circle cx="71" cy="369" r="1.5"/><circle cx="407" cy="130" r="2"/><circle cx="97" cy="95" r="1"/><circle cx="404" cy="560" r="1.5"/></g>
   </svg>`;
 }
-export function characterImage(draft: OutlawDraft) { return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(characterSvg(draft))}`; }
