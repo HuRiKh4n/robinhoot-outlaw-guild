@@ -4,6 +4,7 @@ import HeroMarquee from "@/components/HeroMarquee";
 import Particles from "@/components/motion/Particles";
 import HeroScenery from "@/components/motion/HeroScenery";
 import Reveal from "@/components/motion/Reveal";
+import SfxLink from "@/components/sound/SfxLink";
 import { portraits, webDerivatives } from "@/lib/character/appearance";
 
 const pick = (id: string) => portraits.find(asset => asset.id === id);
@@ -36,7 +37,7 @@ export default function Home() {
         <h1>THE CASTLES ARE FULL.<br /><em>THE TRENCHES ARE RISING.</em></h1>
         <p>They built the castles. They hoarded the gold. Then a broke fox showed up with a torn cloak, a rusty cup, and a plan.</p>
         <div className="actions">
-          <Link className="button" href="/my-outlaw">MAKE YOUR OUTLAW →</Link>
+          <SfxLink className="button" href="/my-outlaw">MAKE YOUR OUTLAW →</SfxLink>
           <a className="secondary" href="#tale">or hear the tale first ↓</a>
         </div>
         <HeroMarquee />
@@ -73,7 +74,7 @@ export default function Home() {
             <cite>— H.M. the Sheriff of Whaleingham</cite>
           </blockquote>
           <p className="villain-target">The whales have the gold.<br />The outlaws take it back to the trenches.</p>
-          <Link className="button" href="/my-outlaw">STEAL FROM THE WHALES →</Link>
+          <SfxLink className="button" href="/my-outlaw">STEAL FROM THE WHALES →</SfxLink>
         </div>
       </section>
 
@@ -88,7 +89,7 @@ export default function Home() {
             <p>{step.line}</p>
           </li>)}
         </ol>
-        <Link className="button" href="/my-outlaw">MAKE YOUR OUTLAW →</Link>
+        <SfxLink className="button" href="/my-outlaw">MAKE YOUR OUTLAW →</SfxLink>
       </section>
 
       <section className="bounty-home-callout" aria-labelledby="home-bounty-title">

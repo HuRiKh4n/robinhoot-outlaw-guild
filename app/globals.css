@@ -328,3 +328,16 @@ input:focus-visible, textarea:focus-visible { outline: 3px solid #df9950; outlin
 .herofox img{filter:drop-shadow(0 18px 30px #000c)}
 .herofox{width:min(300px,70vw)}
 @media(max-width:850px){.hero-moon{top:2.5%;right:auto;left:7%;width:56px}.particles-coin span:nth-child(odd){display:none}.particles-ember span:nth-child(3n){display:none}}
+
+/* ---- Stage 3: floating lute (music on/off) ---- */
+.sound-toggle{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(16px,env(safe-area-inset-bottom));z-index:60;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;border:2px solid #8a6d45;background:radial-gradient(circle at 35% 30%,#3a2a1e,#151712 70%);color:#d9b45c;box-shadow:0 8px 22px #000b,0 0 0 4px #15171299;cursor:pointer;transition:transform .2s ease,border-color .2s ease}
+.sound-toggle svg{width:36px;height:36px;margin:4px 0 0 4px}
+.sound-toggle:hover,.sound-toggle:focus-visible{transform:scale(1.07);border-color:#d88d42;outline:none}
+.sound-toggle:not(.is-on)::after{content:"";position:absolute;width:30px;height:2px;background:#c0392b;transform:rotate(-45deg);border-radius:2px;box-shadow:0 0 0 2px #151712}
+.sound-waves{position:absolute;right:9px;top:11px;display:flex;gap:2px;align-items:flex-end;height:12px}
+.sound-waves i{width:2px;background:#df9950;border-radius:1px;height:3px;opacity:0}
+.sound-toggle.is-on .sound-waves i{opacity:1;animation:sound-bar 1s ease-in-out infinite}
+.sound-toggle.is-on .sound-waves i:nth-child(2){animation-delay:-.4s}
+.sound-toggle.is-on .sound-waves i:nth-child(3){animation-delay:-.7s}
+@keyframes sound-bar{0%,100%{height:3px}50%{height:12px}}
+@media(prefers-reduced-motion:reduce){.sound-toggle.is-on .sound-waves i{animation:none;height:8px}}

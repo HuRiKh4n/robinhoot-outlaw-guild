@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import WalletControl from '@/components/wallet/WalletControl';
+import SoundToggle from '@/components/sound/SoundToggle';
 
 export default function SiteHeader() {
   return <nav className="site-header" aria-label="Main navigation">
@@ -10,5 +11,6 @@ export default function SiteHeader() {
       <Link href="/bounties">Bounties</Link>
     </div>
     <WalletControl />
+    <SoundToggle />
   </nav>;
 }
