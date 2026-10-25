@@ -560,3 +560,32 @@ nav.game-menu{display:block;padding:0;border:0;gap:0;justify-content:normal}
 .title-screen{min-height:max(620px,calc(100svh - 70px))}
 @media(max-width:700px){.ts-name{font-size:clamp(38px,12vw,60px)}}
 @media(max-width:700px){.title-screen .game-item em{display:none}.title-screen .game-item{letter-spacing:.2em}}
+
+/* Title screen with the painted castle + fox */
+.ts-art,.ts-art img{position:absolute;inset:0;width:100%;height:100%;display:block}
+.ts-art img{object-fit:cover;object-position:70% 50%;animation:ts-breathe 30s ease-in-out infinite alternate}
+@keyframes ts-breathe{from{transform:scale(1.02)}to{transform:scale(1.08) translateX(-1%)}}
+.ts-fog{opacity:.55;mix-blend-mode:screen}
+.ts-content::before{inset:0 -20% 0 -40px;background:linear-gradient(90deg,#060608e6 0%,#060608aa 50%,transparent)}
+.title-screen{min-height:max(620px,calc(100svh - 70px));display:flex;flex-direction:column;justify-content:center}
+.ts-content{padding-top:clamp(40px,8vh,110px)}
+@media(max-width:700px){
+  .title-screen{min-height:calc(100svh - 70px);justify-content:flex-start}
+  .ts-art img{object-position:50% 40%}
+  .ts-content{padding:34px 20px 120px;max-width:none}
+  .ts-content::before{inset:0;background:linear-gradient(180deg,#060608ee 0%,#060608aa 55%,#06060855 80%,transparent)}
+  .ts-name{font-size:clamp(40px,12.5vw,62px);letter-spacing:.1em}
+  .ts-sub{letter-spacing:.38em}
+  .title-screen .game-item{min-height:44px;font-size:14px}
+  .ts-press{bottom:22%}
+}
+@media(prefers-reduced-motion:reduce){.ts-art img{animation:none}}
+@media(max-width:700px){
+  .title-screen{min-height:calc(100svh - 150px)}
+  .ts-content{flex:1;display:flex;flex-direction:column;padding:26px 20px 70px}
+  .ts-content::before{background:linear-gradient(180deg,#060608f0 0%,#060608a0 30%,transparent 45%,transparent 62%,#060608d0 82%,#060608f2 100%)}
+  .ts-tag{margin-bottom:0}
+  .title-screen .game-menu{margin-top:auto;max-width:62%}
+  .title-screen .game-item{min-height:40px;padding:6px 10px 6px 30px;font-size:13px;letter-spacing:.18em}
+  .ts-foot{display:none}
+}

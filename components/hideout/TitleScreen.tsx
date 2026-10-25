@@ -32,24 +32,12 @@ export default function TitleScreen() {
 
   return <section className={`title-screen is-${stage}`} id="legend" aria-labelledby="title-name">
     <div className="ts-bg" aria-hidden="true">
-      <div className="ts-sky" />
-      <svg className="ts-castle" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice">
-        <defs>
-          <linearGradient id="tsfog" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#2a2a2e" stopOpacity="0" /><stop offset="1" stopColor="#0b0b0d" /></linearGradient>
-        </defs>
-        <path fill="#17171b" d="M0 900V560l90-60 70 30 110-120 90 70 120-150 160 140 90-60 140 120 110-90 130 110 160-150 120 120 120-70 90 50v460z" />
-        <path fill="#0f0f12" d="M520 900V520h30V380h-18l38-90 38 90h-18v120h40V300h-20l45-110 45 110h-20v160h40V250h-22l52-140 52 140h-22v220h50V340h-18l40-95 40 95h-18v160h44V420h-16l34-80 34 80h-16v180h60l200 300z" />
-        <g fill="#e6a548">
-          <rect className="ts-win" x="604" y="330" width="8" height="16" rx="4" /><rect className="ts-win w2" x="707" y="290" width="8" height="16" rx="4" />
-          <rect className="ts-win w3" x="812" y="270" width="9" height="18" rx="4" /><rect className="ts-win" x="828" y="360" width="8" height="15" rx="4" />
-          <rect className="ts-win w2" x="934" y="370" width="8" height="15" rx="4" /><rect className="ts-win w3" x="1020" y="450" width="7" height="13" rx="3" />
-        </g>
-        <path fill="#0c0c0e" d="M640 900l40-210h60l40 60h360l50-40h80l60 60h80l60-50h40v180z" />
-        <rect width="1600" height="900" fill="url(#tsfog)" />
-      </svg>
+      <picture className="ts-art">
+        <source media="(max-width: 700px) and (orientation: portrait)" type="image/webp" sizes="100vw" srcSet="/title/title-tall-800.webp 800w, /title/title-tall-941.webp 941w" />
+        <img src="/title/title-wide-1672.webp" srcSet="/title/title-wide-1100.webp 1100w, /title/title-wide-1672.webp 1672w" sizes="100vw" width={1672} height={941} alt="" fetchPriority="high" />
+      </picture>
       <div className="ts-fog" />
-      <picture className="ts-fox"><source srcSet="/images/robinhoot-fox.webp" type="image/webp" /><img src="/images/robinhoot-fox.png" alt="" width={1024} height={1536} /></picture>
-      <Particles kind="ember" count={26} seed={77} />
+      <Particles kind="ember" count={22} seed={77} />
     </div>
 
     <div className="ts-content">
