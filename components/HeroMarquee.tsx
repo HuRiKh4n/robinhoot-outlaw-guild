@@ -21,7 +21,7 @@ export default function HeroMarquee() {
       {[0, 1].map(copy => <ul key={copy} className="marquee-track" aria-hidden={copy === 1 || undefined}>
         {row.map(asset => <li key={asset.id}>
           <Link href="/my-outlaw" tabIndex={copy ? -1 : undefined} className="marquee-card">
-            <img src={webDerivatives(asset.src).thumb} width={240} height={360} alt={copy ? '' : `${asset.species} ${asset.class}, ${asset.outfit}`} loading={r ? 'lazy' : 'eager'} decoding="async" />
+            <img src={webDerivatives(asset.src).thumb} width={240} height={360} alt={copy ? '' : `${asset.species} ${asset.class}, ${asset.outfit}`} decoding="async" />
             <span>{asset.species} · {asset.class}</span>
           </Link>
         </li>)}
