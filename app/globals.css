@@ -233,3 +233,18 @@ input:focus-visible, textarea:focus-visible { outline: 3px solid #df9950; outlin
 @keyframes marquee-right{from{transform:translateX(-50%)}to{transform:translateX(0)}}
 @media(max-width:600px){.marquee-card{width:96px}.marquee-track,.hero-marquee{gap:10px}.marquee-track{padding:0 5px}.marquee-card span{font-size:8px;letter-spacing:.5px;padding:14px 3px 5px}}
 @media(prefers-reduced-motion:reduce){.marquee-row{animation:none}.hero-marquee{overflow-x:auto;-webkit-mask-image:none;mask-image:none}.marquee-track[aria-hidden]{display:none}}
+
+/* The villain: castle palette (ocean blue, royal purple, gold) as the opposite of the trench parchment */
+.villain{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:clamp(30px,5vw,70px);align-items:center;padding:100px max(7vw,25px);background:radial-gradient(ellipse at 25% 40%,#3a2350 0%,#16192b 48%,#0c0e18 85%);border-top:1px solid #6d5a2c;border-bottom:1px solid #6d5a2c;overflow:hidden}
+.villain-portrait{margin:0;position:relative;max-width:460px;justify-self:center;width:100%}
+.villain-portrait img{display:block;width:100%;height:auto;border:2px solid #b8913f;box-shadow:0 0 0 6px #0c0e18,0 0 0 7px #6d5a2c,0 0 60px #c79a3a33,0 30px 60px #000c}
+.villain .eyebrow{color:#c9a24f}
+.villain h2{font-size:clamp(38px,5.4vw,70px);margin:12px 0 18px;color:#e9e2f5}
+.villain h2 em{font-style:normal;color:#d9b45c}
+.villain-copy>p:not(.eyebrow){color:#c3bdd6;line-height:1.75;max-width:560px}
+.decree{margin:28px 0;padding:22px 24px;border:1px solid #8a6f33;border-left:5px solid #d9b45c;background:#1b1d33cc;font:500 clamp(19px,2.2vw,25px)/1.4 Oswald,sans-serif;color:#f1e6c6;max-width:560px}
+.decree span{display:block;font:800 11px 'DM Sans',sans-serif;letter-spacing:3px;color:#a98bd0;margin-bottom:10px}
+.decree cite{display:block;margin-top:12px;font:italic 400 13px 'DM Sans',sans-serif;color:#b5a985}
+.villain-target{font:700 clamp(20px,2.4vw,28px) Oswald,sans-serif!important;color:#df9950!important;letter-spacing:1px}
+.villain .button{display:inline-block;margin-top:8px}
+@media(max-width:850px){.villain{grid-template-columns:1fr;text-align:center;padding:70px 20px}.villain-portrait{max-width:340px}.villain-copy>p,.decree{margin-left:auto;margin-right:auto}.decree{text-align:left}}

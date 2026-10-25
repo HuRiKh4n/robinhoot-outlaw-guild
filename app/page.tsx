@@ -39,6 +39,27 @@ export default function Home() {
         </div>
       </section>
 
+      <section className="villain" aria-labelledby="villain-title">
+        <figure className="villain-portrait">
+          <picture>
+            <source srcSet="/villain/sheriff-of-whaleingham.webp" type="image/webp" />
+            <img src="/villain/sheriff-of-whaleingham.png" width={1027} height={1531} alt="The Sheriff of Whaleingham, a giant crowned whale in golden armor and an ermine cape, hugging a chest of gold coins" loading="lazy" decoding="async" />
+          </picture>
+        </figure>
+        <div className="villain-copy">
+          <p className="eyebrow">THE ENEMY OF THE GUILD</p>
+          <h2 id="villain-title">THE SHERIFF OF<br /><em>WHALEINGHAM.</em></h2>
+          <p>He owns the castles, the coins and the candles. He buys the dip before you see it and sells the top before you feel it. Every chest in the kingdom ends up under his flipper.</p>
+          <blockquote className="decree">
+            <span>BY ROYAL DECREE</span>
+            &ldquo;The gold belongs in the castle. The trenches may keep the mud.&rdquo;
+            <cite>— H.M. the Sheriff of Whaleingham</cite>
+          </blockquote>
+          <p className="villain-target">The whales have the gold.<br />The outlaws take it back to the trenches.</p>
+          <a className="button" href="#guild">STEAL FROM THE WHALES →</a>
+        </div>
+      </section>
+
       <OutlawProfile />
 
       <section className="bounty-home-callout" aria-labelledby="home-bounty-title">
