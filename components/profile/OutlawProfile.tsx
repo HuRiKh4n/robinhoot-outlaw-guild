@@ -136,7 +136,6 @@ function DraftEditor({ accountId, dedicated }: { accountId?: string; dedicated: 
       </>}
       <div className="prototype-notice">
         <strong>Kept in your satchel, not in the royal ledger.</strong>
-        {dedicated && }
         <p>Your outlaw is saved only in this browser. Linking a wallet just tells us your name: it doesn&rsquo;t prove anything, register anything or earn anything yet.</p>
         <p>{accountId ? 'Each wallet keeps its own outlaw on this device. Switch wallets and you will meet a different one.' : 'Without a wallet, your outlaw lives in this tab until you close it.'}</p>
       </div>
