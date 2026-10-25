@@ -10,6 +10,7 @@ export default function SiteHeader() {
       <Link href="/#tale">The Tale</Link>
       <Link href="/my-outlaw">Your Outlaw</Link>
       <Link href="/bounties">Bounties</Link>
+      <Link href="/loot">The Loot</Link>
     </div>
     <WalletControl />
     <SoundToggle />
