@@ -15,7 +15,7 @@ const nameInput = (page: Page) => page.getByRole('textbox', { name: 'YOUR OUTLAW
 
 test('wallet drafts stay isolated through reload, switching and disconnect', async ({ page, context }) => {
   await mockMeteorWeb(context, ['alpha.near', 'beta.near', 'alpha.near']);
-  await page.goto('/');
+  await page.goto('/my-outlaw');
   await expect(nameInput(page)).toBeEnabled();
   await nameInput(page).fill('Guest Fox');
   await choose(page, 'SPECIES', 'Fox');
@@ -29,14 +29,11 @@ test('wallet drafts stay isolated through reload, switching and disconnect', asy
   await choose(page, 'SPECIES', 'Wolf');
   await choose(page, 'OUTFIT', 'Forest Hood');
   await choose(page, 'PERSONALITY', 'Fearless');
-  await page.getByRole('link', { name: 'PROFILE', exact: true }).click();
-  const profile = page.getByRole('region', { name: 'OUTLAW PROFILE', exact: true });
-  await expect(profile.getByRole('heading', { name: 'Alpha Ranger', exact: true })).toBeVisible();
-  for (const text of ['Ranger', 'Wolf', 'Forest Hood', 'Fearless']) await expect(profile.locator('.profile-details').getByText(text, { exact: true })).toBeVisible();
-  await expect(profile).toContainText('NOT authenticated ownership');
-  await expect(profile).toContainText('NOT registered on-chain or server-verified');
-  await profile.getByRole('button', { name: 'EDIT PROFILE' }).click();
-  await expect(nameInput(page)).toBeFocused();
+  const profile = page.getByRole('region', { name: 'WHERE YOUR OUTLAW LIVES', exact: true });
+  await expect(page.locator('.poster')).toContainText('Alpha Ranger');
+  for (const text of ['Ranger', 'Wolf', 'Forest Hood']) await expect(page.locator('.poster')).toContainText(text);
+  await expect(profile).toContainText('saved only in this browser');
+  await expect(profile).toContainText('Each wallet keeps its own outlaw');
   await page.reload();
   await expect(nameInput(page)).toHaveValue('Alpha Ranger');
   await reconnect(page, 'alpha.near');
@@ -54,7 +51,7 @@ test('wallet drafts stay isolated through reload, switching and disconnect', asy
   await page.getByRole('button', { name: 'DISCONNECT WALLET', exact: true }).click();
   await expect(nameInput(page)).toHaveValue('Guest Fox');
   await selected(page, 'SPECIES', 'Fox');
-  await expect(profile).toContainText('UNCONNECTED DRAFT MODE');
+  await expect(page.getByText('NO WALLET · GUEST OUTLAW', { exact: true })).toBeVisible();
   await page.reload();
   await expect(nameInput(page)).toHaveValue('Guest Fox');
   const stored = await page.evaluate(() => ({
@@ -97,21 +94,19 @@ test('long wallet accounts never wrap or overflow the responsive header', async 
   await expect(page.locator('.wallet-account')).toHaveText(accountId);
   await expect(page.getByRole('button', { name: 'DISCONNECT WALLET', exact: true })).toBeVisible();
   await page.keyboard.press('Escape');
-  await page.getByRole('link', { name: 'PROFILE', exact: true }).click();
-  await page.locator('#profile').screenshot({ path: testInfo.outputPath('mobile-profile.png') });
   await page.locator('nav').first().screenshot({ path: testInfo.outputPath('mobile-header.png') });
-  await expect(page.getByRole('img', { name: 'RobinHoot — The Outlaw of NEAR', exact: true })).toBeAttached();
+  for (const name of ['The Tale', 'Your Outlaw', 'Bounties']) await expect(page.locator('nav').first().getByRole('link', { name, exact: true })).toBeVisible();
 });
 
 test('malformed local data cannot create membership or replace allowed creator choices', async ({ page }) => {
   await page.addInitScript(() => sessionStorage.setItem('robinhoot:outlaw-draft', JSON.stringify({
     name: 'Local Imposter', class: 'Admin', species: 'Dragon', outfit: 'Crown', personality: 'Verified', reputation: 99999, member: true,
   })));
-  await page.goto('/');
+  await page.goto('/my-outlaw');
   await expect(nameInput(page)).toHaveValue('Local Imposter');
   await selected(page, 'CLASS', 'Ranger');
   await selected(page, 'SPECIES', 'Wolf');
-  await expect(page.getByRole('region', { name: 'OUTLAW PROFILE', exact: true })).toContainText('do not establish reputation or membership');
+  await expect(page.getByRole('region', { name: 'WHERE YOUR OUTLAW LIVES', exact: true })).toContainText('doesn’t prove anything, register anything or earn anything');
   await nameInput(page).fill('Valid Local Draft');
   expect(await page.evaluate(() => JSON.parse(sessionStorage.getItem('robinhoot:outlaw-draft')!))).toEqual({ name: 'Valid Local Draft', class: 'Ranger', species: 'Wolf', outfit: 'Patched Cloak', personality: 'Cunning' });
 });
@@ -125,7 +120,7 @@ test('explicit guest copy preserves the full character across a new browser sess
   const guest = await page.evaluate(() => sessionStorage.getItem('robinhoot:outlaw-draft'));
   await connectWeb(page);
   await expect(nameInput(page)).toHaveValue('The Broke Bandit');
-  const copy = page.getByRole('button', { name: 'USE GUEST CHARACTER FOR THIS ACCOUNT', exact: true });
+  const copy = page.getByRole('button', { name: 'BRING MY GUEST OUTLAW', exact: true });
   await expect(copy).toBeVisible();
   await page.setViewportSize({width:320,height:851});
   const box = await copy.boundingBox(); expect(box!.height).toBeGreaterThanOrEqual(48);
@@ -159,7 +154,7 @@ test('guest copy fails honestly on storage errors and never replaces an existing
   await mockMeteorWeb(context, ['protected.near']);
   await page.goto('/my-outlaw'); await nameInput(page).fill('Guest Original');
   await connectWeb(page);
-  const copy = page.getByRole('button', { name:'USE GUEST CHARACTER FOR THIS ACCOUNT', exact:true });
+  const copy = page.getByRole('button', { name:'BRING MY GUEST OUTLAW', exact:true });
   await expect(copy).toBeVisible();
   await page.evaluate(() => {
     Reflect.set(window, '__originalStorageSet', Storage.prototype.setItem);

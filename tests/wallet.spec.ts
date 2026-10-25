@@ -3,7 +3,7 @@ import { mockMeteorWeb, openMeteor } from './helpers';
 
 test('Meteor connects without keys or signing, restores, switches and disconnects', async ({ page, context }) => {
   await mockMeteorWeb(context, ['first-outlaw.near', 'second-outlaw.near']);
-  await page.goto('/');
+  await page.goto('/my-outlaw');
   await page.getByRole('textbox', { name: 'YOUR OUTLAW NAME' }).fill('Android Bandit');
   await openMeteor(page);
   await page.getByRole('button', { name: 'Meteor Web', exact: true }).click();
@@ -37,15 +37,13 @@ test('Meteor connects without keys or signing, restores, switches and disconnect
   await page.reload();
   await expect(page.getByRole('button', { name: 'CONNECT WALLET', exact: true })).toBeEnabled();
   await expect(page.getByRole('textbox', { name: 'YOUR OUTLAW NAME' })).toHaveValue('Android Bandit');
-  await expect(page.getByRole('heading', { name: 'CREATE YOUR OUTLAW' })).toBeVisible();
-  await expect(page.getByRole('heading', { name: 'NOT ANOTHER CASTLE. AN OUTLAW GUILD.' })).toBeVisible();
-  await expect(page.getByText('CHAPTER V', { exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'YOUR OUTLAW', exact: true })).toBeVisible();
 });
 
 test('blocked wallet popup can be cancelled and retried without losing the character', async ({ page, context }) => {
   await mockMeteorWeb(context, ['unused.near']);
   await page.addInitScript(() => { window.open = () => null; });
-  await page.goto('/');
+  await page.goto('/my-outlaw');
   await page.getByRole('textbox', { name: 'YOUR OUTLAW NAME' }).fill('Still Here');
   await openMeteor(page);
   await page.getByRole('button', { name: 'Meteor Web', exact: true }).click();
@@ -57,7 +55,7 @@ test('blocked wallet popup can be cancelled and retried without losing the chara
 
 test('closing Meteor account selection leaves the site disconnected', async ({ page, context }) => {
   await mockMeteorWeb(context, []);
-  await page.goto('/');
+  await page.goto('/my-outlaw');
   await openMeteor(page);
   await page.getByRole('button', { name: 'Close Meteor Connect', exact: true }).click();
   await expect(page.getByRole('dialog', { name: 'CONNECT WALLET', exact: true }).getByRole('alert')).toContainText('not completed');
@@ -68,7 +66,7 @@ test('storage failure leaves the preview usable and offers setup retry', async (
   await page.addInitScript(() => {
     Storage.prototype.getItem = () => { throw new DOMException('Storage unavailable', 'SecurityError'); };
   });
-  await page.goto('/');
+  await page.goto('/my-outlaw');
   await page.getByRole('button', { name: 'CONNECT WALLET', exact: true }).click();
   await expect(page.getByRole('dialog', { name: 'CONNECT WALLET', exact: true }).getByRole('alert')).toContainText('Allow browser storage');
   await expect(page.getByRole('button', { name: 'RETRY WALLET SETUP' })).toBeEnabled();
@@ -91,7 +89,7 @@ test('desktop extension uses account-only login without a wallet signing request
       } },
     });
   });
-  await page.goto('/');
+  await page.goto('/my-outlaw');
   await openMeteor(page);
   await page.getByRole('button', { name: 'Chrome Extension', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Wallet connected: extension-outlaw.near. Manage wallet', exact: true })).toBeVisible();

@@ -13,7 +13,7 @@ export default function BountyBoard() {
     <div className="bounty-filters" role="group" aria-label="Filter missions by category">
       {(['All', ...categories] as const).map(value => <button key={value} type="button" aria-pressed={category === value} onClick={() => setCategory(value)}>{value === 'All' ? 'All contracts' : `${value} Bounties`}</button>)}
     </div>
-    <p className="bounty-filter-description">{category === 'All' ? 'Six stories waiting to be written. Find the one that calls to you.' : categoryNotes[category]}</p>
+    <p className="bounty-filter-description">{category === 'All' ? 'Six jobs, no takers yet. Which one has your name on it?' : categoryNotes[category]}</p>
     <div className="bounty-grid">
       {visible.map(bounty => <article key={bounty.id} className={`bounty-contract contract-${bounty.category.toLowerCase()}`} aria-labelledby={`title-${bounty.id}`}>
         <div className="contract-topline"><span>{bounty.id} / {bounty.category.toUpperCase()}</span><span className="contract-seal"><ContractSymbol id={bounty.id}/></span></div>

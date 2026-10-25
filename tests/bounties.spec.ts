@@ -89,10 +89,9 @@ test('board browsing preserves wallet and full local character; roadmap reports 
   await expect(page.locator('.character-preview-large img')).toHaveAttribute('src','/characters/wolf/mage/dark-sorcerer.png');
   expect(await page.evaluate(()=>localStorage.getItem('robinhoot:profile:v1:mainnet:board.near'))).toBe(before);
   await page.goto('/#roadmap');
-  await expect(page.locator('#roadmap')).toContainText('BOARD PREVIEW AVAILABLE');
-  await expect(page.locator('#roadmap')).toContainText('Submissions, verification, reputation and badges are not live.');
-  await expect(page.locator('#roadmap')).toContainText('No live AI generation.');
-  await expect(page.locator('#roadmap')).toContainText('Nothing to claim');
+  await expect(page.locator('#roadmap')).toContainText('The board is pinned to the tavern wall. Taking on jobs comes next.');
+  await expect(page.locator('#roadmap')).toContainText('The chest is still locked.');
+  await expect(page.locator('#roadmap li.is-done')).toHaveCount(2);
 });
 
 

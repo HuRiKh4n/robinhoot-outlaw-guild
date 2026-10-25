@@ -51,7 +51,7 @@ test('passport PNG pixels change with species, equipment and clothing, matching 
 
 test('legacy drafts keep their choices, retired Guardian reads as Warrior, and poster matches profile', async ({ page }) => {
   await page.addInitScript(() => sessionStorage.setItem('robinhoot:outlaw-draft', JSON.stringify({ name: 'Old Owl', animal: 'Owl', class: 'Guardian', outfit: 'Ragged Hood', trait: 'Loyal' })));
-  await page.goto('/');
+  await page.goto('/my-outlaw');
   await expect(page.getByRole('textbox', { name: 'YOUR OUTLAW NAME' })).toHaveValue('Old Owl');
   await selected(page, 'SPECIES', 'Owl');
   await selected(page, 'CLASS', 'Warrior');

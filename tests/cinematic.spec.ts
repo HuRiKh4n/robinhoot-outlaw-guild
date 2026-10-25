@@ -12,13 +12,13 @@ test('cinematic catalogue only covers exact ready species/class/outfit combinati
   const art = resolveAppearance(wolf, [entry]);
   expect(art.kind).toBe('cinematic'); expect(art.src).toBe(entry.src);
   expect(resolveAppearance({ ...wolf, name: 'Different name', personality: 'Loyal' }, [entry]).src).toBe(entry.src);
-  expect(art.note).toContain('does not change this portrait');
+  expect(art.note).toContain('shapes the story, not the portrait');
   for (const selection of [{ ...wolf, outfit: 'Ragged Hood' as const }, { ...wolf, class: 'Mage' as const }, { ...wolf, species: 'Fox' as const }]) {
     expect(resolveAppearance(selection, [entry]).kind).toBe('unavailable');
   }
   expect(resolveAppearance(wolf, [{ ...entry, status: 'awaiting-artwork' }]).kind).toBe('unavailable');
   expect(resolveAppearance(wolf).src).toBe('/characters/wolf/ranger/patched-cloak.png');
-  expect(resolveAppearance({ ...wolf, outfit: 'Ragged Hood' }).note).toContain('no other character or outfit is substituted');
+  expect(resolveAppearance({ ...wolf, outfit: 'Ragged Hood' }).note).toContain("haven't reached");
 });
 
 const variants = [
@@ -37,7 +37,7 @@ const variants = [
 ];
 
 test('all twelve actual Wolf images switch without reload and synchronize live, Wanted and profile', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/my-outlaw');
   await page.evaluate(() => Reflect.set(window, '__robinhootPreviewMarker', 'same-document'));
   await choose(page, 'SPECIES', 'Wolf');
   const sources = new Set<string>();
@@ -47,7 +47,7 @@ test('all twelve actual Wolf images switch without reload and synchronize live, 
     expect(bytes.subarray(0, 8).toString('hex')).toBe('89504e470d0a1a0a');
     expect(createHash('sha256').update(bytes).digest('hex')).toBe(checksum);
     await choose(page, 'CLASS', job); await choose(page, 'OUTFIT', outfit);
-    for (const selector of ['.character-preview-large img', '.poster img', '.profile-emblem img']) {
+    for (const selector of ['.character-preview-large img', '.poster img']) {
       const image = page.locator(selector);
       await expect(image).toHaveAttribute('src', source);
       await expect.poll(() => image.evaluate(element => (element as HTMLImageElement).naturalWidth)).toBe(portraits.find(asset => asset.src === source)!.width);
