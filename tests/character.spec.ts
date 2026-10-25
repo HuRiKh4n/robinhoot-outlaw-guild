@@ -3,17 +3,18 @@ import { expect, test } from '@playwright/test';
 import { readFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 
-const species = ['Fox', 'Wolf', 'Raccoon', 'Bear', 'Rabbit', 'Badger', 'Owl'];
-const classes = ['Ranger', 'Rogue', 'Warrior', 'Mage', 'Scout', 'Trickster', 'Guardian'];
-const outfits = ['Patched Cloak', 'Ragged Hood', 'Worn Leather Vest'];
+const speciesWithoutArt = ['Bear', 'Owl'];
+const classes = ['Ranger', 'Rogue', 'Warrior', 'Mage', 'Scout', 'Trickster'];
 
-test('unsupported species and classes show explicit unavailable states without fabricated art', async ({ page }, testInfo) => {
+test('species without artwork are not offered; a stored one still shows an explicit unavailable state', async ({ page }, testInfo) => {
   await page.goto('/my-outlaw');
-  for (const value of species) {
-    await choose(page, 'SPECIES', value);
-    await expect(page.locator('.character-preview-large img')).toHaveCount(0);
-    await expect(page.locator('.character-preview-large .portrait-unavailable')).toContainText(value);
-  }
+  await page.getByRole('tab', { name: /^Species\b/ }).click();
+  for (const value of speciesWithoutArt) await expect(page.getByRole('radio', { name: value, exact: true })).toHaveCount(0);
+  for (const value of ['Wolf', 'Fox', 'Raccoon', 'Rabbit', 'Badger']) await expect(page.getByRole('radio', { name: value, exact: true })).toHaveCount(1);
+  // A draft saved before Owl was hidden keeps its species and shows no substitute art for any class.
+  await page.evaluate(() => sessionStorage.setItem('robinhoot:outlaw-draft', JSON.stringify({ name: 'Old Owl', species: 'Owl', class: 'Ranger', outfit: 'Patched Cloak', personality: 'Loyal' })));
+  await page.reload();
+  await selected(page, 'SPECIES', 'Owl');
   for (const value of classes) {
     await choose(page, 'CLASS', value);
     await expect(page.locator('.character-preview-large img')).toHaveCount(0);
@@ -48,12 +49,12 @@ test('passport PNG pixels change with species, equipment and clothing, matching 
   expect(new Set(pngHashes).size).toBe(selections.length);
 });
 
-test('legacy drafts retain all choices and use the same art on poster and profile', async ({ page }) => {
+test('legacy drafts keep their choices, retired Guardian reads as Warrior, and poster matches profile', async ({ page }) => {
   await page.addInitScript(() => sessionStorage.setItem('robinhoot:outlaw-draft', JSON.stringify({ name: 'Old Owl', animal: 'Owl', class: 'Guardian', outfit: 'Ragged Hood', trait: 'Loyal' })));
   await page.goto('/');
   await expect(page.getByRole('textbox', { name: 'YOUR OUTLAW NAME' })).toHaveValue('Old Owl');
   await selected(page, 'SPECIES', 'Owl');
-  await selected(page, 'CLASS', 'Guardian');
+  await selected(page, 'CLASS', 'Warrior');
   await expect(page.locator('.character-preview-large img, .poster .character-preview img, .profile-emblem img')).toHaveCount(0);
   await expect(page.locator('.poster')).toContainText('Cinematic artwork not yet available');
   const stored = await page.evaluate(() => JSON.parse(sessionStorage.getItem('robinhoot:outlaw-draft')!));

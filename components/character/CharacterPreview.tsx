@@ -11,7 +11,10 @@ export default function CharacterPreview({ draft, large = false }: { draft: Outl
     <div className="portrait-frame" data-art-kind={art.kind}>
       {!art.src ? <div className="portrait-unavailable" role="status"><strong>CINEMATIC ARTWORK UNAVAILABLE</strong><p>{draft.species} · {draft.class}</p><p>{draft.outfit}</p><small>Your selections remain editable. No substitute artwork is shown.</small></div>
         : failedSource === art.src ? <div className="portrait-unavailable" role="status">Character artwork could not load. Your selections remain saved; image downloads are unavailable.</div>
-        : <img key={art.src} className="portrait-reveal" src={art.src} width={art.width} height={art.height} alt={art.alt} onError={() => setFailedSource(art.src)} />}
+        : <picture key={art.src}>
+            <source srcSet={art.display} type="image/webp" />
+            <img className="portrait-reveal" src={art.src} width={art.width} height={art.height} alt={art.alt} decoding="async" onError={() => setFailedSource(art.src)} />
+          </picture>}
     </div>
     <figcaption>{large && <strong>{draft.species} · {draft.class}</strong>}<span>{art.label}</span></figcaption>
   </figure>;

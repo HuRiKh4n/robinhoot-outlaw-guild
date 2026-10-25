@@ -5,8 +5,9 @@ import { classDraft, defaultDraft, outfitsFor, parseDraft } from '../lib/profile
 import { choose, selected } from './creator-helpers';
 
 const variants = portraits.filter(asset => !asset.fallback);
-test('all twelve exact approved paths are registered; active variants resolve without cross-class substitution', async () => {
-  expect(variants.map(asset=>asset.src)).toEqual([
+test('every registered path is unique and each ready variant resolves to its own art without cross-species or cross-class substitution', async () => {
+  const wolf = variants.filter(asset => asset.species === 'Wolf').map(asset => asset.src);
+  expect(wolf.slice(0, 12)).toEqual([
     '/characters/wolf/ranger/patched-cloak.png', '/characters/wolf/ranger/leather-vest.png',
     '/characters/wolf/ranger/forest-hood.png', '/characters/wolf/mage/arcane-robes.png',
     '/characters/wolf/mage/dark-sorcerer.png', '/characters/wolf/mage/mystic-hood.png',
@@ -15,13 +16,14 @@ test('all twelve exact approved paths are registered; active variants resolve wi
     '/characters/wolf/warrior/berserker.png',
     '/characters/wolf/warrior/royal-guard.png',
   ]);
+  expect(new Set(variants.map(asset => asset.src)).size).toBe(variants.length);
   const ready: PortraitAsset[] = variants;
   expect(ready.every(asset=>asset.status==='ready')).toBe(true);
   for (const asset of ready) {
-    const draft={...defaultDraft,species:'Wolf' as const,class:asset.class as 'Ranger'|'Mage'|'Rogue'|'Warrior',outfit:asset.outfit!};
+    const draft={...defaultDraft,species:asset.species as typeof defaultDraft.species,class:asset.class as typeof defaultDraft.class,outfit:asset.outfit!};
     expect(resolveAppearance(draft,ready).src).toBe(asset.src);
   }
-  expect(resolveAppearance({...defaultDraft,species:'Wolf',class:'Scout'},ready).kind).toBe('unavailable');
+  expect(resolveAppearance({...defaultDraft,species:'Owl',class:'Scout',outfit:'Wanderer Pack'},ready).kind).toBe('unavailable');
   for (const asset of variants) {
     const exists=await access(`public${asset.src}`).then(()=>true,()=>false);
     expect(exists).toBe(true); // All approved originals must exist at these exact case-sensitive paths.

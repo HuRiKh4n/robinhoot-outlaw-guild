@@ -59,9 +59,8 @@ test('all twelve actual Wolf images switch without reload and synchronize live, 
   }
   expect(sources.size).toBe(variants.length);
   expect(await page.evaluate(() => Reflect.get(window, '__robinhootPreviewMarker'))).toBe('same-document');
-  await choose(page, 'CLASS', 'Scout');
-  await expect(page.locator('.character-preview-large img')).toHaveCount(0);
-  await expect(page.locator('.art-availability')).toContainText('No cinematic artwork');
+  await page.getByRole('tab', { name: /^Species\b/ }).click();
+  await expect(page.getByRole('radio', { name: 'Owl', exact: true })).toHaveCount(0);
 });
 
 test('all twelve Wolf variants render into passport and both real PNG downloads', async ({ page }, testInfo) => {
@@ -125,4 +124,16 @@ test('cinematic studio stays usable at narrow Android and desktop sizes', async 
   }
   await page.setViewportSize({ width: 393, height: 851 });
   await page.locator('.builder-stage').screenshot({ path: testInfo.outputPath('cinematic-mobile-foundation.png') });
+});
+
+test('all sixteen Fox variants, including Scout and Trickster, show their own original artwork', async ({ page }) => {
+  const fox = portraits.filter(asset => asset.species === 'Fox' && asset.status === 'ready');
+  expect(fox).toHaveLength(16);
+  await page.goto('/my-outlaw'); await choose(page, 'SPECIES', 'Fox');
+  for (const asset of fox) {
+    await choose(page, 'CLASS', asset.class); await choose(page, 'OUTFIT', asset.outfit!);
+    await expect(page.locator('.character-preview-large img')).toHaveAttribute('src', asset.src);
+    await expect(page.locator('.poster')).toContainText(asset.outfit!.toUpperCase());
+  }
+  await expect(page.locator('.character-preview-large picture source')).toHaveAttribute('srcset', fox.at(-1)!.src.replace(/\.png$/, '.webp'));
 });

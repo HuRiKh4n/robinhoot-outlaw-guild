@@ -1,7 +1,14 @@
 import catalogue from '../character/portraits.json';
 
 export const species = ['Raccoon', 'Wolf', 'Rabbit', 'Fox', 'Badger', 'Owl', 'Bear'] as const;
-export const classes = ['Scout', 'Ranger', 'Trickster', 'Guardian', 'Rogue', 'Warrior', 'Mage'] as const;
+/** Species shown in the creator: only those with at least one ready portrait.
+ *  Owl and Bear stay valid for stored drafts and reappear automatically once their art is registered. */
+export const offeredSpecies: readonly typeof species[number][] = species.filter(name =>
+  catalogue.some(asset => asset.species === name && asset.status === 'ready'));
+/** Classes offered in the creator: only those with a registered cinematic wardrobe. */
+export const classes = ['Scout', 'Ranger', 'Trickster', 'Rogue', 'Warrior', 'Mage'] as const;
+/** Retired classes (no artwork yet) map to the closest active class when an old draft is read. */
+export const legacyClasses: Record<string, typeof classes[number]> = { Guardian: 'Warrior' };
 export const outfits = ['Patched Cloak', 'Ragged Hood', 'Worn Leather Vest'] as const;
 export const personalities = ['Cunning', 'Fearless', 'Chaotic', 'Loyal'] as const;
 export interface OutlawDraft {
@@ -12,7 +19,7 @@ export interface OutlawDraft {
   personality: typeof personalities[number];
 }
 export const defaultDraft: OutlawDraft = {
-  name: 'The Broke Bandit', species: 'Raccoon', class: 'Scout', outfit: 'Patched Cloak', personality: 'Cunning',
+  name: 'The Broke Bandit', species: 'Wolf', class: 'Ranger', outfit: 'Patched Cloak', personality: 'Cunning',
 };
 
 /** Registry entries define class outfit choices even while their artwork is missing. */
@@ -34,7 +41,8 @@ export function parseDraft(raw: string | null): OutlawDraft {
     function choice<T extends string>(options: readonly T[], input: unknown, fallback: T): T {
       return typeof input === 'string' && options.includes(input as T) ? input as T : fallback;
     }
-    const characterClass = choice(classes, value.class, defaultDraft.class);
+    const storedClass = typeof value.class === 'string' ? legacyClasses[value.class] ?? value.class : value.class;
+    const characterClass = choice(classes, storedClass, defaultDraft.class);
     const aliases: Record<string, string> = { 'Worn Leather Vest': 'Leather Vest', 'Ragged Hood': 'Forest Hood' };
     const oldOutfit = typeof value.outfit === 'string' ? value.outfit : '';
     const normalized = characterClass === 'Ranger' ? aliases[oldOutfit] ?? oldOutfit : oldOutfit;
