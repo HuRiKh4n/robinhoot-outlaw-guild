@@ -694,7 +694,8 @@ nav.site-header{backdrop-filter:none;-webkit-backdrop-filter:none}
   nav.site-header .brand{font-size:18px;letter-spacing:.1em}
   nav.site-header .brand span{font-size:9px;letter-spacing:.2em;padding-left:29px}
   nav.site-header .wallet-trigger{font-size:10px;letter-spacing:.12em;padding:8px 10px;box-shadow:none}
-  nav.site-header .nav-links a{font-size:12px;letter-spacing:.12em}
+  nav.site-header .nav-links{justify-content:space-between;gap:4px}
+  nav.site-header .nav-links a{font-size:11.5px;letter-spacing:.08em;white-space:nowrap}
   .page-dark .eyebrow{font-size:11px;letter-spacing:.22em}
   .my-outlaw.guild{padding:32px 18px}
   .my-outlaw h1{font-size:clamp(40px,12vw,56px);letter-spacing:.08em}
