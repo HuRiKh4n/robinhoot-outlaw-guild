@@ -115,3 +115,49 @@
 @keyframes hall-light { from { opacity:.3; } to { opacity:.65; } }
 
 .guild-arrow { flex-shrink:0; }
+
+/* ===== Dark cinematic re-skin (matches the title screen) ===== */
+.bounty-page.page-dark{background:var(--night)}
+.bounty-page h1,.bounty-page h2,.bounty-page h3{font-family:'Cormorant Garamond',Georgia,serif}
+.bounty-page .eyebrow{color:var(--gold);font:600 11px 'Cormorant Garamond',Georgia,serif;letter-spacing:.38em}
+.bounty-page .site-header{background:#07070af2}
+.bounty-hero{background:linear-gradient(180deg,#07070acc 0%,#07070a99 40%,#07070a 100%),url('/hideout/hideout-wide-1100.webp') 92% 40% / cover;border-bottom:1px solid var(--gold-soft);padding:20px 20px 46px}
+.bounty-hero::before{background:radial-gradient(ellipse at 50% 60%,#d88d4218,transparent 60%)}
+.bounty-hero::after{display:none}
+.bounty-back,.bounty-hero-links a,.bounty-text-link{color:var(--gold);font:600 12px 'Cormorant Garamond',Georgia,serif;letter-spacing:.3em}
+.guild-insignia{color:var(--gold)}
+.hall-insignia > span{color:var(--gold);font-family:'Cormorant Garamond',Georgia,serif;letter-spacing:.4em}
+.bounty-hero h1{font-weight:400;letter-spacing:.12em;color:var(--ink);text-shadow:0 4px 30px #000}
+.bounty-hero h1 em{color:var(--ember);letter-spacing:.2em}
+.bounty-lead{font:italic 20px/1.6 'Cormorant Garamond',Georgia,serif;color:#cfc6b3}
+.hall-enter{border-color:var(--gold);background:linear-gradient(90deg,transparent,#d88d421c,transparent)}
+.bounty-preview-notice{border-left-color:var(--ember);background:#0d0d11cc;font-family:'Cormorant Garamond',Georgia,serif}
+.bounty-preview-notice strong{color:var(--ember);letter-spacing:.3em}
+.bounty-preview-notice p,.bounty-preview-notice details p{color:var(--ink-dim);font-size:16px}
+.bounty-section-heading h2{font-weight:400;letter-spacing:.06em;color:var(--ink)}
+.bounty-count,.future-label{color:var(--gold);font-family:'Cormorant Garamond',Georgia,serif;letter-spacing:.25em}
+.bounty-filter-description{color:var(--ink-dim);font:italic 17px 'Cormorant Garamond',Georgia,serif}
+.bounty-filters button{background:transparent;border:1px solid var(--gold-soft);color:#b9b0a0;font:600 12px 'Cormorant Garamond',Georgia,serif;letter-spacing:.28em;text-transform:uppercase}
+.bounty-filters button:hover{border-color:var(--gold);color:var(--ink)}
+.bounty-filters button[aria-pressed=true]{color:#fff6e2;border-color:var(--ember);background:linear-gradient(90deg,#d88d4226,#d88d420a);box-shadow:inset 3px 0 0 var(--ember)}
+/* Contracts stay parchment, pinned to the dark wall */
+.bounty-contract{box-shadow:0 22px 44px #000d,0 0 0 1px #6b4f2c;transform:rotate(var(--tilt,-.5deg));transition:transform .3s ease,box-shadow .3s ease}
+.bounty-contract:nth-child(2n){--tilt:.6deg}.bounty-contract:nth-child(3n){--tilt:-.9deg}
+.bounty-contract:hover{transform:rotate(0) translateY(-6px);box-shadow:0 30px 60px #000,0 0 0 1px #c9a464}
+.bounty-contract h3,.bounty-detail h1{font-weight:600;letter-spacing:.04em;color:#2a1c12}
+.contract-status{color:#7c1f16;letter-spacing:.3em;font-family:'Cormorant Garamond',Georgia,serif;font-size:11px}
+.recognition-card{background:#0d0d11cc;border-block:1px solid var(--gold-soft)}
+.recognition-card h3{color:var(--ink);letter-spacing:.3em;font-family:'Cormorant Garamond',Georgia,serif}
+.recognition-card p{color:var(--ink-dim);font-family:'Cormorant Garamond',Georgia,serif;font-size:16px}
+.bounty-rewards{border-block:1px solid var(--gold-soft);background:radial-gradient(ellipse at 50% 20%,#d88d4218,transparent 60%),#08080b}
+.bounty-next h2{font-weight:400;color:var(--ink);letter-spacing:.04em}
+.bounty-page .button{background:linear-gradient(#9b3a24,#6e2416);border:1px solid #e2a35c;color:#fff2da;font:600 12px 'Cormorant Garamond',Georgia,serif;letter-spacing:.28em;border-radius:0;box-shadow:inset 0 0 0 3px #6e2416,inset 0 0 0 4px #e2a35c55}
+.bounty-page footer{background:#050507;border-top:1px solid var(--gold-soft)}
+.bounty-detail-shell{position:relative}
+@media(max-width:700px){
+  .bounty-hero h1{letter-spacing:.06em}
+  .bounty-back,.bounty-hero-links a,.bounty-text-link,.bounty-filters button{letter-spacing:.16em}
+  .bounty-page .button{letter-spacing:.16em}
+  .bounty-contract{transform:none}
+}
+@media(prefers-reduced-motion:reduce){.bounty-contract{transition:none}}
