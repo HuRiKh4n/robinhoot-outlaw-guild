@@ -217,3 +217,19 @@ input:focus-visible, textarea:focus-visible { outline: 3px solid #df9950; outlin
 
 .guild-identity-page .prototype-notice { overflow-wrap:anywhere; }
 .guild-identity-page .button { min-height:48px; max-width:100%; line-height:1.5; white-space:normal; }
+
+/* Home hero: endlessly scrolling guild portraits */
+.hero{position:relative;overflow:hidden}
+.hero-marquee{width:100vw;max-width:none;margin:34px 0 6px;display:grid;gap:14px;-webkit-mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);mask-image:linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent)}
+.marquee-row{display:flex;width:max-content;animation:marquee-left 70s linear infinite}
+.marquee-reverse{animation-name:marquee-right;animation-duration:85s}
+.marquee-row:hover,.marquee-row:focus-within{animation-play-state:paused}
+.marquee-track{display:flex;gap:14px;margin:0;padding:0 7px;list-style:none}
+.marquee-card{display:block;position:relative;width:132px;border:1px solid #8a6d45;background:#101310;box-shadow:0 0 0 3px #151712,0 0 0 4px #5d4a30,0 12px 26px #0009;transition:transform .25s ease,box-shadow .25s ease}
+.marquee-card img{display:block;width:100%;height:auto;aspect-ratio:2/3;object-fit:cover}
+.marquee-card span{position:absolute;inset:auto 0 0;padding:16px 6px 6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font:700 10px Oswald,sans-serif;letter-spacing:1.5px;text-transform:uppercase;color:#f2e4c8;background:linear-gradient(transparent,#0c0e0bdd 55%)}
+.marquee-card:hover,.marquee-card:focus-visible{transform:translateY(-6px) rotate(-1.5deg);box-shadow:0 0 0 3px #151712,0 0 0 4px #d88d42,0 18px 30px #000b;outline:none}
+@keyframes marquee-left{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes marquee-right{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+@media(max-width:600px){.marquee-card{width:96px}.marquee-track,.hero-marquee{gap:10px}.marquee-track{padding:0 5px}.marquee-card span{font-size:8px;letter-spacing:.5px;padding:14px 3px 5px}}
+@media(prefers-reduced-motion:reduce){.marquee-row{animation:none}.hero-marquee{overflow-x:auto;-webkit-mask-image:none;mask-image:none}.marquee-track[aria-hidden]{display:none}}
