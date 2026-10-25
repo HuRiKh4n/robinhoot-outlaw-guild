@@ -16,6 +16,28 @@ export default function HideoutScene() {
   const { on, toggle, play } = useSound();
   const stage = useRef<HTMLDivElement>(null);
   const [entering, setEntering] = useState(false);
+  const [withVideo, setWithVideo] = useState(false);
+  const [videoReady, setVideoReady] = useState(false);
+  const video = useRef<HTMLVideoElement>(null);
+
+  // Desktop: the living version of the room (silent looping video). Phones, data-saver and
+  // reduced-motion visitors keep the still painting.
+  useEffect(() => {
+    const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
+    if (saveData || window.matchMedia('(prefers-reduced-motion: reduce)').matches || !window.matchMedia('(min-width: 701px)').matches) return;
+    setWithVideo(true);
+  }, []);
+
+  // Only play while the room is on screen.
+  useEffect(() => {
+    const element = video.current;
+    if (!withVideo || !element || !('IntersectionObserver' in window)) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) void element.play().catch(() => {}); else element.pause();
+    }, { threshold: 0.15 });
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [withVideo]);
 
   // First visit of the session: the room starts dark and the lantern light spreads through it.
   useEffect(() => {
@@ -63,13 +85,17 @@ export default function HideoutScene() {
 
   return <section className="hideout" aria-labelledby="hideout-title">
     <h2 id="hideout-title" className="visually-hidden">The outlaws&rsquo; hideout</h2>
-    <div ref={stage} className={`hideout-stage${entering ? ' is-entering' : ''}`}>
+    <div ref={stage} className={`hideout-stage${entering ? ' is-entering' : ''}${videoReady ? ' has-video' : ''}`}>
       <div className="hideout-diorama">
       <picture className="hideout-art">
         <source media="(max-width: 700px)" type="image/webp" sizes="100vw" srcSet="/hideout/hideout-tall-828.webp 828w, /hideout/hideout-tall-1200.webp 1200w" />
         <img src="/hideout/hideout-wide-1600.webp" srcSet="/hideout/hideout-wide-1100.webp 1100w, /hideout/hideout-wide-1600.webp 1600w, /hideout/hideout-wide-2400.webp 2400w" sizes="100vw" width={2400} height={1340}
           alt="A cosy, messy hideout under the trenches: a fox pins WANTED posters to the wall, an open storybook lies on the table, a window shows the whale's golden castle, a chained chest glows by the fire, a raccoon bard plays the lute and a bounty board hangs on the right." fetchPriority="high" />
       </picture>
+      {withVideo && <video ref={video} className="hideout-video" autoPlay muted loop playsInline preload="auto" poster="/hideout/hideout-wide-1600.webp" aria-hidden="true" onPlaying={() => setVideoReady(true)}>
+        <source src="/hideout/hideout-wide-loop.webm" type="video/webm" />
+        <source src="/hideout/hideout-wide-loop.mp4" type="video/mp4" />
+      </video>}
 
       <div className="hideout-fx" aria-hidden="true">
         <span className="fx fx-fire" style={place(fire.wide, fire.tall)}><Particles kind="ember" count={10} seed={31} /></span>

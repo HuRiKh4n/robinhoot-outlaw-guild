@@ -453,3 +453,8 @@ input:focus-visible, textarea:focus-visible { outline: 3px solid #df9950; outlin
 @media(max-width:700px){.hideout-stage.is-entering .hideout-curtain{background:radial-gradient(circle at 40% 16%,#ffcf7a55 0%,transparent calc(var(--reveal) * .12),#070503 var(--reveal))}.hideout-diorama{scale:1}}
 @media(hover:none){.hideout-diorama{transform:none}.hideout-stage.is-exploring .hideout-torch{opacity:.45}}
 @media(prefers-reduced-motion:reduce){.hideout-diorama{transform:none;transition:none}.hideout-torch{display:none}.hideout-curtain{display:none}.home-hideout .hideout-intro h1{animation:none}}
+/* Living room video (desktop) */
+.hideout-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .9s ease}
+.has-video .hideout-video{opacity:1}
+.has-video .fx-fire,.has-video .fx-castle,.has-video .fx-chest{display:none}
+@media(max-width:700px){.hideout-video{display:none}}
