@@ -12,7 +12,7 @@ const paths = [
   {id:'service', title:'SERVICE', description:'Constructive guild work', motto:'Strengthen the guild.'},
 ] as const;
 export default function Bounties() {
-  return <main className="bounty-page"><SiteHeader />
+  return <main className="bounty-page page-dark"><SiteHeader />
     <section className="bounty-hero" aria-labelledby="bounty-title">
       <Link className="bounty-back" href="/">← BACK TO THE TALE</Link>
       <div className="guild-hall-entry"><div className="hall-insignia"><GuildInsignia /><span>THE OUTLAW GUILD</span></div>

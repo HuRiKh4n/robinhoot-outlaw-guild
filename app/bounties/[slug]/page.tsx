@@ -16,7 +16,7 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
 export default async function BountyDetail({params}: Props) {
   const bounty = bountyBySlug((await params).slug);
   if (!bounty) notFound();
-  return <main className="bounty-page"><SiteHeader /><div className="bounty-detail-shell">
+  return <main className="bounty-page page-dark"><SiteHeader /><div className="bounty-detail-shell">
     <Link className="bounty-back" href="/bounties">← BACK TO THE BOUNTY BOARD</Link>
     <PreviewNotice />
     <article className={`bounty-detail contract-${bounty.category.toLowerCase()}`} aria-labelledby="mission-title">
