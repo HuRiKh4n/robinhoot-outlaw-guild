@@ -30,7 +30,7 @@ export default function WalletControl() {
       // Do not render wallet payloads or log callback/account data.
       setError(action === 'disconnect'
         ? 'Wallet disconnection failed. Please try again.'
-        : 'Meteor connection was not completed. Allow popups or use Meteor Mobile, return here, and try again.');
+        : 'The wallet didn’t answer. Allow popups (or open Meteor Mobile), come back here and try again.');
       if (!dialog.current?.open) dialog.current?.showModal();
     } finally {
       running.current = false;
@@ -53,8 +53,8 @@ export default function WalletControl() {
           <h2 id="wallet-title">{account ? 'YOUR WALLET' : 'CONNECT WALLET'}</h2>
           <button type="button" className="wallet-close" aria-label="Close wallet dialog" onClick={() => dialog.current?.close()}>×</button>
         </div>
-        <p className="eyebrow">NEAR MAINNET · CONNECTION ONLY</p>
-        <p id="wallet-description">Share your account with RobinHoot. No transactions, token approvals, access keys, or signatures are requested.</p>
+        <p className="eyebrow">NEAR · METEOR WALLET</p>
+        <p id="wallet-description">Tell the guild your name. We only read your account: nothing to sign, nothing to approve, no coins move.</p>
         {account ? <>
           <p className="wallet-account">{account.accountId}</p>
           <p>Connected with Meteor Wallet</p>
@@ -71,10 +71,10 @@ export default function WalletControl() {
           <button type="button" className="button wallet-disconnect" disabled={busy} onClick={() => void run('disconnect')}>DISCONNECT WALLET</button>
         </> : <>
           <button type="button" className="button" disabled={!connection || busy} onClick={() => void run('connect')}>CONTINUE WITH METEOR WALLET ↗</button>
-          <p className="note">Choose Meteor Web or the browser extension on desktop. On Android, use Meteor Web or pair with Meteor Mobile using its Open button. Return here after connecting.</p>
+          <p className="note">On a computer, use Meteor Web or the extension. On Android, use Meteor Web or tap Open in Meteor Mobile, then come back here.</p>
         </>}
         {!connection && setupError && <button type="button" className="button" onClick={retry}>RETRY WALLET SETUP</button>}
-        <p className="note">Connection does not verify ownership or register guild membership. Never share your seed phrase with this site.</p>
+        <p className="note">Never share your seed phrase. Not with us, not with anyone.</p>
         <p role="status" aria-live="polite">{busy ? 'Waiting for wallet…' : ''}</p>
         {message && <p role="alert" className="wallet-error">{message}</p>}
       </dialog>

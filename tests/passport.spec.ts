@@ -8,13 +8,13 @@ const card = (page: import('@playwright/test').Page) => page.getByRole('img', { 
 
 test('keyboard navigation opens My Outlaw and exports the exact preview as a PNG', async ({ page }, testInfo) => {
   await page.goto('/');
-  await nameInput(page).fill('Forest Fox');
-  const link = page.getByRole('link', { name: 'MY OUTLAW / PASSPORT →', exact: true });
+  const link = page.getByRole('link', { name: 'MAKE YOUR OUTLAW →', exact: true }).first();
   await link.focus(); await page.keyboard.press('Enter');
   await expect(page).toHaveURL(/\/my-outlaw$/);
-  await expect(page.getByRole('heading', { name: 'MY OUTLAW', exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'YOUR OUTLAW', exact: true })).toBeVisible();
+  await nameInput(page).fill('Forest Fox');
   await expect(nameInput(page)).toHaveValue('Forest Fox');
-  await expect(page.getByText('DISCONNECTED · UNCONNECTED DRAFT', { exact: true })).toBeVisible();
+  await expect(page.getByText('NO WALLET · GUEST OUTLAW', { exact: true })).toBeVisible();
   await choose(page, 'CLASS', 'Trickster');
   await choose(page, 'SPECIES', 'Fox');
   await expect(card(page)).toHaveAttribute('aria-label', /Forest Fox, Trickster, Fox/);
@@ -33,17 +33,17 @@ test('keyboard navigation opens My Outlaw and exports the exact preview as a PNG
   await page.reload();
   await expect(nameInput(page)).toHaveValue('Forest Fox');
   await selected(page, 'CLASS', 'Trickster');
-  await expect(page.getByText('NOT registered on-chain or server-verified', { exact: false })).toBeVisible();
+  await expect(page.getByText('saved only in this browser', { exact: false })).toBeVisible();
 });
 
 test('passport drafts and account opt-in stay isolated when switching and disconnecting', async ({ page, context }) => {
   await mockMeteorWeb(context, ['alpha.near', 'beta.near', 'alpha.near']);
   await page.goto('/my-outlaw');
-  await expect(page.getByText('Your outlaw story is unwritten.', { exact: true })).toBeVisible();
+  await expect(page.getByText('Every outlaw starts as a stranger.', { exact: true })).toBeVisible();
   await nameInput(page).fill('Guest Outlaw');
   await openMeteor(page); await page.getByRole('button', { name: 'Meteor Web', exact: true }).click();
   await expect(page.getByRole('button', { name: 'Wallet connected: alpha.near. Manage wallet', exact: true })).toBeEnabled();
-  await expect(page.getByText('CONNECTED · ACCOUNT-ONLY', { exact: true })).toBeVisible();
+  await expect(page.getByText('WALLET LINKED · SAVED ON THIS DEVICE', { exact: true })).toBeVisible();
   await expect(nameInput(page)).toHaveValue('The Broke Bandit');
   await nameInput(page).fill('Alpha Fox');
   await expect(card(page)).not.toHaveAttribute('aria-label', /alpha.near/);

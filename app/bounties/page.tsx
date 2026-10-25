@@ -5,7 +5,7 @@ import BountyBoard from '@/components/bounties/BountyBoard';
 import { GuildInsignia, RecognitionEmblem, TreasuryChest, ArrowMark } from '@/components/bounties/GuildArt';
 import PreviewNotice from '@/components/bounties/PreviewNotice';
 
-export const metadata: Metadata = { title: 'Bounty Board | RobinHoot', description: 'Enter the Outlaw Guild hall. Explore six mission contracts; submissions, reputation and rewards are not live.' };
+export const metadata: Metadata = { title: 'Bounty Board | RobinHoot', description: 'Six jobs pinned to the tavern wall for brave outlaws of NEAR. Taking them on comes later.' };
 const paths = [
   {id:'craft', title:'CRAFT', description:'Creative contributions', motto:'Leave your mark.'},
   {id:'story', title:'STORY', description:'Stories & community', motto:'Carry the legend.'},
@@ -14,9 +14,9 @@ const paths = [
 export default function Bounties() {
   return <main className="bounty-page"><SiteHeader />
     <section className="bounty-hero" aria-labelledby="bounty-title">
-      <Link className="bounty-back" href="/">← BACK TO THE LEGEND</Link>
+      <Link className="bounty-back" href="/">← BACK TO THE TALE</Link>
       <div className="guild-hall-entry"><div className="hall-insignia"><GuildInsignia /><span>THE OUTLAW GUILD</span></div>
-        <div className="hall-title"><p className="eyebrow">THE HALL OF CONTRACTS</p><h1 id="bounty-title">THE BOUNTY<br /><em>BOARD.</em></h1><p className="bounty-lead">Choose your path. Write the next legend.</p>
+        <div className="hall-title"><p className="eyebrow">THE HALL OF CONTRACTS</p><h1 id="bounty-title">THE BOUNTY<br /><em>BOARD.</em></h1><p className="bounty-lead">Pinned to the tavern wall, under a broken lantern.</p>
           <div className="bounty-hero-links"><a className="hall-enter" href="#contracts-title">ENTER THE HUNT <ArrowMark down /></a><a href="#guild-reputation">THE GUILD’S LEGACY <ArrowMark /></a></div>
         </div>
       </div>
@@ -30,6 +30,6 @@ export default function Bounties() {
       <section className="bounty-rewards" aria-labelledby="rewards-title"><div className="treasury-scene"><span className="treasury-arch" aria-hidden="true"/><TreasuryChest /><span className="treasury-seal">GUILD TREASURY · SEALED</span></div><div className="treasury-copy"><p className="eyebrow">BEYOND THE IRON DOOR</p><h2 id="rewards-title">The Guild Treasury</h2><span className="future-label">PLANNED · NOT CLAIMABLE</span><p>The chest stays locked. No $RHOOT rewards are currently available. Reputation Points (RP) are a separate planned off-chain recognition system.</p><details className="guild-fine-print"><summary>Future rewards & availability</summary><p>Formats, eligibility and funding are undefined. There is no guaranteed token distribution, payment, allocation, reward amount or financial return. Nothing can be claimed or purchased here.</p></details><Link className="bounty-text-link" href="/#roadmap">FOLLOW THE ROADMAP →</Link></div></section>
       <aside className="bounty-next"><div><p className="eyebrow">YOUR STORY STARTS HERE</p><h2>Bring your outlaw to the hall.</h2></div><Link className="button" href="/my-outlaw">OPEN MY OUTLAW →</Link></aside>
     </div>
-    <footer><b>ROBINHOOT · OUTLAW GUILD</b><p>THE LEGEND IS STILL BEING WRITTEN.</p></footer>
+    <footer><b>🦊 ROBINHOOT</b><p>A TALE FROM THE KINGDOM OF NEAR · $RHOOT</p><p>A meme, a story and a guild. No treasure is promised, only the adventure.</p></footer>
   </main>;
 }

@@ -1,9 +1,22 @@
-"use client";
-
 import SiteHeader from "@/components/SiteHeader";
 import Link from "next/link";
-import OutlawProfile from "@/components/profile/OutlawProfile";
 import HeroMarquee from "@/components/HeroMarquee";
+import { portraits, webDerivatives } from "@/lib/character/appearance";
+
+const pick = (id: string) => portraits.find(asset => asset.id === id);
+const steps = [
+  { n: "1", title: "Pick a creature", line: "Fox, wolf, raccoon, rabbit or badger. Each one carries its own kind of trouble.", art: pick("fox-ranger-patched-cloak") ?? pick("wolf-patched-cloak") },
+  { n: "2", title: "Choose a calling", line: "Archer, mage, thief, fighter, wanderer or trickster. What will they whisper about you in the taverns?", art: pick("raccoon-mage-dark-sorcerer") ?? pick("wolf-dark-sorcerer") },
+  { n: "3", title: "Dress for the job", line: "Sixteen outfits per creature. Then print your WANTED poster and hang it where the Sheriff can see it.", art: pick("badger-warrior-royal-guard") ?? pick("wolf-royal-guard") },
+];
+
+const road: { n: string; title: string; line: string; done: boolean; treasure?: boolean }[] = [
+  { n: "I", title: "The Broke Fox", line: "The tale is told and the tavern doors are open.", done: true },
+  { n: "II", title: "Assemble the Guild", line: "Eighty outlaws painted so far. Make yours and print your poster.", done: true },
+  { n: "III", title: "The Bounty Hunt", line: "The board is pinned to the tavern wall. Taking on jobs comes next.", done: false },
+  { n: "IV", title: "Loot for the Trenches", line: "The chest is still locked. We open it together, once the rules are fair and written down.", done: false, treasure: true },
+  { n: "V", title: "Kingdom Without Kings", line: "One day the guild will write its own chapters.", done: false },
+];
 
 export default function Home() {
   return (
@@ -11,31 +24,28 @@ export default function Home() {
       <SiteHeader />
 
       <section className="hero" id="legend">
-        <p className="eyebrow">THE OUTLAW OF NEAR · CHAPTER I</p>
+        <p className="eyebrow">A TALE FROM THE KINGDOM OF NEAR</p>
         <div className="herofox">
-          <img
-            src="/images/file_000000001d188246a150a12121d3ed34.png"
-            alt="RobinHoot — The Outlaw of NEAR"
-            style={{ width: "100%", maxWidth: "340px", height: "auto", objectFit: "contain" }}
-          />
+          <img src="/images/file_000000001d188246a150a12121d3ed34.png" alt="RobinHoot, the broke fox of NEAR" width={340} height={340} />
         </div>
         <h1>THE CASTLES ARE FULL.<br /><em>THE TRENCHES ARE RISING.</em></h1>
         <p>They built the castles. They hoarded the gold. Then a broke fox showed up with a torn cloak, a rusty cup, and a plan.</p>
         <div className="actions">
-          <a className="button" href="#guild">BECOME AN OUTLAW →</a>
-          <a className="secondary" href="#roadmap">READ THE ROADMAP ↓</a>
-          <Link className="secondary" href="/my-outlaw">MY OUTLAW / PASSPORT →</Link>
+          <Link className="button" href="/my-outlaw">MAKE YOUR OUTLAW →</Link>
+          <a className="secondary" href="#tale">or hear the tale first ↓</a>
         </div>
         <HeroMarquee />
-        <small>STEAL THE HYPE. GIVE IT TO THE TRENCHES.</small>
+        <small>STEAL FROM THE WHALES. GIVE TO THE TRENCHES.</small>
       </section>
 
-      <section className="manifesto">
-        <div className="stamp">WANTED<br />DEAD BROKE</div>
-        <div>
-          <p className="eyebrow">THE MANIFESTO</p>
-          <h2>NOT ANOTHER CASTLE.<br />AN OUTLAW GUILD.</h2>
-          <p>Every wallet deserves a character. Every outlaw deserves a mission. Join a community where memes become missions and creativity builds reputation.</p>
+      <section id="tale" className="tale" aria-labelledby="tale-title">
+        <p className="eyebrow">CHAPTER ONE</p>
+        <h2 id="tale-title">Once upon a time, in the kingdom of NEAR…</h2>
+        <div className="tale-text">
+          <p><span className="dropcap">A</span> whale grew so fat on gold that he bought the castles, the coins and even the candles. He called himself the Sheriff, and he made one rule: the gold stays up here, the mud stays down there.</p>
+          <p>Down in the trenches lived everybody else. Foxes with torn cloaks. Raccoons with quick paws. Badgers who never back down, rabbits who hear everything, wolves who forget nothing.</p>
+          <p>One rainy night a broke fox climbed out of the mud with a bow he had carved himself. He looked up at the castle, counted the windows, and grinned.</p>
+          <p className="tale-end">That was the night the guild was born.</p>
         </div>
       </section>
 
@@ -47,7 +57,7 @@ export default function Home() {
           </picture>
         </figure>
         <div className="villain-copy">
-          <p className="eyebrow">THE ENEMY OF THE GUILD</p>
+          <p className="eyebrow">THE VILLAIN OF OUR TALE</p>
           <h2 id="villain-title">THE SHERIFF OF<br /><em>WHALEINGHAM.</em></h2>
           <p>He owns the castles, the coins and the candles. He buys the dip before you see it and sells the top before you feel it. Every chest in the kingdom ends up under his flipper.</p>
           <blockquote className="decree">
@@ -56,43 +66,50 @@ export default function Home() {
             <cite>— H.M. the Sheriff of Whaleingham</cite>
           </blockquote>
           <p className="villain-target">The whales have the gold.<br />The outlaws take it back to the trenches.</p>
-          <a className="button" href="#guild">STEAL FROM THE WHALES →</a>
+          <Link className="button" href="/my-outlaw">STEAL FROM THE WHALES →</Link>
         </div>
       </section>
 
-      <OutlawProfile />
+      <section id="join" className="join" aria-labelledby="join-title">
+        <p className="eyebrow">JOIN THE GUILD</p>
+        <h2 id="join-title">Your outlaw, in three moves.</h2>
+        <ol className="join-steps">
+          {steps.map(step => <li key={step.n}>
+            {step.art && <img src={webDerivatives(step.art.src).thumb} width={240} height={360} alt="" loading="lazy" decoding="async" />}
+            <b>{step.n}</b>
+            <h3>{step.title}</h3>
+            <p>{step.line}</p>
+          </li>)}
+        </ol>
+        <Link className="button" href="/my-outlaw">MAKE YOUR OUTLAW →</Link>
+      </section>
 
       <section className="bounty-home-callout" aria-labelledby="home-bounty-title">
-        <div><p className="eyebrow">CHAPTER III · CONTRACT PREVIEWS</p><h2 id="home-bounty-title">THE BOUNTY BOARD</h2><p>Creative work. Original stories. A guild built together. Explore six mission concepts; submissions, reputation and rewards are not live.</p></div>
-        <Link className="button" href="/bounties">EXPLORE THE BOUNTY BOARD →</Link>
+        <div>
+          <p className="eyebrow">PINNED TO THE TAVERN WALL</p>
+          <h2 id="home-bounty-title">THE BOUNTY BOARD</h2>
+          <p>Six jobs for brave outlaws: tall tales, wanted posters, songs for the trenches. The board is up. The payouts aren&rsquo;t, yet.</p>
+        </div>
+        <Link className="button" href="/bounties">READ THE BOARD →</Link>
       </section>
 
-      <section id="roadmap" className="roadmap">
-        <p className="eyebrow">THE OUTLAW ROADMAP</p>
-        <h2>FROM ONE BROKE FOX<br />TO AN ARMY OF OUTLAWS.</h2>
-        <div className="chapters">
-          {[
-            ["I", "THE BROKE FOX", "Website and manifesto available. Community growth is ongoing.", "SITE AVAILABLE"],
-            ["II", "ASSEMBLE THE GUILD", "Cinematic creator with 80 original portraits across five species, local profiles, WANTED posters and passport PNGs available. Meteor is account-only; no authenticated or on-chain identity. No live AI generation.", "LOCAL PROTOTYPE AVAILABLE"],
-            ["III", "THE BOUNTY HUNT", "Bounty Board and mission details available as previews. Submissions, verification, reputation and badges are not live.", "BOARD PREVIEW AVAILABLE"],
-            ["IV", "LOOT FOR THE TRENCHES", "Reward rules, eligibility and any funding remain undefined. Nothing to claim; no guaranteed token distributions or returns.", "PLANNED · NOT LIVE"],
-            ["V", "KINGDOM WITHOUT KINGS", "Future stories, collaborative challenges and community proposals. No governance system is live.", "PLANNED · NOT LIVE"]
-          ].map(([n, t, d, status]) => (
-            <article key={n}>
-              <b>CHAPTER {n}</b>
-              <h3>{t}</h3>
-              <span className="roadmap-status">{status}</span>
-              <p>{d}</p>
-            </article>
-          ))}
-        </div>
-        <p className="note">Roadmap features are development plans, not live functionality or guaranteed rewards.</p>
+      <section id="roadmap" className="roadmap" aria-labelledby="roadmap-title">
+        <p className="eyebrow">THE ROAD AHEAD</p>
+        <h2 id="roadmap-title">FROM ONE BROKE FOX<br />TO AN ARMY OF OUTLAWS.</h2>
+        <ol className="treasure-map">
+          {road.map(stop => <li key={stop.n} className={stop.done ? "is-done" : stop.treasure ? "is-treasure" : undefined}>
+            <span className="map-pin" aria-hidden="true">{stop.done ? "✓" : stop.treasure ? "✕" : ""}</span>
+            <b>CHAPTER {stop.n}</b>
+            <h3>{stop.title}</h3>
+            <p>{stop.line}</p>
+          </li>)}
+        </ol>
       </section>
 
       <footer>
         <b>🦊 ROBINHOOT</b>
-        <p>THE OUTLAW OF NEAR · $RHOOT</p>
-        <p>Built for the trenches. No promises of returns.</p>
+        <p>A TALE FROM THE KINGDOM OF NEAR · $RHOOT</p>
+        <p>A meme, a story and a guild. No treasure is promised, only the adventure.</p>
       </footer>
     </main>
   );
