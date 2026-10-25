@@ -3,6 +3,7 @@
 import SiteHeader from "@/components/SiteHeader";
 import Link from "next/link";
 import OutlawProfile from "@/components/profile/OutlawProfile";
+import HeroMarquee from "@/components/HeroMarquee";
 
 export default function Home() {
   return (
@@ -25,6 +26,7 @@ export default function Home() {
           <a className="secondary" href="#roadmap">READ THE ROADMAP ↓</a>
           <Link className="secondary" href="/my-outlaw">MY OUTLAW / PASSPORT →</Link>
         </div>
+        <HeroMarquee />
         <small>STEAL THE HYPE. GIVE IT TO THE TRENCHES.</small>
       </section>
 
@@ -50,7 +52,7 @@ export default function Home() {
         <div className="chapters">
           {[
             ["I", "THE BROKE FOX", "Website and manifesto available. Community growth is ongoing.", "SITE AVAILABLE"],
-            ["II", "ASSEMBLE THE GUILD", "Cinematic creator, 12 Wolf variants, local profiles, WANTED posters and passport PNGs available. Meteor is account-only; no authenticated or on-chain identity. No live AI generation.", "LOCAL PROTOTYPE AVAILABLE"],
+            ["II", "ASSEMBLE THE GUILD", "Cinematic creator with 80 original portraits across five species, local profiles, WANTED posters and passport PNGs available. Meteor is account-only; no authenticated or on-chain identity. No live AI generation.", "LOCAL PROTOTYPE AVAILABLE"],
             ["III", "THE BOUNTY HUNT", "Bounty Board and mission details available as previews. Submissions, verification, reputation and badges are not live.", "BOARD PREVIEW AVAILABLE"],
             ["IV", "LOOT FOR THE TRENCHES", "Reward rules, eligibility and any funding remain undefined. Nothing to claim; no guaranteed token distributions or returns.", "PLANNED · NOT LIVE"],
             ["V", "KINGDOM WITHOUT KINGS", "Future stories, collaborative challenges and community proposals. No governance system is live.", "PLANNED · NOT LIVE"]
