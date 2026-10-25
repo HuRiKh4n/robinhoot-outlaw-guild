@@ -96,7 +96,7 @@ async function initialize(): Promise<WalletConnection> {
       if (active() !== challenge.accountId || proof.accountId !== challenge.accountId) {
         throw new Error('Selected account changed.');
       }
-      return { accountId: proof.accountId, publicKey: proof.publicKey, signature: proof.signature };
+      return { accountId: proof.accountId, publicKey: proof.publicKey, signature: await toBase64Signature(proof.signature) };
     },
     subscribe(listener) {
       listeners.add(listener);
@@ -124,4 +124,18 @@ async function initialize(): Promise<WalletConnection> {
       emit();
     },
   };
+}
+
+/** Wallets disagree on the signature encoding (base64, base64url or "ed25519:" + base58).
+ *  The guild server accepts standard base64 only, so normalise here. */
+async function toBase64Signature(signature: string): Promise<string> {
+  let bytes: Uint8Array;
+  if (signature.startsWith('ed25519:')) {
+    const { default: bs58 } = await import('bs58');
+    bytes = bs58.decode(signature.slice(8));
+  } else {
+    const plain = signature.replace(/-/g, '+').replace(/_/g, '/');
+    bytes = Uint8Array.from(atob(plain + '='.repeat((4 - plain.length % 4) % 4)), character => character.charCodeAt(0));
+  }
+  return btoa(String.fromCharCode(...bytes));
 }
