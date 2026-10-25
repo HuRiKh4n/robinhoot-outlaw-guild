@@ -879,5 +879,16 @@
     "width": 1024,
     "height": 1536,
     "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "badger-warrior-royal-guard",
+    "species": "Badger",
+    "class": "Warrior",
+    "outfit": "Royal Guard",
+    "status": "ready",
+    "src": "/characters/badger/warrior/royal-guard.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
   }
 ]
