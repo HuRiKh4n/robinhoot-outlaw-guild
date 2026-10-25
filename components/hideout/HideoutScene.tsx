@@ -6,6 +6,9 @@ import { castleGlow, chestGlow, coinSparkle, fire, hotspots, type Box, type Hots
 import { useSound } from '@/components/sound/SoundProvider';
 import Particles from '@/components/motion/Particles';
 
+/** Set to true once animated loops of the dark hideout are in public/hideout/hideout-{wide,tall}-loop.{webm,mp4}. */
+const HAS_VIDEO = false;
+
 const place = (wide: Box, tall: Box) => ({
   '--x': wide[0], '--y': wide[1], '--w': wide[2], '--h': wide[3],
   '--tx': tall[0], '--ty': tall[1], '--tw': tall[2], '--th': tall[3],
@@ -25,7 +28,7 @@ export default function HideoutScene() {
   // Data-saver and reduced-motion visitors keep the still painting.
   useEffect(() => {
     const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
-    if (saveData || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (!HAS_VIDEO || saveData || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const phone = window.matchMedia('(max-width: 700px)');
     const pick = () => { setVideoReady(false); setWithVideo(phone.matches ? 'tall' : 'wide'); };
     pick();
@@ -111,11 +114,11 @@ export default function HideoutScene() {
     <div ref={stage} className={`hideout-stage${entering ? ' is-entering' : ''}${videoReady ? ' has-video' : ''}`}>
       <div className="hideout-diorama">
       <picture className="hideout-art">
-        <source media="(max-width: 700px)" type="image/webp" sizes="100vw" srcSet="/hideout/hideout-tall-828.webp 828w, /hideout/hideout-tall-1200.webp 1200w" />
-        <img src="/hideout/hideout-wide-1600.webp" srcSet="/hideout/hideout-wide-1100.webp 1100w, /hideout/hideout-wide-1600.webp 1600w, /hideout/hideout-wide-2400.webp 2400w" sizes="100vw" width={2400} height={1340}
-          alt="A cosy, messy hideout under the trenches: a fox pins WANTED posters to the wall, an open storybook lies on the table, a window shows the whale's golden castle, a chained chest glows by the fire, a raccoon bard plays the lute and a bounty board hangs on the right." fetchPriority="high" />
+        <source media="(max-width: 700px)" type="image/webp" sizes="100vw" srcSet="/hideout/hideout-tall-800.webp 800w, /hideout/hideout-tall-941.webp 941w" />
+        <img src="/hideout/hideout-wide-1672.webp" srcSet="/hideout/hideout-wide-1100.webp 1100w, /hideout/hideout-wide-1672.webp 1672w" sizes="100vw" width={1672} height={941}
+          alt="The outlaws' hideout carved into the rock at night: the fox pins WANTED posters to the wall, an old book lies open on the table, a window looks out on the Sheriff's gothic castle, a chained chest glows by the fire, a hooded raccoon plays the lute and a bounty board hangs on the right." fetchPriority="high" />
       </picture>
-      {withVideo && <video key={withVideo} ref={video} className="hideout-video" autoPlay muted loop playsInline preload="auto" poster={withVideo === 'tall' ? '/hideout/hideout-tall-828.webp' : '/hideout/hideout-wide-1600.webp'} aria-hidden="true" onPlaying={() => setVideoReady(true)}>
+      {withVideo && <video key={withVideo} ref={video} className="hideout-video" autoPlay muted loop playsInline preload="auto" poster={withVideo === 'tall' ? '/hideout/hideout-tall-800.webp' : '/hideout/hideout-wide-1672.webp'} aria-hidden="true" onPlaying={() => setVideoReady(true)}>
         <source src={`/hideout/hideout-${withVideo}-loop.webm`} type="video/webm" />
         <source src={`/hideout/hideout-${withVideo}-loop.mp4`} type="video/mp4" />
       </video>}

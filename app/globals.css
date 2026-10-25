@@ -589,3 +589,24 @@ nav.game-menu{display:block;padding:0;border:0;gap:0;justify-content:normal}
   .title-screen .game-item{min-height:40px;padding:6px 10px 6px 30px;font-size:13px;letter-spacing:.18em}
   .ts-foot{display:none}
 }
+/* Dark painted hideout */
+.hideout-stage{aspect-ratio:1672/941;max-width:calc((100vh - 40px)*1672/941)}
+.hideout-art img{filter:brightness(1.16) contrast(1.03)}
+.hideout{background:#060608}
+.hideout-intro-below{background:linear-gradient(#07070a,#060608);border-bottom:0}
+.hideout-intro-below .eyebrow{color:#c9a464}
+.hideout-intro-below h2{font-family:'Cormorant Garamond','IM Fell English',Georgia,serif;letter-spacing:.02em;color:#efe6d2}
+.hideout-intro-below h2 em{color:#d39a52}
+.hs-label{background:#120f0cf0;color:#efe6d2;border-color:#c9a46488;border-radius:2px;font-family:'Cormorant Garamond',Georgia,serif}
+.hs-label strong{font:600 18px/1.1 'Cormorant Garamond',Georgia,serif;letter-spacing:.06em}
+.hs-label small{color:#bfae8c}
+.hs-wanted .hs-label{background:#7d2416f0;border-color:#e2a35c}
+.hideout-strip{background:#060608;border-top:1px solid #c9a46422}
+.strip-item{background:#0f0f12;border-color:#c9a46433}
+.strip-item b{font-family:'Cormorant Garamond',Georgia,serif;font-weight:600}
+@media(max-width:700px){.hideout-stage{aspect-ratio:941/1672;max-width:none}}
+/* Labels sit inside each object (never clipped at the scene edges) */
+.hs .hs-label{top:auto;bottom:8px;left:50%;right:auto;transform:translate(-50%,6px)}
+.hs .hs-target:hover .hs-label,.hs .hs-target:focus-visible .hs-label{transform:translate(-50%,0)}
+.hs-wanted .hs-label,.hs-wanted .hs-target:hover .hs-label,.hs-wanted .hs-target:focus-visible .hs-label{left:12px;transform:none}
+.hs-board .hs-label,.hs-board .hs-target:hover .hs-label,.hs-board .hs-target:focus-visible .hs-label{left:auto;right:8px;transform:none}
