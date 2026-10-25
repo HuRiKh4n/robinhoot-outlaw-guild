@@ -62,3 +62,33 @@ nav > .wallet-control { flex: 0 1 240px; min-width: 0; }
   .profile-details dl { gap: 20px 12px; }
 }
 @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+.my-outlaw h1 { font-family: Oswald, sans-serif; font-size: clamp(48px,7vw,84px); margin: 10px 0 22px; }
+.my-outlaw .creator { grid-template-columns: minmax(230px, 1fr) minmax(0, 1.5fr); gap: 32px; }
+.identity-mode { font-weight: 800; letter-spacing: 1px; font-size: 12px; color: #df9950!important; }
+.identity-empty { max-width: 680px; border: 1px dashed #8e6b43; padding: 20px; margin: 20px 0; background: #22251e; line-height: 1.6; }
+.identity-empty p { margin: 8px 0 0; color: #c7bba2; }
+.passport { min-width: 0; }
+.passport .profile-heading { margin-bottom: 20px; gap: 12px; }
+.passport h2 { font-size: clamp(30px,4vw,45px); margin: 10px 0; }
+.passport .eyebrow { font-size: 10px; }
+.passport .prototype-badge { font-size: 9px; padding: 9px 12px; }
+.passport-art { border: 1px solid #8e6b43; box-shadow: 0 15px 40px #070806; }
+.passport canvas { width: 100%; height: auto; display: block; aspect-ratio: 3/4; }
+.passport-tools { background: #272820; border: 1px solid #514f3f; margin-top: 22px; padding: 24px; }
+.passport-tools h3 { font-size: 26px; margin: 0 0 14px; }
+.passport-tools p { font-size: 13px; line-height: 1.7; color: #c7bba2; }
+.passport-flags { color: #df9950!important; font-weight: 800; }
+.passport-tools dl { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 18px; }
+.passport-tools dt { color: #d9aa6c; font-size: 10px; letter-spacing: 1px; }
+.passport-tools dd { margin: 7px 0; font-size: 14px; overflow-wrap: anywhere; }
+.passport-account-option { display: flex; gap: 12px; align-items: center; min-height: 44px; font-size: 13px; line-height: 1.6; }
+.passport-account-option input { width: 22px; height: 22px; flex: 0 0 22px; accent-color: #a93624; }
+.passport-tools .button { display: flex; width: 100%; justify-content: center; align-items: center; min-height: 44px; margin-top: 14px; text-align: center; }
+.passport-share { background: #181a16; }
+.passport-copy-label { display: grid; gap: 10px; font-size: 13px; }
+.passport-copy-label textarea { width: 100%; max-width: 100%; background: #181a16; color: #f2e4c8; border: 1px solid #67604b; padding: 12px; font: 14px sans-serif; }
+input:focus-visible, textarea:focus-visible { outline: 3px solid #df9950; outline-offset: 3px; }
+@media(max-width:850px) { .my-outlaw .creator { grid-template-columns: minmax(0,1fr); } }
+@media(min-width:1500px) { .my-outlaw .creator { grid-template-columns: minmax(260px,1fr) minmax(0,1.4fr); } .passport-layout { display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap: 22px; align-items: start; } .passport-tools { margin-top: 0; } }
+.identity-disclaimer-title { font-size: clamp(30px,4vw,46px); margin: 0 0 20px; }
