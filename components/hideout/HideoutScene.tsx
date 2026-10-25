@@ -5,8 +5,7 @@ import { useEffect, useRef, useState } from 'react';
 import { castleGlow, chestGlow, coinSparkle, fire, hotspots, type Box, type Hotspot } from '@/lib/hideout';
 import { useSound } from '@/components/sound/SoundProvider';
 import Particles from '@/components/motion/Particles';
-import GameMenu from './GameMenu';
-import { Dartboard, GoldTally, useGold } from './GoldCounter';
+import { Dartboard, useGold } from './GoldCounter';
 
 const place = (wide: Box, tall: Box) => ({
   '--x': wide[0], '--y': wide[1], '--w': wide[2], '--h': wide[3],
@@ -19,7 +18,7 @@ export default function HideoutScene() {
   const stage = useRef<HTMLDivElement>(null);
   const [phase, setPhase] = useState<'title' | 'lantern' | null>(null);
   const entering = phase === 'lantern';
-  const { gold, add } = useGold();
+  const { add } = useGold();
   const [withVideo, setWithVideo] = useState<'wide' | 'tall' | null>(null);
   const [videoReady, setVideoReady] = useState(false);
   const video = useRef<HTMLVideoElement>(null);
@@ -54,7 +53,13 @@ export default function HideoutScene() {
     let seen = false;
     try { seen = sessionStorage.getItem('robinhoot:hideout-entered') === '1'; sessionStorage.setItem('robinhoot:hideout-entered', '1'); } catch {}
     if (seen) return;
-    setPhase('title');
+    const element = stage.current;
+    if (!element || !('IntersectionObserver' in window)) return;
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.intersectionRatio > 0.45) { setPhase('lantern'); observer.disconnect(); }
+    }, { threshold: [0.45] });
+    observer.observe(element);
+    return () => observer.disconnect();
   }, []);
   useEffect(() => {
     if (phase === 'title') {
@@ -138,18 +143,6 @@ export default function HideoutScene() {
       </ul>
       </div>
       <div className="hideout-curtain" aria-hidden="true" />
-      <div className="game-hud">
-        <p className="game-title" aria-hidden="true">ROBINHOOT</p>
-        <GameMenu />
-        <GoldTally gold={gold} />
-      </div>
     </div>
-    <p className="game-hints" aria-hidden="true"><kbd>↑</kbd><kbd>↓</kbd> select <kbd>Enter</kbd> confirm <kbd>Click</kbd> the Sheriff&rsquo;s portrait to steal back gold</p>
-    {phase === 'title' && <div className="title-card" role="presentation">
-      <p className="title-kicker">A tale from the kingdom of NEAR</p>
-      <p className="title-name" aria-label="RobinHoot">{'ROBINHOOT'.split('').map((letter, i) => <span key={i} style={{ animationDelay: `${0.35 + i * 0.11}s` }}>{letter}</span>)}</p>
-      <p className="title-sub">THE OUTLAW OF NEAR</p>
-      <p className="title-tag">The castles are full. The trenches are rising.</p>
-    </div>}
   </section>;
 }

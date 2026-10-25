@@ -13,12 +13,18 @@ const place = (wide: Box, tall: Box) => ({
 /** Throw darts at the Sheriff's portrait to steal back his gold. A just-for-fun counter kept in this browser. */
 export function useGold() {
   const [gold, setGold] = useState(0);
-  useEffect(() => { try { setGold(Number(localStorage.getItem(KEY)) || 0); } catch {} }, []);
-  const add = useCallback(() => setGold(value => {
-    const next = value + 1;
-    try { localStorage.setItem(KEY, String(next)); } catch {}
+  useEffect(() => {
+    const read = () => { try { setGold(Number(localStorage.getItem(KEY)) || 0); } catch {} };
+    read();
+    window.addEventListener('robinhoot:gold', read);
+    return () => window.removeEventListener('robinhoot:gold', read);
+  }, []);
+  const add = useCallback(() => {
+    let next = 0;
+    try { next = (Number(localStorage.getItem(KEY)) || 0) + 1; localStorage.setItem(KEY, String(next)); } catch {}
+    window.dispatchEvent(new Event('robinhoot:gold'));
     return next;
-  }), []);
+  }, []);
   return { gold, add };
 }
 

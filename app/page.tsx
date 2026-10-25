@@ -1,5 +1,6 @@
 import SiteHeader from "@/components/SiteHeader";
 import HideoutScene from "@/components/hideout/HideoutScene";
+import TitleScreen from "@/components/hideout/TitleScreen";
 import StoryDialogs from "@/components/hideout/StoryDialogs";
 import SfxLink from "@/components/sound/SfxLink";
 
@@ -8,9 +9,11 @@ export default function Home() {
     <main className="home-hideout">
       <SiteHeader />
 
-      <header className="hideout-intro" id="legend">
-        <h1>The castles have the gold. <em>The outlaws have a plan.</em></h1>
-        <p>Welcome to the hideout. Touch anything that glows.</p>
+      <TitleScreen />
+
+      <header className="hideout-intro hideout-intro-below">
+        <p className="eyebrow">BELOW THE TRENCHES</p>
+        <h2>Enter the hideout. <em>Touch anything that glows.</em></h2>
       </header>
 
       <HideoutScene />

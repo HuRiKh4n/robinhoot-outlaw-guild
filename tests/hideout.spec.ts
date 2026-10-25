@@ -27,7 +27,7 @@ test('phones get the tall art and a bottom bar; nothing requires exploring the p
 
 test('game menu works with the keyboard and the Sheriff dartboard counts reclaimed gold', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.addInitScript(() => sessionStorage.setItem('robinhoot:hideout-entered', '1'));
+  await page.addInitScript(() => { sessionStorage.setItem('robinhoot:hideout-entered', '1'); sessionStorage.setItem('robinhoot:title-seen', '1'); });
   await page.goto('/');
   const menu = page.getByRole('navigation', { name: 'Main menu' });
   await expect(menu.getByRole('link')).toHaveCount(4);
