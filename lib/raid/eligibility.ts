@@ -82,6 +82,7 @@ export async function checkAccount(archive: NearArchive, rules: RaidRules, point
   if (!rules.open || !rules.token || !rules.minRaw) return { account, eligible: false, reason: rules.reason ?? "Raid closed." };
   if (config.excluded.has(account)) return { account, eligible: false, reason: "Excluded account (contract, pool or exchange)." };
   const min = BigInt(rules.minRaw);
+  const shown = `${Number(rules.minTokens).toLocaleString('en-US')} $${rules.symbol}`;
   const unit = pow10(rules.decimals ?? 18);
   // Newest first: shows the current balance and how long it has been held, then stops at the first miss.
   const ordered = [...points].sort((a, b) => b.at - a.at);
@@ -95,10 +96,10 @@ export async function checkAccount(archive: NearArchive, rules: RaidRules, point
     if (balance < min) {
       const heldHours = Math.max(0, Math.floor((ordered[0].at - heldSince) / 3600_000));
       return { account, eligible: false, balanceNow: (balanceNow / unit).toString(), heldHours, lowest: (lowest / unit).toString(),
-        reason: balanceNow < min ? `Holds less than ${rules.minTokens} ${rules.symbol}.` : `Below ${rules.minTokens} ${rules.symbol} about ${heldHours} h ago: needs ${rules.holdHours} h in a row.` };
+        reason: balanceNow < min ? `Holds less than ${shown}.` : `Below ${shown} about ${heldHours} h ago: needs ${rules.holdHours} h in a row.` };
     }
     heldSince = point.at;
   }
   return { account, eligible: true, balanceNow: (balanceNow! / unit).toString(), heldHours: rules.holdHours, lowest: (lowest! / unit).toString(),
-    reason: `Held at least ${rules.minTokens} ${rules.symbol} at all ${points.length} checks over ${rules.holdHours} h.` };
+    reason: `Held at least ${shown} at all ${points.length} checks over ${rules.holdHours} h.` };
 }
