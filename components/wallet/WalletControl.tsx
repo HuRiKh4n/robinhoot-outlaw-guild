@@ -30,7 +30,7 @@ export default function WalletControl() {
       // Do not render wallet payloads or log callback/account data.
       setError(action === 'disconnect'
         ? 'Wallet disconnection failed. Please try again.'
-        : 'The wallet didn’t answer. Allow popups (or open Meteor Mobile), come back here and try again.');
+        : 'The wallet didn’t answer. Allow popups (or open your wallet app), come back here and try again.');
       if (!dialog.current?.open) dialog.current?.showModal();
     } finally {
       running.current = false;
@@ -53,11 +53,11 @@ export default function WalletControl() {
           <h2 id="wallet-title">{account ? 'YOUR WALLET' : 'CONNECT WALLET'}</h2>
           <button type="button" className="wallet-close" aria-label="Close wallet dialog" onClick={() => dialog.current?.close()}>×</button>
         </div>
-        <p className="eyebrow">NEAR · METEOR WALLET</p>
+        <p className="eyebrow">NEAR · HOT · METEOR · INTEAR · AND MORE</p>
         <p id="wallet-description">Tell the guild your name. We only read your account: nothing to sign, nothing to approve, no coins move.</p>
         {account ? <>
           <p className="wallet-account">{account.accountId}</p>
-          <p>Connected with Meteor Wallet</p>
+          <p>Connected with {state?.walletName ?? 'your NEAR wallet'}</p>
           {(state?.accounts.length ?? 0) > 1 && <label className="wallet-account-select">Active account
             <select value={account.accountId} disabled={busy} onChange={event => {
               try { connection?.switchAccount(event.target.value); }
@@ -67,11 +67,11 @@ export default function WalletControl() {
             </select>
           </label>}
           <button type="button" className="button" disabled={busy} onClick={() => void run('reconnect')}>SWITCH ACCOUNT</button>
-          <p className="note">Switching disconnects the current session, then opens Meteor to choose an account.</p>
+          <p className="note">Switching disconnects the current session, then lets you pick a wallet and account again.</p>
           <button type="button" className="button wallet-disconnect" disabled={busy} onClick={() => void run('disconnect')}>DISCONNECT WALLET</button>
         </> : <>
-          <button type="button" className="button" disabled={!connection || busy} onClick={() => void run('connect')}>CONTINUE WITH METEOR WALLET ↗</button>
-          <p className="note">On a computer, use Meteor Web or the extension. On Android, use Meteor Web or tap Open in Meteor Mobile, then come back here.</p>
+          <button type="button" className="button" disabled={!connection || busy} onClick={() => void run('connect')}>CHOOSE YOUR WALLET ↗</button>
+          <p className="note">Pick any NEAR wallet: HOT, Meteor, Intear, MyNearWallet and more. On a phone, approve in the wallet app, then come back here.</p>
         </>}
         {!connection && setupError && <button type="button" className="button" onClick={retry}>RETRY WALLET SETUP</button>}
         <p className="note">Never share your seed phrase. Not with us, not with anyone.</p>
