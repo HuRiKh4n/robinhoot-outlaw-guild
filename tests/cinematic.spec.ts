@@ -59,7 +59,7 @@ test('all twelve actual Wolf images switch without reload and synchronize live, 
   }
   expect(sources.size).toBe(variants.length);
   expect(await page.evaluate(() => Reflect.get(window, '__robinhootPreviewMarker'))).toBe('same-document');
-  await choose(page, 'CLASS', 'Scout');
+  await choose(page, 'SPECIES', 'Owl');
   await expect(page.locator('.character-preview-large img')).toHaveCount(0);
   await expect(page.locator('.art-availability')).toContainText('No cinematic artwork');
 });
@@ -136,6 +136,6 @@ test('all sixteen Fox variants, including Scout and Trickster, show their own or
     await expect(page.locator('.character-preview-large img')).toHaveAttribute('src', asset.src);
     await expect(page.locator('.poster')).toContainText(asset.outfit!.toUpperCase());
   }
-  await choose(page, 'SPECIES', 'Wolf'); await choose(page, 'CLASS', 'Trickster');
+  await choose(page, 'SPECIES', 'Owl'); await choose(page, 'CLASS', 'Trickster');
   await expect(page.locator('.character-preview-large img')).toHaveCount(0);
 });
