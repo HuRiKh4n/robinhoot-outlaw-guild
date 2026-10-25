@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useEffect, useRef, useState } from 'react';
 import { castleGlow, chestGlow, coinSparkle, fire, hotspots, type Box, type Hotspot } from '@/lib/hideout';
 import { useSound } from '@/components/sound/SoundProvider';
 import Particles from '@/components/motion/Particles';
@@ -13,6 +14,47 @@ const place = (wide: Box, tall: Box) => ({
 /** The homepage: the outlaws' hideout. Every lit object is a door (real links/buttons over the art). */
 export default function HideoutScene() {
   const { on, toggle, play } = useSound();
+  const stage = useRef<HTMLDivElement>(null);
+  const [entering, setEntering] = useState(false);
+
+  // First visit of the session: the room starts dark and the lantern light spreads through it.
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let seen = false;
+    try { seen = sessionStorage.getItem('robinhoot:hideout-entered') === '1'; sessionStorage.setItem('robinhoot:hideout-entered', '1'); } catch {}
+    if (seen) return;
+    setEntering(true);
+    const done = window.setTimeout(() => setEntering(false), 3200);
+    return () => window.clearTimeout(done);
+  }, []);
+
+  // Torchlight + diorama tilt: the light follows the pointer (or finger), the room leans a little.
+  useEffect(() => {
+    const element = stage.current;
+    if (!element || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let frame = 0, px = 0.5, py = 0.45;
+    const apply = () => {
+      frame = 0;
+      element.style.setProperty('--lx', `${(px * 100).toFixed(1)}%`);
+      element.style.setProperty('--ly', `${(py * 100).toFixed(1)}%`);
+      element.style.setProperty('--rx', `${((0.5 - py) * 3).toFixed(2)}deg`);
+      element.style.setProperty('--ry', `${((px - 0.5) * 4).toFixed(2)}deg`);
+    };
+    const move = (event: PointerEvent) => {
+      const box = element.getBoundingClientRect();
+      px = Math.min(1, Math.max(0, (event.clientX - box.left) / box.width));
+      py = Math.min(1, Math.max(0, (event.clientY - box.top) / box.height));
+      if (!frame) frame = requestAnimationFrame(apply);
+    };
+    const leave = () => { px = 0.5; py = 0.45; element.classList.remove('is-exploring'); if (!frame) frame = requestAnimationFrame(apply); };
+    const enter = () => element.classList.add('is-exploring');
+    element.addEventListener('pointermove', move);
+    element.addEventListener('pointerdown', move);
+    element.addEventListener('pointerenter', enter);
+    element.addEventListener('pointerleave', leave);
+    apply();
+    return () => { element.removeEventListener('pointermove', move); element.removeEventListener('pointerdown', move); element.removeEventListener('pointerenter', enter); element.removeEventListener('pointerleave', leave); if (frame) cancelAnimationFrame(frame); };
+  }, []);
 
   const content = (spot: Hotspot) => <>
     <span className="hs-spark" aria-hidden="true" />
@@ -21,7 +63,8 @@ export default function HideoutScene() {
 
   return <section className="hideout" aria-labelledby="hideout-title">
     <h2 id="hideout-title" className="visually-hidden">The outlaws&rsquo; hideout</h2>
-    <div className="hideout-stage">
+    <div ref={stage} className={`hideout-stage${entering ? ' is-entering' : ''}`}>
+      <div className="hideout-diorama">
       <picture className="hideout-art">
         <source media="(max-width: 700px)" type="image/webp" sizes="100vw" srcSet="/hideout/hideout-tall-828.webp 828w, /hideout/hideout-tall-1200.webp 1200w" />
         <img src="/hideout/hideout-wide-1600.webp" srcSet="/hideout/hideout-wide-1100.webp 1100w, /hideout/hideout-wide-1600.webp 1600w, /hideout/hideout-wide-2400.webp 2400w" sizes="100vw" width={2400} height={1340}
@@ -35,6 +78,8 @@ export default function HideoutScene() {
         <span className="fx fx-coin" style={place(coinSparkle.wide, coinSparkle.tall)} />
       </div>
 
+      <div className="hideout-torch" aria-hidden="true" />
+
       <ul className="hotspots">
         {hotspots.map(spot => <li key={spot.id} className={`hs hs-${spot.id}`} style={place(spot.wide, spot.tall)}>
           {spot.action === 'music'
@@ -44,6 +89,8 @@ export default function HideoutScene() {
               : <Link className="hs-target" href={spot.href!} onClick={() => play(spot.id === 'wanted' ? 'hit' : 'coin')}>{content(spot)}</Link>}
         </li>)}
       </ul>
+      </div>
+      <div className="hideout-curtain" aria-hidden="true" />
     </div>
   </section>;
 }

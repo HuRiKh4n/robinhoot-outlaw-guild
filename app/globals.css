@@ -430,3 +430,26 @@ input:focus-visible, textarea:focus-visible { outline: 3px solid #df9950; outlin
   .mobile-bar .mobile-forge span{font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase}
 }
 @media(prefers-reduced-motion:reduce){.fx,.hs-spark{animation:none}.fx-coin{display:none}.story-dialog[open]{animation:none}}
+
+/* ---- Hideout wow: lantern entrance, torchlight, diorama tilt ---- */
+@property --reveal{syntax:'<percentage>';inherits:false;initial-value:150%}
+.hideout-stage{--lx:50%;--ly:45%;--rx:0deg;--ry:0deg;perspective:1400px;overflow:hidden}
+.hideout-diorama{position:absolute;inset:0;transform:rotateX(var(--rx)) rotateY(var(--ry)) scale(1.035);transform-style:preserve-3d;transition:transform .5s cubic-bezier(.2,.7,.2,1);will-change:transform}
+.hideout-torch{position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at var(--lx) var(--ly),#ffcf7a30 0%,transparent 16%,#0a0704 46%,#0a0704f0 100%);opacity:.38;transition:opacity .6s ease}
+.hideout-stage.is-exploring .hideout-torch{opacity:.72}
+.hideout-stage:not(.is-exploring) .hideout-torch{background:radial-gradient(ellipse at 50% 55%,transparent 30%,#0a0704 100%)}
+/* lit hotspot wins over the darkness */
+.hs-target:hover,.hs-target:focus-visible{z-index:4}
+.hs-target:hover::after,.hs-target:focus-visible::after{content:"";position:absolute;inset:-12%;border-radius:40%;background:radial-gradient(ellipse,#ffd98a40,transparent 70%);mix-blend-mode:screen;pointer-events:none}
+/* Entrance: dark room, lantern light spreads from beside the fox */
+.hideout-curtain{position:absolute;inset:0;pointer-events:none;z-index:6;opacity:0;--reveal:150%}
+.hideout-stage.is-entering .hideout-curtain{opacity:1;background:radial-gradient(circle at 27.5% 33%,#ffcf7a55 0%,transparent calc(var(--reveal) * .12),#070503 var(--reveal));animation:lantern-reveal 2.9s cubic-bezier(.55,.05,.25,1) both}
+@keyframes lantern-reveal{0%{--reveal:0%}18%{--reveal:6%}35%{--reveal:5%}100%{--reveal:160%;opacity:0}}
+.hideout-stage.is-entering .hs{opacity:0;animation:hs-arrive .6s ease-out both}
+.hideout-stage.is-entering .hs:nth-child(1){animation-delay:1.6s}.hideout-stage.is-entering .hs:nth-child(2){animation-delay:1.85s}.hideout-stage.is-entering .hs:nth-child(3){animation-delay:2.1s}.hideout-stage.is-entering .hs:nth-child(4){animation-delay:2.35s}.hideout-stage.is-entering .hs:nth-child(5){animation-delay:2.6s}.hideout-stage.is-entering .hs:nth-child(6){animation-delay:2.85s}
+@keyframes hs-arrive{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:none}}
+.home-hideout .hideout-intro h1{animation:intro-ink 1.6s ease-out .4s both}
+@keyframes intro-ink{from{opacity:0;filter:blur(6px);letter-spacing:.06em}to{opacity:1;filter:none;letter-spacing:normal}}
+@media(max-width:700px){.hideout-stage.is-entering .hideout-curtain{background:radial-gradient(circle at 40% 16%,#ffcf7a55 0%,transparent calc(var(--reveal) * .12),#070503 var(--reveal))}.hideout-diorama{scale:1}}
+@media(hover:none){.hideout-diorama{transform:none}.hideout-stage.is-exploring .hideout-torch{opacity:.45}}
+@media(prefers-reduced-motion:reduce){.hideout-diorama{transform:none;transition:none}.hideout-torch{display:none}.hideout-curtain{display:none}.home-hideout .hideout-intro h1{animation:none}}
