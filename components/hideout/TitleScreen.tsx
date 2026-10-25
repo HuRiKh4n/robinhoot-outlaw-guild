@@ -13,6 +13,7 @@ export default function TitleScreen() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     let seen = false;
     try { seen = sessionStorage.getItem('robinhoot:title-seen') === '1'; sessionStorage.setItem('robinhoot:title-seen', '1'); } catch {}
+    if (new URLSearchParams(location.search).has('intro')) seen = false; // ?intro replays it
     if (seen) return;
     setStage('black');
     const t1 = window.setTimeout(() => setStage('title'), 700);
