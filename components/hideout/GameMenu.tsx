@@ -8,7 +8,7 @@ const items = [
   { label: 'Forge your outlaw', note: 'new legend', href: '/my-outlaw' },
   { label: 'Hear the tale', note: 'chapter one', href: '#tale' },
   { label: 'The bounty board', note: 'ten jobs', href: '/bounties' },
-  { label: 'The road ahead', note: 'a locked chest', href: '#road' },
+  { label: 'The road ahead', note: 'five chapters', href: '#road' },
 ] as const;
 
 /** Video-game style main menu over the hideout. Mouse, touch and keyboard (↑ ↓ / ← → and Enter). */

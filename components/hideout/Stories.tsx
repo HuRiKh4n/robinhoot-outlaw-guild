@@ -33,11 +33,11 @@ export function SheriffStory() {
   </div>;
 }
 
-const road: { n: string; title: string; line: string; done: boolean; treasure?: boolean }[] = [
+const road: { n: string; title: string; line: string; done: boolean; treasure?: boolean; href?: string }[] = [
   { n: 'I', title: 'The Broke Fox', line: 'The tale is told and the tavern doors are open.', done: true },
   { n: 'II', title: 'Assemble the Guild', line: 'Eighty outlaws painted so far. Make yours and print your poster.', done: true },
   { n: 'III', title: 'The Bounty Hunt', line: 'The board is pinned to the tavern wall. Taking on jobs comes next.', done: false },
-  { n: 'IV', title: 'Loot for the Trenches', line: 'The chest is still locked. We open it together, once the rules are fair and written down.', done: false, treasure: true },
+  { n: 'IV', title: 'Loot for the Trenches', line: 'The rules are written down and nailed to the tavern door. The chest opens at launch.', done: false, treasure: true, href: '/loot' },
   { n: 'V', title: 'Kingdom Without Kings', line: 'One day the guild will write its own chapters.', done: false },
 ];
 
@@ -50,7 +50,7 @@ export function RoadStory() {
         <span className="map-pin" aria-hidden="true">{stop.done ? '✓' : stop.treasure ? '✕' : ''}</span>
         <b>CHAPTER {stop.n}</b>
         <h3>{stop.title}</h3>
-        <p>{stop.line}</p>
+        <p>{stop.line}{stop.href && <> <a href={stop.href}>Read The Loot →</a></>}</p>
       </li>)}
     </ol>
   </>;

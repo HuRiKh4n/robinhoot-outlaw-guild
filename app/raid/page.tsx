@@ -33,7 +33,7 @@ export default async function RaidPage() {
         <li><b>The amount is set on Monday.</b> ${rules?.minUsd ?? 50} worth of $RHOOT at last week&rsquo;s average price. If the price moves during the week, the amount stays the same.</li>
         <li><b>The chain remembers.</b> When the chest opens, the guild looks at your balance at 13 fixed moments over the last 72 hours and at 6 more picked by chance, at that very moment.</li>
         <li><b>Every check must pass.</b> Buy the day before, or sell and buy back in between, and the ledger shows it.</li>
-        <li><b>The prize is paid in NEAR,</b> from the guild&rsquo;s chest, to outlaws who completed bounties. Holding is the ticket, not the prize.</li>
+        <li><b>The prize is paid in NEAR,</b> from the Guild Chest: the Bounty of the Week every Sunday, the Assault on the Castle every month. Holding is the ticket, the work wins the prize. <Link href="/loot">Where the gold comes from →</Link></li>
       </ol>
     </section>
 
