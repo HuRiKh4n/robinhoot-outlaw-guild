@@ -7,7 +7,7 @@ import { useSound } from '@/components/sound/SoundProvider';
 const items = [
   { label: 'Forge your outlaw', note: 'new legend', href: '/my-outlaw' },
   { label: 'Hear the tale', note: 'chapter one', href: '#tale' },
-  { label: 'The bounty board', note: 'six jobs', href: '/bounties' },
+  { label: 'The bounty board', note: 'ten jobs', href: '/bounties' },
   { label: 'The road ahead', note: 'a locked chest', href: '#road' },
 ] as const;
 

@@ -5,7 +5,7 @@ import BountyBoard from '@/components/bounties/BountyBoard';
 import { GuildInsignia, RecognitionEmblem, TreasuryChest, ArrowMark } from '@/components/bounties/GuildArt';
 import PreviewNotice from '@/components/bounties/PreviewNotice';
 
-export const metadata: Metadata = { title: 'Bounty Board | RobinHoot', description: 'Six jobs pinned to the tavern wall for brave outlaws of NEAR. Taking them on comes later.' };
+export const metadata: Metadata = { title: 'Bounty Board | RobinHoot', description: 'Ten jobs pinned to the tavern wall for brave outlaws of NEAR. Taking them on comes later.' };
 const paths = [
   {id:'craft', title:'CRAFT', description:'Creative contributions', motto:'Leave your mark.'},
   {id:'story', title:'STORY', description:'Stories & community', motto:'Carry the legend.'},
