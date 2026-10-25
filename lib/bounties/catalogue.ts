@@ -19,6 +19,30 @@ export const categoryNotes: Record<BountyCategory, string> = {
 };
 export const bounties: readonly BountyPreview[] = [
   {
+    id: 'RH-C03', slug: 'rob-the-whale', title: 'Rob the Whale', category: 'Creative', difficulty: 'Initiate', status: 'preview',
+    description: 'The Sheriff of Whaleingham counts his gold every night. Make the meme of the night it went missing.',
+    requirements: ['Create an original meme starring the Sheriff of Whaleingham and the outlaws of the trenches.', 'Use RobinHoot artwork, your own art, or material you have permission to adapt; credit collaborators.', 'Mock the whale, not real people. No harassment, impersonation or promises of profit.'],
+    futureEvidence: ['The image file or a public link to the meme.', 'A one-line caption and credits for any adapted material.'],
+  },
+  {
+    id: 'RH-C04', slug: 'pin-your-wanted-poster', title: 'Pin Your Wanted Poster', category: 'Creative', difficulty: 'Initiate', status: 'preview',
+    description: 'Forge your outlaw in the hideout, print the WANTED poster, and tell the kingdom what you are wanted for.',
+    requirements: ['Create your outlaw on the Your Outlaw page and save the WANTED poster.', 'Add one or two lines of backstory: the crime, the alias, the reward on your head.', 'Never include seed phrases, private keys or personal details in the poster or the post.'],
+    futureEvidence: ['The saved poster image or a public post that shows it.', 'Your backstory lines.'],
+  },
+  {
+    id: 'RH-S03', slug: 'the-tale-in-your-tongue', title: 'The Tale in Your Tongue', category: 'Social', difficulty: 'Initiate', status: 'preview',
+    description: 'Not every outlaw speaks the King’s English. Carry the tale to your own village, in your own language.',
+    requirements: ['Retell the RobinHoot tale in your own language, in your own words, in a post or short thread.', 'Keep the facts straight: a meme, a story and a guild. No price talk, no promises of returns.', 'One honest post beats ten copies. No spam, bots or bought engagement.'],
+    futureEvidence: ['A public link to the post or the text itself.', 'The language and the community you shared it with.'],
+  },
+  {
+    id: 'RH-G03', slug: 'light-a-new-campfire', title: 'Light a New Campfire', category: 'Guild', difficulty: 'Seasoned', status: 'preview',
+    description: 'Every outlaw was once a stranger at the edge of the fire. Bring one friend in and help them forge their first outlaw.',
+    requirements: ['Invite a real friend and walk them through forging their own outlaw.', 'Share both WANTED posters side by side, with a line about how your crew met.', 'Friends, not farms: one real person, no fake or duplicate accounts.'],
+    futureEvidence: ['Both posters, or a public post showing them together.', 'Your friend’s outlaw name and their OK to share it.'],
+  },
+  {
     id: 'RH-C01', slug: 'a-fox-walks-into-a-castle', title: 'A Fox Walks into a Castle', category: 'Creative', difficulty: 'Initiate', status: 'preview',
     description: 'Imagine an original RobinHoot meme: one broke outlaw, one grand castle, and a punchline worth passing around.',
     requirements: ['Create an original meme with a clear RobinHoot story or theme.', 'Use artwork you own or have permission to adapt; credit collaborators.', 'Keep the joke welcoming. No harassment, impersonation or misleading financial claims.'],
