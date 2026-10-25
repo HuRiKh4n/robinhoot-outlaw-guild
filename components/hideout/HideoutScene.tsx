@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from 'react';
 import { castleGlow, chestGlow, coinSparkle, fire, hotspots, type Box, type Hotspot } from '@/lib/hideout';
 import { useSound } from '@/components/sound/SoundProvider';
 import Particles from '@/components/motion/Particles';
-import { Dartboard, useGold } from './GoldCounter';
 
 const place = (wide: Box, tall: Box) => ({
   '--x': wide[0], '--y': wide[1], '--w': wide[2], '--h': wide[3],
@@ -18,7 +17,6 @@ export default function HideoutScene() {
   const stage = useRef<HTMLDivElement>(null);
   const [phase, setPhase] = useState<'title' | 'lantern' | null>(null);
   const entering = phase === 'lantern';
-  const { add } = useGold();
   const [withVideo, setWithVideo] = useState<'wide' | 'tall' | null>(null);
   const [videoReady, setVideoReady] = useState(false);
   const video = useRef<HTMLVideoElement>(null);
@@ -139,7 +137,6 @@ export default function HideoutScene() {
               ? <a className="hs-target" href={spot.href}>{content(spot)}</a>
               : <Link className="hs-target" href={spot.href!} onClick={() => play(spot.id === 'wanted' ? 'hit' : 'coin')}>{content(spot)}</Link>}
         </li>)}
-        <li className="hs-wrap"><Dartboard onHit={add} /></li>
       </ul>
       </div>
       <div className="hideout-curtain" aria-hidden="true" />

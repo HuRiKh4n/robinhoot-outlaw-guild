@@ -1,20 +1,13 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import GameMenu from './GameMenu';
-import { GoldTally, useGold } from './GoldCounter';
 import Particles from '@/components/motion/Particles';
-import { useSound } from '@/components/sound/SoundProvider';
 
 /** Full-screen video-game title screen (critic's concept):
- *  black → ROBINHOOT writes itself → "press any button" → main menu.
- *  Clicking the night sky "strikes the castle" and reclaims a coin. */
+ *  black → ROBINHOOT writes itself → "press any button" → main menu. */
 export default function TitleScreen() {
   const [stage, setStage] = useState<'black' | 'title' | 'press' | 'menu'>('menu');
-  const { gold, add } = useGold();
-  const { play } = useSound();
-  const [strikes, setStrikes] = useState<{ id: number; x: number; y: number }[]>([]);
-  const root = useRef<HTMLElement>(null);
 
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -36,16 +29,7 @@ export default function TitleScreen() {
     return () => { window.removeEventListener('keydown', go); window.removeEventListener('pointerdown', go); };
   }, [stage]);
 
-  const strike = (event: React.MouseEvent<HTMLElement>) => {
-    if (stage !== 'menu' || (event.target as HTMLElement).closest('a,button,nav')) return;
-    const box = root.current!.getBoundingClientRect();
-    const id = Date.now() + Math.random();
-    setStrikes(list => [...list.slice(-6), { id, x: event.clientX - box.left, y: event.clientY - box.top }]);
-    window.setTimeout(() => setStrikes(list => list.filter(item => item.id !== id)), 900);
-    add(); play('coin');
-  };
-
-  return <section ref={root} className={`title-screen is-${stage}`} id="legend" aria-labelledby="title-name" onClick={strike}>
+  return <section className={`title-screen is-${stage}`} id="legend" aria-labelledby="title-name">
     <div className="ts-bg" aria-hidden="true">
       <div className="ts-sky" />
       <svg className="ts-castle" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice">
@@ -80,9 +64,7 @@ export default function TitleScreen() {
 
     <div className="ts-foot">
       <p>Choose a creature, a calling and an outfit. The Sheriff&rsquo;s clerks will write your wanted poster.</p>
-      <p className="ts-keys" aria-hidden="true"><kbd>↑</kbd><kbd>↓</kbd> select <kbd>Enter</kbd> confirm <kbd>Click</kbd> strike the castle</p>
+      <p className="ts-keys" aria-hidden="true"><kbd>↑</kbd><kbd>↓</kbd> select <kbd>Enter</kbd> confirm</p>
     </div>
-    <GoldTally gold={gold} />
-    {strikes.map(item => <span key={item.id} className="ts-strike" style={{ left: item.x, top: item.y }} aria-hidden="true">+1 🪙</span>)}
   </section>;
 }

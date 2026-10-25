@@ -497,7 +497,7 @@ input:focus-visible, textarea:focus-visible { outline: 3px solid #df9950; outlin
 @media(prefers-reduced-motion:reduce){.title-card{display:none}.coin-pop{animation:none;opacity:0}}
 
 /* ===== Title screen (video-game start screen) ===== */
-.title-screen{position:relative;min-height:calc(100svh - 70px);overflow:hidden;background:#07070a;color:#efe6d2;cursor:crosshair;isolation:isolate}
+.title-screen{position:relative;min-height:calc(100svh - 70px);overflow:hidden;background:#07070a;color:#efe6d2;isolation:isolate}
 .title-screen a,.title-screen button{cursor:pointer}
 .ts-bg{position:absolute;inset:0;z-index:-1}
 .ts-sky{position:absolute;inset:0;background:radial-gradient(ellipse at 52% 12%,#5d5f68 0%,#2c2d33 22%,#131318 55%,#07070a 85%)}
