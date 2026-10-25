@@ -3,6 +3,7 @@
 import { useId, useRef, useState } from 'react';
 import { classDraft, classes, offeredSpecies, outfitsFor, personalities, type OutlawDraft } from '@/lib/profile/draft';
 import { resolveAppearance } from '@/lib/character/appearance';
+import { useSound } from '@/components/sound/SoundProvider';
 
 const groups = [
   { field: 'species', label: 'Species', choices: offeredSpecies },
@@ -17,6 +18,7 @@ export default function ChoiceDeck({ draft, disabled, onChange }: {
   onChange: <K extends keyof OutlawDraft>(field: K, value: OutlawDraft[K]) => void;
 }) {
   const [active, setActive] = useState(0);
+  const { play } = useSound();
   const id = useId();
   const tabs = useRef<(HTMLButtonElement | null)[]>([]);
   const group = groups[active];
@@ -42,7 +44,7 @@ export default function ChoiceDeck({ draft, disabled, onChange }: {
           const thumbnail = exact && !metadata ? art.thumb : undefined;
           const status = metadata ? 'Story detail' : exact ? art.label.includes('fallback') ? 'Original portrait fallback' : 'Cinematic artwork' : 'Artwork unavailable';
           return <label className={`choice-card${draft[group.field] === value ? ' is-selected' : ''}`} key={value}>
-            <input type="radio" name={`${id}-${group.field}-choice`} aria-label={value} value={value} checked={draft[group.field] === value} disabled={disabled} onChange={() => onChange(group.field as Field, value as OutlawDraft[Field])} />
+            <input type="radio" name={`${id}-${group.field}-choice`} aria-label={value} value={value} checked={draft[group.field] === value} disabled={disabled} onChange={() => { play('coin'); onChange(group.field as Field, value as OutlawDraft[Field]); }} />
             {thumbnail && <img src={thumbnail} width={art.width} height={art.height} alt="" loading="lazy" decoding="async" />}
             <span className="choice-card-copy"><strong>{value}</strong><small>{status}</small></span><span className="choice-check" aria-hidden="true">{draft[group.field] === value ? '✓' : '+'}</span>
           </label>;

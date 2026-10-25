@@ -1,6 +1,10 @@
 import SiteHeader from "@/components/SiteHeader";
 import Link from "next/link";
 import HeroMarquee from "@/components/HeroMarquee";
+import Particles from "@/components/motion/Particles";
+import HeroScenery from "@/components/motion/HeroScenery";
+import Reveal from "@/components/motion/Reveal";
+import SfxLink from "@/components/sound/SfxLink";
 import { portraits, webDerivatives } from "@/lib/character/appearance";
 
 const pick = (id: string) => portraits.find(asset => asset.id === id);
@@ -24,14 +28,16 @@ export default function Home() {
       <SiteHeader />
 
       <section className="hero" id="legend">
+        <HeroScenery />
+        <Particles kind="ember" count={22} seed={11} />
         <p className="eyebrow">A TALE FROM THE KINGDOM OF NEAR</p>
         <div className="herofox">
-          <img src="/images/file_000000001d188246a150a12121d3ed34.png" alt="RobinHoot, the broke fox of NEAR" width={340} height={340} />
+          <picture><source srcSet="/images/robinhoot-fox.webp" type="image/webp" /><img src="/images/robinhoot-fox.png" alt="RobinHoot, the broke fox of NEAR" width={1024} height={1536} /></picture>
         </div>
         <h1>THE CASTLES ARE FULL.<br /><em>THE TRENCHES ARE RISING.</em></h1>
         <p>They built the castles. They hoarded the gold. Then a broke fox showed up with a torn cloak, a rusty cup, and a plan.</p>
         <div className="actions">
-          <Link className="button" href="/my-outlaw">MAKE YOUR OUTLAW →</Link>
+          <SfxLink className="button" href="/my-outlaw">MAKE YOUR OUTLAW →</SfxLink>
           <a className="secondary" href="#tale">or hear the tale first ↓</a>
         </div>
         <HeroMarquee />
@@ -40,16 +46,18 @@ export default function Home() {
 
       <section id="tale" className="tale" aria-labelledby="tale-title">
         <p className="eyebrow">CHAPTER ONE</p>
-        <h2 id="tale-title">Once upon a time, in the kingdom of NEAR…</h2>
-        <div className="tale-text">
+        <Reveal className="tale-head"><h2 id="tale-title" className="ink-title">Once upon a time, in the kingdom of NEAR…</h2></Reveal>
+        <Particles kind="firefly" count={14} seed={23} />
+        <Reveal className="tale-text">
           <p><span className="dropcap">A</span> whale grew so fat on gold that he bought the castles, the coins and even the candles. He called himself the Sheriff, and he made one rule: the gold stays up here, the mud stays down there.</p>
           <p>Down in the trenches lived everybody else. Foxes with torn cloaks. Raccoons with quick paws. Badgers who never back down, rabbits who hear everything, wolves who forget nothing.</p>
           <p>One rainy night a broke fox climbed out of the mud with a bow he had carved himself. He looked up at the castle, counted the windows, and grinned.</p>
           <p className="tale-end">That was the night the guild was born.</p>
-        </div>
+        </Reveal>
       </section>
 
       <section className="villain" aria-labelledby="villain-title">
+        <Particles kind="coin" count={12} seed={5} />
         <figure className="villain-portrait">
           <picture>
             <source srcSet="/villain/sheriff-of-whaleingham.webp" type="image/webp" />
@@ -66,7 +74,7 @@ export default function Home() {
             <cite>— H.M. the Sheriff of Whaleingham</cite>
           </blockquote>
           <p className="villain-target">The whales have the gold.<br />The outlaws take it back to the trenches.</p>
-          <Link className="button" href="/my-outlaw">STEAL FROM THE WHALES →</Link>
+          <SfxLink className="button" href="/my-outlaw">STEAL FROM THE WHALES →</SfxLink>
         </div>
       </section>
 
@@ -81,7 +89,7 @@ export default function Home() {
             <p>{step.line}</p>
           </li>)}
         </ol>
-        <Link className="button" href="/my-outlaw">MAKE YOUR OUTLAW →</Link>
+        <SfxLink className="button" href="/my-outlaw">MAKE YOUR OUTLAW →</SfxLink>
       </section>
 
       <section className="bounty-home-callout" aria-labelledby="home-bounty-title">
