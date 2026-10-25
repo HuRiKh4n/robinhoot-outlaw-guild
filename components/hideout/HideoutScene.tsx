@@ -5,6 +5,8 @@ import { useEffect, useRef, useState } from 'react';
 import { castleGlow, chestGlow, coinSparkle, fire, hotspots, type Box, type Hotspot } from '@/lib/hideout';
 import { useSound } from '@/components/sound/SoundProvider';
 import Particles from '@/components/motion/Particles';
+import GameMenu from './GameMenu';
+import { Dartboard, GoldTally, useGold } from './GoldCounter';
 
 const place = (wide: Box, tall: Box) => ({
   '--x': wide[0], '--y': wide[1], '--w': wide[2], '--h': wide[3],
@@ -15,7 +17,9 @@ const place = (wide: Box, tall: Box) => ({
 export default function HideoutScene() {
   const { on, toggle, play } = useSound();
   const stage = useRef<HTMLDivElement>(null);
-  const [entering, setEntering] = useState(false);
+  const [phase, setPhase] = useState<'title' | 'lantern' | null>(null);
+  const entering = phase === 'lantern';
+  const { gold, add } = useGold();
   const [withVideo, setWithVideo] = useState<'wide' | 'tall' | null>(null);
   const [videoReady, setVideoReady] = useState(false);
   const video = useRef<HTMLVideoElement>(null);
@@ -43,16 +47,28 @@ export default function HideoutScene() {
     return () => observer.disconnect();
   }, [withVideo]);
 
-  // First visit of the session: the room starts dark and the lantern light spreads through it.
+  // First visit of the session: black title card (ROBINHOOT writes itself), then the room starts dark
+  // and the lantern light spreads through it. Any key or tap skips the title.
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     let seen = false;
     try { seen = sessionStorage.getItem('robinhoot:hideout-entered') === '1'; sessionStorage.setItem('robinhoot:hideout-entered', '1'); } catch {}
     if (seen) return;
-    setEntering(true);
-    const done = window.setTimeout(() => setEntering(false), 3200);
-    return () => window.clearTimeout(done);
+    setPhase('title');
   }, []);
+  useEffect(() => {
+    if (phase === 'title') {
+      const skip = () => setPhase('lantern');
+      const timer = window.setTimeout(skip, 2600);
+      window.addEventListener('keydown', skip, { once: true });
+      window.addEventListener('pointerdown', skip, { once: true });
+      return () => { window.clearTimeout(timer); window.removeEventListener('keydown', skip); window.removeEventListener('pointerdown', skip); };
+    }
+    if (phase === 'lantern') {
+      const timer = window.setTimeout(() => setPhase(null), 3200);
+      return () => window.clearTimeout(timer);
+    }
+  }, [phase]);
 
   // Torchlight + diorama tilt: the light follows the pointer (or finger), the room leans a little.
   useEffect(() => {
@@ -118,9 +134,22 @@ export default function HideoutScene() {
               ? <a className="hs-target" href={spot.href}>{content(spot)}</a>
               : <Link className="hs-target" href={spot.href!} onClick={() => play(spot.id === 'wanted' ? 'hit' : 'coin')}>{content(spot)}</Link>}
         </li>)}
+        <li className="hs-wrap"><Dartboard onHit={add} /></li>
       </ul>
       </div>
       <div className="hideout-curtain" aria-hidden="true" />
+      <div className="game-hud">
+        <p className="game-title" aria-hidden="true">ROBINHOOT</p>
+        <GameMenu />
+        <GoldTally gold={gold} />
+      </div>
     </div>
+    <p className="game-hints" aria-hidden="true"><kbd>↑</kbd><kbd>↓</kbd> select <kbd>Enter</kbd> confirm <kbd>Click</kbd> the Sheriff&rsquo;s portrait to steal back gold</p>
+    {phase === 'title' && <div className="title-card" role="presentation">
+      <p className="title-kicker">A tale from the kingdom of NEAR</p>
+      <p className="title-name" aria-label="RobinHoot">{'ROBINHOOT'.split('').map((letter, i) => <span key={i} style={{ animationDelay: `${0.35 + i * 0.11}s` }}>{letter}</span>)}</p>
+      <p className="title-sub">THE OUTLAW OF NEAR</p>
+      <p className="title-tag">The castles are full. The trenches are rising.</p>
+    </div>}
   </section>;
 }

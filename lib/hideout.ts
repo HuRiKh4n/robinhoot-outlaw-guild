@@ -26,3 +26,6 @@ export const fire = { wide: [0.58, 0.53, 0.12, 0.2] as Box, tall: [0.19, 0.53, 0
 export const castleGlow = { wide: [0.42, 0.19, 0.1, 0.17] as Box, tall: [0.48, 0.08, 0.15, 0.1] as Box };
 export const chestGlow = { wide: [0.565, 0.82, 0.13, 0.05] as Box, tall: [0.51, 0.81, 0.28, 0.04] as Box };
 export const coinSparkle = { wide: [0.655, 0.03, 0.025, 0.04] as Box, tall: [0.48, 0.67, 0.03, 0.02] as Box };
+
+/** The Sheriff's portrait used as a dartboard: hit it to steal back a coin. */
+export const dartboard = { wide: [0.6, 0.2, 0.085, 0.2] as Box, tall: [0.21, 0.32, 0.18, 0.13] as Box };
