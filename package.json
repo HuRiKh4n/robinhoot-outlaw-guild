@@ -15,8 +15,7 @@
     "test:security": "node --conditions=react-server --import tsx --test tests/security/*.test.ts"
   },
   "dependencies": {
-    "@meteorwallet/sdk": "3.24.0",
-    "@near-js/keystores": "2.2.5",
+    "@hot-labs/near-connect": "^0.11.3",
     "bs58": "6.0.0",
     "next": "^15.5.0",
     "pg": "8.23.1",
@@ -42,9 +41,6 @@
   "overrides": {
     "next": {
       "postcss": "8.5.31"
-    },
-    "@meteorwallet/sdk": {
-      "nanoid": "5.1.16"
     }
   }
 }

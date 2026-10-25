@@ -98,7 +98,7 @@ function IdentityEditor({ active }: { active: RefObject<string | undefined> }) {
     if (!connection || !account || busy) return;
     setBusy(true);
     setStatus(
-      "Review the off-chain sign-in message in Meteor. No transaction or gas fee is required.",
+      "Review the off-chain sign-in message in your wallet. No transaction or gas fee is required.",
     );
     try {
       await waitForGuildLogout();
