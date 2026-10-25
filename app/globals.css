@@ -457,4 +457,3 @@ input:focus-visible, textarea:focus-visible { outline: 3px solid #df9950; outlin
 .hideout-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .9s ease}
 .has-video .hideout-video{opacity:1}
 .has-video .fx-fire,.has-video .fx-castle,.has-video .fx-chest{display:none}
-@media(max-width:700px){.hideout-video{display:none}}

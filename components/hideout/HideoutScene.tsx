@@ -16,16 +16,20 @@ export default function HideoutScene() {
   const { on, toggle, play } = useSound();
   const stage = useRef<HTMLDivElement>(null);
   const [entering, setEntering] = useState(false);
-  const [withVideo, setWithVideo] = useState(false);
+  const [withVideo, setWithVideo] = useState<'wide' | 'tall' | null>(null);
   const [videoReady, setVideoReady] = useState(false);
   const video = useRef<HTMLVideoElement>(null);
 
-  // Desktop: the living version of the room (silent looping video). Phones, data-saver and
-  // reduced-motion visitors keep the still painting.
+  // The living version of the room (silent looping video): wide on computers, tall on phones.
+  // Data-saver and reduced-motion visitors keep the still painting.
   useEffect(() => {
     const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData;
-    if (saveData || window.matchMedia('(prefers-reduced-motion: reduce)').matches || !window.matchMedia('(min-width: 701px)').matches) return;
-    setWithVideo(true);
+    if (saveData || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const phone = window.matchMedia('(max-width: 700px)');
+    const pick = () => { setVideoReady(false); setWithVideo(phone.matches ? 'tall' : 'wide'); };
+    pick();
+    phone.addEventListener('change', pick);
+    return () => phone.removeEventListener('change', pick);
   }, []);
 
   // Only play while the room is on screen.
@@ -92,9 +96,9 @@ export default function HideoutScene() {
         <img src="/hideout/hideout-wide-1600.webp" srcSet="/hideout/hideout-wide-1100.webp 1100w, /hideout/hideout-wide-1600.webp 1600w, /hideout/hideout-wide-2400.webp 2400w" sizes="100vw" width={2400} height={1340}
           alt="A cosy, messy hideout under the trenches: a fox pins WANTED posters to the wall, an open storybook lies on the table, a window shows the whale's golden castle, a chained chest glows by the fire, a raccoon bard plays the lute and a bounty board hangs on the right." fetchPriority="high" />
       </picture>
-      {withVideo && <video ref={video} className="hideout-video" autoPlay muted loop playsInline preload="auto" poster="/hideout/hideout-wide-1600.webp" aria-hidden="true" onPlaying={() => setVideoReady(true)}>
-        <source src="/hideout/hideout-wide-loop.webm" type="video/webm" />
-        <source src="/hideout/hideout-wide-loop.mp4" type="video/mp4" />
+      {withVideo && <video key={withVideo} ref={video} className="hideout-video" autoPlay muted loop playsInline preload="auto" poster={withVideo === 'tall' ? '/hideout/hideout-tall-828.webp' : '/hideout/hideout-wide-1600.webp'} aria-hidden="true" onPlaying={() => setVideoReady(true)}>
+        <source src={`/hideout/hideout-${withVideo}-loop.webm`} type="video/webm" />
+        <source src={`/hideout/hideout-${withVideo}-loop.mp4`} type="video/mp4" />
       </video>}
 
       <div className="hideout-fx" aria-hidden="true">
