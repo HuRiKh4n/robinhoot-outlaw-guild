@@ -6,14 +6,15 @@ import { createHash } from 'node:crypto';
 const speciesWithoutArt = ['Bear', 'Owl'];
 const classes = ['Ranger', 'Rogue', 'Warrior', 'Mage', 'Scout', 'Trickster'];
 
-test('unsupported species and classes show explicit unavailable states without fabricated art', async ({ page }, testInfo) => {
+test('species without artwork are not offered; a stored one still shows an explicit unavailable state', async ({ page }, testInfo) => {
   await page.goto('/my-outlaw');
-  for (const value of speciesWithoutArt) {
-    await choose(page, 'SPECIES', value);
-    await expect(page.locator('.character-preview-large img')).toHaveCount(0);
-    await expect(page.locator('.character-preview-large .portrait-unavailable')).toContainText(value);
-  }
-  // Owl has no artwork yet, so every class stays an explicit unavailable state.
+  await page.getByRole('tab', { name: /^Species\b/ }).click();
+  for (const value of speciesWithoutArt) await expect(page.getByRole('radio', { name: value, exact: true })).toHaveCount(0);
+  for (const value of ['Wolf', 'Fox', 'Raccoon', 'Rabbit', 'Badger']) await expect(page.getByRole('radio', { name: value, exact: true })).toHaveCount(1);
+  // A draft saved before Owl was hidden keeps its species and shows no substitute art for any class.
+  await page.evaluate(() => sessionStorage.setItem('robinhoot:outlaw-draft', JSON.stringify({ name: 'Old Owl', species: 'Owl', class: 'Ranger', outfit: 'Patched Cloak', personality: 'Loyal' })));
+  await page.reload();
+  await selected(page, 'SPECIES', 'Owl');
   for (const value of classes) {
     await choose(page, 'CLASS', value);
     await expect(page.locator('.character-preview-large img')).toHaveCount(0);

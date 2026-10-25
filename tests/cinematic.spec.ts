@@ -59,9 +59,8 @@ test('all twelve actual Wolf images switch without reload and synchronize live, 
   }
   expect(sources.size).toBe(variants.length);
   expect(await page.evaluate(() => Reflect.get(window, '__robinhootPreviewMarker'))).toBe('same-document');
-  await choose(page, 'SPECIES', 'Owl');
-  await expect(page.locator('.character-preview-large img')).toHaveCount(0);
-  await expect(page.locator('.art-availability')).toContainText('No cinematic artwork');
+  await page.getByRole('tab', { name: /^Species\b/ }).click();
+  await expect(page.getByRole('radio', { name: 'Owl', exact: true })).toHaveCount(0);
 });
 
 test('all twelve Wolf variants render into passport and both real PNG downloads', async ({ page }, testInfo) => {
@@ -136,6 +135,5 @@ test('all sixteen Fox variants, including Scout and Trickster, show their own or
     await expect(page.locator('.character-preview-large img')).toHaveAttribute('src', asset.src);
     await expect(page.locator('.poster')).toContainText(asset.outfit!.toUpperCase());
   }
-  await choose(page, 'SPECIES', 'Owl'); await choose(page, 'CLASS', 'Trickster');
-  await expect(page.locator('.character-preview-large img')).toHaveCount(0);
+  await expect(page.locator('.character-preview-large picture source')).toHaveAttribute('srcset', fox.at(-1)!.src.replace(/\.png$/, '.webp'));
 });

@@ -46,4 +46,5 @@ for (const speciesDir of (await readdir(charactersDir, { withFileTypes: true }))
 await writeFile(catalogueFile, `${JSON.stringify(catalogue, null, 2)}\n`);
 for (const line of added) console.log(`Registered: ${line}`);
 for (const line of activated) console.log(`Activated: public${line}`);
+if (added.length || activated.length) console.log('Next: python3 scripts/make-web-derivatives.py to create the lightweight display copies.');
 console.log(`${added.length} new, ${activated.length} activated, ${catalogue.filter(asset => asset.status === 'ready').length} ready in total.`);

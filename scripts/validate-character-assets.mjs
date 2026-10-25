@@ -31,5 +31,12 @@ for (const asset of assets) {
   if (bytes.length > 10 * 1024 * 1024) fail('PNG exceeds 10 MB; optimize before publishing');
   if (bytes.readUInt32BE(16) !== asset.width || bytes.readUInt32BE(20) !== asset.height) fail('dimensions do not match PNG');
   if (asset.width < 960 || asset.height < 1240) fail('production portrait must be at least 960×1240');
+  for (const suffix of ['.webp', '.thumb.webp']) {
+    const derived = asset.src.replace(/\.png$/, suffix);
+    let webp;
+    try { webp = await readFile(path.join(root, 'public', derived)); }
+    catch { fail(`missing display copy public${derived}; run python3 scripts/make-web-derivatives.py`); }
+    if (webp.subarray(0, 4).toString() !== 'RIFF' || webp.subarray(8, 12).toString() !== 'WEBP') fail(`${derived} is not a real WebP`);
+  }
 }
 console.log(`Character catalogue valid: ${assets.filter(asset => asset.status === 'ready').length} ready, ${assets.filter(asset => asset.status !== 'ready').length} awaiting artwork.`);

@@ -1,6 +1,10 @@
 import catalogue from '../character/portraits.json';
 
 export const species = ['Raccoon', 'Wolf', 'Rabbit', 'Fox', 'Badger', 'Owl', 'Bear'] as const;
+/** Species shown in the creator: only those with at least one ready portrait.
+ *  Owl and Bear stay valid for stored drafts and reappear automatically once their art is registered. */
+export const offeredSpecies: readonly typeof species[number][] = species.filter(name =>
+  catalogue.some(asset => asset.species === name && asset.status === 'ready'));
 /** Classes offered in the creator: only those with a registered cinematic wardrobe. */
 export const classes = ['Scout', 'Ranger', 'Trickster', 'Rogue', 'Warrior', 'Mage'] as const;
 /** Retired classes (no artwork yet) map to the closest active class when an old draft is read. */

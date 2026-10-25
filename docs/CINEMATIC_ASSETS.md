@@ -90,3 +90,9 @@ The replacement Warrior originals are genuine 1024×1536 PNGs at the requested p
 - Warrior / Battle Armor: SHA-256 `92376df3d7d70a690524f0de04c86ca29ded45f3d7ae22dc39beb19f407ce9d2`
 - Warrior / Berserker: SHA-256 `a1c09136b17d0dbc894480a293f642060ba203d7163e7d317cc6aea08b534411`
 - Warrior / Royal Guard: SHA-256 `90edcf8fca989e6843fff34f6e04543980d31551e95d2d03e30b19a108274438`
+
+## Web display copies and offered species
+
+Each original PNG has two generated display copies next to it: `name.webp` (800 px, ~120 KB) for the live preview, poster and profile, and `name.thumb.webp` (240 px, ~12 KB) for choice-card thumbnails. The PNG original is unchanged and still feeds both PNG downloads. Previously every choice card loaded the full ~2.4 MB PNG. After adding art, run `npm run register:art` then `python3 scripts/make-web-derivatives.py`; `validate:art` (and therefore the build) fails if a ready portrait lacks either copy.
+
+The creator offers only species with at least one ready portrait (currently Wolf, Fox, Raccoon, Rabbit, Badger). Owl and Bear remain valid in stored drafts, show the explicit unavailable state there, and reappear automatically once their art is registered.

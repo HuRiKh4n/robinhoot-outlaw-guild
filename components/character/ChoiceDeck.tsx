@@ -1,11 +1,11 @@
 'use client';
 
 import { useId, useRef, useState } from 'react';
-import { classDraft, classes, outfitsFor, personalities, species, type OutlawDraft } from '@/lib/profile/draft';
+import { classDraft, classes, offeredSpecies, outfitsFor, personalities, type OutlawDraft } from '@/lib/profile/draft';
 import { resolveAppearance } from '@/lib/character/appearance';
 
 const groups = [
-  { field: 'species', label: 'Species', choices: species },
+  { field: 'species', label: 'Species', choices: offeredSpecies },
   { field: 'class', label: 'Class', choices: classes },
   { field: 'outfit', label: 'Outfit', choices: [] as readonly string[] },
   { field: 'personality', label: 'Spirit', choices: personalities },
@@ -34,16 +34,16 @@ export default function ChoiceDeck({ draft, disabled, onChange }: {
     </div>
     {groups.map((item, index) => <div key={item.field} role="tabpanel" id={`${id}-panel-${item.field}`} aria-labelledby={`${id}-${item.field}`} hidden={active !== index}>
       {active === index && <fieldset className="choice-panel"><legend>{group.label === 'Spirit' ? 'YOUR PERSONALITY' : `YOUR ${group.label.toUpperCase()}`}</legend>
-        <div className="choice-grid">{(group.field === 'outfit' ? outfitsFor(draft.class) : group.choices).map(value => {
+        <div className="choice-grid">{(group.field === 'outfit' ? outfitsFor(draft.class) : group.field === 'species' && !group.choices.includes(draft.species as never) ? [...group.choices, draft.species] : group.choices).map(value => {
           const next = group.field === 'class' ? classDraft(draft, value as OutlawDraft['class']) : { ...draft, [group.field]: value } as OutlawDraft;
           const art = resolveAppearance(next);
           const metadata = group.field === 'personality';
           const exact = art.kind === 'cinematic';
-          const thumbnail = exact && !metadata ? art.src : undefined;
+          const thumbnail = exact && !metadata ? art.thumb : undefined;
           const status = metadata ? 'Story detail' : exact ? art.label.includes('fallback') ? 'Original portrait fallback' : 'Cinematic artwork' : 'Artwork unavailable';
           return <label className={`choice-card${draft[group.field] === value ? ' is-selected' : ''}`} key={value}>
             <input type="radio" name={`${id}-${group.field}-choice`} aria-label={value} value={value} checked={draft[group.field] === value} disabled={disabled} onChange={() => onChange(group.field as Field, value as OutlawDraft[Field])} />
-            {thumbnail && <img src={thumbnail} width={art.width} height={art.height} alt="" />}
+            {thumbnail && <img src={thumbnail} width={art.width} height={art.height} alt="" loading="lazy" decoding="async" />}
             <span className="choice-card-copy"><strong>{value}</strong><small>{status}</small></span><span className="choice-check" aria-hidden="true">{draft[group.field] === value ? '✓' : '+'}</span>
           </label>;
         })}</div>
