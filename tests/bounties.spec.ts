@@ -88,10 +88,12 @@ test('board browsing preserves wallet and full local character; roadmap reports 
   await selected(page,'OUTFIT','Dark Sorcerer'); await selected(page,'PERSONALITY','Loyal');
   await expect(page.locator('.character-preview-large img')).toHaveAttribute('src','/characters/wolf/mage/dark-sorcerer.png');
   expect(await page.evaluate(()=>localStorage.getItem('robinhoot:profile:v1:mainnet:board.near'))).toBe(before);
-  await page.goto('/#roadmap');
-  await expect(page.locator('#roadmap')).toContainText('The board is pinned to the tavern wall. Taking on jobs comes next.');
-  await expect(page.locator('#roadmap')).toContainText('The chest is still locked.');
-  await expect(page.locator('#roadmap li.is-done')).toHaveCount(2);
+  await page.goto('/#road');
+  const road = page.getByRole('dialog', { name: 'From one broke fox to an army of outlaws' });
+  await expect(road).toBeVisible();
+  await expect(road).toContainText('The board is pinned to the tavern wall. Taking on jobs comes next.');
+  await expect(road).toContainText('The chest is still locked.');
+  await expect(road.locator('li.is-done')).toHaveCount(2);
 });
 
 

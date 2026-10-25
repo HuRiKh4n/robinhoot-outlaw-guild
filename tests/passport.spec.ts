@@ -8,7 +8,7 @@ const card = (page: import('@playwright/test').Page) => page.getByRole('img', { 
 
 test('keyboard navigation opens My Outlaw and exports the exact preview as a PNG', async ({ page }, testInfo) => {
   await page.goto('/');
-  const link = page.getByRole('link', { name: 'MAKE YOUR OUTLAW →', exact: true }).first();
+  const link = page.getByRole('link', { name: 'FORGE YOUR OUTLAW →', exact: true }).first();
   await link.focus(); await page.keyboard.press('Enter');
   await expect(page).toHaveURL(/\/my-outlaw$/);
   await expect(page.getByRole('heading', { name: 'YOUR OUTLAW', exact: true })).toBeVisible();
