@@ -810,3 +810,22 @@ nav.site-header{background:#07070a}
 .draw-eligible summary{cursor:pointer;color:#a99c84;font-size:13px}
 .draw-eligible p{color:#a99c84;font-size:12px;word-break:break-all}
 .draw-card .button{justify-self:start;cursor:pointer}
+.draw-how{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:12px}
+.draw-how div{border:1px solid #c9a46455;background:#0d0c10cc;padding:16px;display:grid;gap:6px;align-content:start}
+.draw-how b{font:600 30px/1 'Cormorant Garamond',Georgia,serif;color:var(--gold)}
+.draw-how h3{margin:0;font:600 19px 'Cormorant Garamond',Georgia,serif;color:var(--ink)}
+.draw-how p{margin:0;color:#a99c84;font-size:13px;line-height:1.6}
+.draw-demo{display:grid;gap:14px;justify-items:center}
+.draw-demo .button{cursor:pointer}
+.draw-seed{text-align:center;color:#cfc4ad;font-size:13px;margin:0}
+.draw-seed a{color:var(--gold)}
+.draw-seed code,.draw-steps code{font-size:11px;color:#a99c84;word-break:break-all}
+.draw-sample{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:1fr 1fr;gap:6px;width:100%}
+.draw-sample li{display:flex;flex-wrap:wrap;gap:8px;align-items:center;border:1px solid #c9a46433;padding:8px 10px;color:#b9b0a0;font-size:13px}
+.draw-sample li span{color:#6f6758;width:18px}
+.draw-sample li.is-winner{border-color:var(--gold);color:var(--ink);background:#c9a4641a}
+.draw-sample li b{color:var(--gold);font-weight:600;margin-left:auto}
+.draw-steps{margin:0;padding-left:18px;display:grid;gap:8px;color:#cfc4ad;font-size:13px;line-height:1.6;width:100%}
+.draw-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.draw-check{font-size:13px}.draw-check.ok{color:#7fb069}.draw-check.bad{color:#d86a4a}
+@media(max-width:700px){.draw-how{grid-template-columns:1fr 1fr}.draw-sample{grid-template-columns:1fr}}
