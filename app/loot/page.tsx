@@ -42,18 +42,18 @@ export default function LootPage() {
     </section>
 
     <section className="loot-section" aria-labelledby="chest-title">
-      <h2 id="chest-title">The Guild Chest</h2>
-      <p className="loot-lead">Every week the chest is split three ways. Part is paid out at once, part grows into a Grand Prize, and part is kept for lean times.</p>
+      <h2 id="chest-title">Hold &amp; Win</h2>
+      <p className="loot-lead"><b>Hold the coin. Win NEAR. Every week.</b> No sign-up, no forms: the chain knows who stayed.</p>
       <Split parts={[
-        { pct: 36, label: 'The weekly prize', note: 'Every week, 5 outlaws: 3 chosen for the best bounties, 2 drawn by lot', tone: 'gold' },
-        { pct: 54, label: 'The Grand Prize', note: 'Builds up all month; 60% goes to 10 outlaws drawn by lot, 40% stays in the chest', tone: 'blood' },
+        { pct: 36, label: 'The weekly prize', note: 'Every Sunday, 5 holders drawn: the Lucky Outlaw takes 28%, four more take 18% each', tone: 'gold' },
+        { pct: 54, label: 'The Grand Prize', note: 'Builds up all month; on the 1st, 10 holders drawn: The Big Heist takes 30%, nine more share the rest. 40% stays in the chest', tone: 'blood' },
         { pct: 10, label: 'The reserve', note: 'Kept for lean weeks, so the prizes stay steady', tone: 'ember' },
       ]} />
       <ol className="raid-how">
-        <li><b>Bring your outlaw.</b> Only wallets registered on this site with their own outlaw can win. <Link href="/my-outlaw">Forge yours →</Link></li>
-        <li><b>Stay in the guild.</b> Hold at least $50 of $RHOOT for 72 hours in a row for the weekly prize, 120 hours for the Grand Prize. <Link href="/raid">Check if you are ready →</Link></li>
-        <li><b>Win by deed or by luck.</b> Each week the 3 best bounties win, and 2 more outlaws are drawn by lot; the best bounty of the week takes the biggest share (28%), the other four share the rest equally (18% each). The Grand Prize is drawn by lot among all eligible outlaws: one takes The Big Heist (30%), the other nine share the rest equally. Every draw is public: it is seeded by a NEAR block announced in advance, so anyone can check it.</li>
-        <li><b>Get paid in NEAR.</b> Straight from the Guild Chest, and every payout is posted in public.</li>
+        <li><b>Hold.</b> At least $50 of the coin for 3 days in a row for the weekly prize, 5 days for the Grand Prize. <Link href="/raid">Check if you are in →</Link></li>
+        <li><b>That&rsquo;s it.</b> Every holder who stayed is in the draw automatically. The longer you hold, the more draws you are in.</li>
+        <li><b>Drawn in the open.</b> Every Sunday and every 1st of the month, the dice is the first NEAR block after 20:00 UTC. Anyone can check it. <Link href="/draws">See the draws →</Link></li>
+        <li><b>Paid in NEAR, announced on X.</b> Straight from the Guild Chest to the winners&rsquo; wallets.</li>
       </ol>
     </section>
 
@@ -67,15 +67,15 @@ export default function LootPage() {
       </div>
       <div className="loot-cards">
         <article className="loot-card">
-          <p className="loot-card-kicker">Every week · 5 outlaws</p>
-          <div className="loot-card-top"><span>🥇 Best bounty</span><strong>$226</strong></div>
-          <div className="loot-card-rest"><span>4 more outlaws</span><strong>$145 each</strong></div>
-          <p className="loot-card-note">3 win for their bounties, 2 are drawn by lot.</p>
+          <p className="loot-card-kicker">Every Sunday · 5 holders drawn</p>
+          <div className="loot-card-top"><span>🍀 The Lucky Outlaw</span><strong>$226</strong></div>
+          <div className="loot-card-rest"><span>4 more holders</span><strong>$145 each</strong></div>
+          <p className="loot-card-note">Hold 3 days and you are in. Every week.</p>
         </article>
         <article className="loot-card loot-card-grand">
-          <p className="loot-card-kicker">Every month · 10 outlaws drawn</p>
+          <p className="loot-card-kicker">Every month · 10 holders drawn</p>
           <div className="loot-card-top"><span>👑 The Big Heist</span><strong>$930</strong></div>
-          <div className="loot-card-rest"><span>9 more outlaws</span><strong>$240 each</strong></div>
+          <div className="loot-card-rest"><span>9 more holders</span><strong>$240 each</strong></div>
           <p className="loot-card-note">Month one. The chest keeps 40% for the next month, so it grows: up to about <b>$1,550</b> and <b>$400 each</b>.</p>
         </article>
       </div>

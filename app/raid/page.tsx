@@ -31,10 +31,9 @@ export default async function RaidPage() {
       </div> : <p className="raid-closed">{rules?.reason ?? 'The raid ledger could not be read right now. Come back soon.'}</p>}
       <ol className="raid-how">
         <li><b>The amount is set on Monday.</b> ${rules?.minUsd ?? 50} worth of $RHOOT at last week&rsquo;s average price. If the price moves during the week, the amount stays the same.</li>
-        <li><b>The chain remembers.</b> When the chest opens, the guild looks at your balance every 6 hours over the last 72 hours (120 for the Grand Prize) and at 6 more moments picked by chance, at that very moment.</li>
-        <li><b>Bring your outlaw.</b> Only wallets registered on the site with their own outlaw can win. Wearing your outlaw as your Telegram picture earns you the guild&rsquo;s respect.</li>
+        <li><b>The chain remembers.</b> When the chest opens, the guild looks at your balance every 6 hours over the last 72 hours (120 for the Grand Prize) and at 6 more moments that nobody knows in advance.</li>
         <li><b>Every check must pass.</b> Buy the day before, or sell and buy back in between, and the ledger shows it.</li>
-        <li><b>The prize is paid in NEAR,</b> from the Guild Chest: each week 3 outlaws win for their bounties and 2 by lot; every month 10 win the Grand Prize by lot. Holding is your ticket. <Link href="/loot">Where the gold comes from →</Link></li>
+        <li><b>The prize is paid in NEAR,</b> from the Guild Chest: every Sunday 5 holders are drawn, and on the 1st of every month 10 more win the Grand Prize. Holding is your only ticket. <Link href="/draws">See the draws →</Link> <Link href="/loot">Where the gold comes from →</Link></li>
       </ol>
     </section>
 
