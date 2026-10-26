@@ -60,17 +60,26 @@ export default function LootPage() {
     <section className="loot-section" aria-labelledby="example-title">
       <h2 id="example-title">What the chest could hold</h2>
       <p className="loot-lead">An example, not a promise: if the guild trades <b>$20,000 a day</b>, this is how the loot would flow. Less volume, smaller prizes; more volume, bigger ones.</p>
-      <div className="loot-table-wrap"><table className="raid-table loot-example-table">
-        <tbody>
-          <tr><th scope="row">Sheriff&rsquo;s tax collected</th><td>$400 a day · $2,800 a week</td></tr>
-          <tr><th scope="row">To the Guild Chest (80%)</th><td>$2,240 a week</td></tr>
-          <tr><th scope="row">Weekly prize, 5 outlaws</th><td><b>$806 a week:</b> about $226 for the best bounty, about $145 each for the other four</td></tr>
-          <tr><th scope="row">Grand Prize, 10 outlaws</th><td><b>The Big Heist: about $930 in month one, growing to about $1,550</b> as the chest fills; the other nine about $240 each, growing to about $400</td></tr>
-          <tr><th scope="row">Left in the chest after each Grand Prize</th><td>from about $2,000 to about $3,500</td></tr>
-          <tr><th scope="row">The reserve</th><td>about $960 a month</td></tr>
-        </tbody>
-      </table></div>
-      <p className="loot-example">Prizes are paid in NEAR, so their dollar value moves with the price of NEAR. Figures are rounded.</p>
+      <div className="loot-flow" aria-label="$400 of tax a day, $2,240 a week into the Guild Chest">
+        <div><strong>$400</strong><span>tax a day</span></div>
+        <i aria-hidden="true">→</i>
+        <div><strong>$2,240</strong><span>a week into the Guild Chest</span></div>
+      </div>
+      <div className="loot-cards">
+        <article className="loot-card">
+          <p className="loot-card-kicker">Every week · 5 outlaws</p>
+          <div className="loot-card-top"><span>🥇 Best bounty</span><strong>$226</strong></div>
+          <div className="loot-card-rest"><span>4 more outlaws</span><strong>$145 each</strong></div>
+          <p className="loot-card-note">3 win for their bounties, 2 are drawn by lot.</p>
+        </article>
+        <article className="loot-card loot-card-grand">
+          <p className="loot-card-kicker">Every month · 10 outlaws drawn</p>
+          <div className="loot-card-top"><span>👑 The Big Heist</span><strong>$930</strong></div>
+          <div className="loot-card-rest"><span>9 more outlaws</span><strong>$240 each</strong></div>
+          <p className="loot-card-note">Month one. The chest keeps 40% for the next month, so it grows: up to about <b>$1,550</b> and <b>$400 each</b>.</p>
+        </article>
+      </div>
+      <p className="loot-example">Another 10% of the chest is kept as a reserve for lean weeks. Prizes are paid in NEAR, so their dollar value moves with the price of NEAR. Figures are rounded.</p>
     </section>
 
     <section className="loot-section" aria-labelledby="bag-title">
