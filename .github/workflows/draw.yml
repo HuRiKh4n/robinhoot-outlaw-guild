@@ -1,0 +1,46 @@
+name: Hold & Win draw
+
+on:
+  schedule:
+    - cron: "30 20 * * 0"   # every Sunday 20:30 UTC: weekly draw (seed = first block after 20:00)
+    - cron: "45 20 1 * *"   # the 1st of every month 20:45 UTC: Grand Prize draw
+  workflow_dispatch:
+    inputs:
+      kind:
+        description: "weekly or monthly"
+        required: true
+        default: weekly
+      date:
+        description: "Draw day YYYY-MM-DD (empty = most recent)"
+        required: false
+
+permissions:
+  contents: write
+
+concurrency: draw
+
+jobs:
+  draw:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Draw
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            node scripts/draw.mjs "${{ inputs.kind }}" ${{ inputs.date }}
+          elif [ "${{ github.event.schedule }}" = "45 20 1 * *" ]; then
+            node scripts/draw.mjs monthly
+          else
+            node scripts/draw.mjs weekly
+          fi
+      - name: Publish result
+        run: |
+          git config user.name "RobinHoot draw"
+          git config user.email "evilhuri@gmail.com"
+          git add public/draws
+          git commit -m "Hold & Win draw result" || echo "nothing new"
+          git push
