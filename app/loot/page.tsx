@@ -52,6 +52,12 @@ export default function LootPage() {
       <ol className="raid-how">
         <li><b>Hold.</b> At least $50 of the coin for 3 days in a row for a weekly prize, 5 days for the Grand Prize. <Link href="/raid">Check if you are in →</Link></li>
         <li><b>That&rsquo;s it.</b> Every holder who stayed is in the draw automatically. The longer you hold, the more draws you are in.</li>
+        <li><b>Hold more, get more tickets.</b> Your tickets follow your lowest balance in those days: a little edge for big holders, a real chance for everyone.
+          <div className="loot-tickets" role="table" aria-label="Tickets by balance">
+            {[['$50', 1], ['$200', 2], ['$300', 3], ['$400', 4], ['$500', 5], ['$1,000', 6], ['$2,000', 7], ['$3,000', 8], ['$4,000', 9], ['$5,000+', 10]].map(([usd, t]) => <div key={String(usd)} role="row"><span role="cell">{usd}</span><b role="cell">{t} 🎟️</b></div>)}
+          </div>
+          Linked wallets (sub-accounts of the same parent, or wallets funded by the same wallet) count as one.
+        </li>
         <li><b>Drawn in the open.</b> Every Sunday at 20:00 UTC, the dice is the first NEAR block after that moment. Anyone can check it. <Link href="/draws">See the draws →</Link></li>
         <li><b>Paid in NEAR, announced on X.</b> Straight from the Guild Chest to the winners&rsquo; wallets.</li>
       </ol>

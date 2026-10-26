@@ -848,3 +848,7 @@ nav.site-header{background:#07070a}
 @media(max-width:700px){.live-clock div{min-width:60px}.live-clock strong{font-size:34px}}
 @media(prefers-reduced-motion:reduce){.live-pulse,.live-winners li.is-in{animation:none}}
 .draw-sample-label{margin:0;font:600 11px Oswald,sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#d86a4a}
+.loot-tickets{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin:10px 0}
+.loot-tickets div{border:1px solid #c9a46444;padding:8px 6px;text-align:center;display:grid;gap:2px}
+.loot-tickets span{color:#a99c84;font-size:12px}.loot-tickets b{color:var(--ink);font-size:14px}
+@media(max-width:700px){.loot-tickets{grid-template-columns:repeat(2,1fr)}}

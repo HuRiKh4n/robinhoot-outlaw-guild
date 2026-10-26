@@ -32,6 +32,7 @@ export default async function RaidPage() {
       <ol className="raid-how">
         <li><b>The amount is set on Monday.</b> ${rules?.minUsd ?? 50} worth of $RHOOT at last week&rsquo;s average price. If the price moves during the week, the amount stays the same.</li>
         <li><b>The chain remembers.</b> When the chest opens, the guild looks at your balance every 6 hours over the last 72 hours (120 for the Grand Prize) and at 6 more moments that nobody knows in advance.</li>
+        <li><b>Tickets.</b> Your lowest balance in the window sets your tickets: $50 = 1, $200 = 2, up to 5 at $500, then one more for every extra $1,000, up to 10 at $5,000.</li>
         <li><b>Every check must pass.</b> Buy the day before, or sell and buy back in between, and the ledger shows it.</li>
         <li><b>The prize is paid in NEAR,</b> from the Guild Chest: every Sunday there is a draw: three Sundays out of four, 3 holders win the weekly prize; every fourth Sunday, 5 holders win the Grand Prize. Holding is your only ticket. <Link href="/draws">See the draws →</Link> <Link href="/loot">Where the gold comes from →</Link></li>
       </ol>

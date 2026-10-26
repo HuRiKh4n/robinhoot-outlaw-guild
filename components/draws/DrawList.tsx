@@ -6,8 +6,9 @@ import { drawWinners } from '@/lib/draw-math';
 interface Entry { kind: 'weekly' | 'monthly'; date: string; file: string; eligible: number; winners: number }
 interface Draw {
   kind: 'weekly' | 'monthly'; date: string; holdHours: number; minTokens: string; symbol?: string;
-  seedBlock: { height: number; hash: string; time: string }; holdersChecked: number; eligible: string[];
-  winners: Array<{ account: string; share: number; title?: string }>;
+  seedBlock: { height: number; hash: string; time: string }; holdersChecked: number; totalTickets?: number;
+  eligible: Array<string | { account: string; tickets: number }>; linked?: string[][];
+  winners: Array<{ account: string; share: number; title?: string; tickets?: number }>;
 }
 
 const label = (kind: Draw['kind']) => kind === 'monthly' ? 'Grand Prize' : 'Weekly prize';
@@ -47,8 +48,8 @@ export default function DrawList() {
       <ol className="draw-winners">
         {draw.winners.map((w, i) => <li key={w.account}><span>{i === 0 ? (draw.kind === 'monthly' ? '👑' : '🍀') : '🦊'} {w.account}{w.title ? <em> · {w.title}</em> : null}</span><b>{w.share.toFixed(w.share % 1 ? 1 : 0)}%</b></li>)}
       </ol>
-      <p className="loot-card-note">{draw.eligible.length} of {draw.holdersChecked} holders were eligible (at least {Number(draw.minTokens).toLocaleString('en-US')} tokens for {draw.holdHours} h). Seed: <a href={`https://nearblocks.io/blocks/${draw.seedBlock.hash}`} target="_blank" rel="noopener noreferrer">block #{draw.seedBlock.height} ↗</a></p>
-      <details className="draw-eligible"><summary>All eligible holders ({draw.eligible.length})</summary><p>{draw.eligible.join(', ')}</p></details>
+      <p className="loot-card-note">{draw.eligible.length} of {draw.holdersChecked} holders were eligible (at least {Number(draw.minTokens).toLocaleString('en-US')} tokens for {draw.holdHours} h){draw.totalTickets ? `, ${draw.totalTickets} tickets in the pot` : ''}. Seed: <a href={`https://nearblocks.io/blocks/${draw.seedBlock.hash}`} target="_blank" rel="noopener noreferrer">block #{draw.seedBlock.height} ↗</a></p>
+      <details className="draw-eligible"><summary>All eligible holders ({draw.eligible.length})</summary><p>{draw.eligible.map(e => typeof e === 'string' ? e : `${e.account} (${e.tickets} 🎟️)`).join(', ')}</p></details>
       <div className="draw-actions"><button type="button" className="button" onClick={() => void verify(draw)}>CHECK THIS DRAW</button>
       {checks[draw.kind + draw.date] && <span className={`draw-check ${checks[draw.kind + draw.date]}`} role="status">{checks[draw.kind + draw.date] === 'ok' ? '✓ Your device re-ran the draw: the winners match.' : '✗ The winners do not match. Tell the guild.'}</span>}</div>
       <button type="button" className="button" onClick={() => { void navigator.clipboard?.writeText(tweet(draw)).then(() => { setCopied(draw.date + draw.kind); setTimeout(() => setCopied(''), 2000); }); }}>{copied === draw.date + draw.kind ? 'COPIED ✓' : 'COPY THE TWEET'}</button>

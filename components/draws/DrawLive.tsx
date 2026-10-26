@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 type Kind = 'weekly' | 'monthly';
-interface Draw { kind: Kind; date: string; eligible: string[]; seedBlock: { height: number; hash: string }; winners: Array<{ account: string; share: number; title?: string }> }
+interface Draw { kind: Kind; date: string; eligible: Array<string | { account: string }>; seedBlock: { height: number; hash: string }; winners: Array<{ account: string; share: number; title?: string }> }
 const RPCS = ['https://rpc.mainnet.fastnear.com', 'https://free.rpc.fastnear.com'];
 
 /** Next Sunday 20:00 UTC (or the one just passed, within the last 6 hours). */
@@ -93,7 +93,7 @@ export default function DrawLive() {
   // Reveal the winners one by one, names spinning like a slot machine.
   useEffect(() => {
     if (!draw || shown >= draw.winners.length) return;
-    const names = draw.eligible.length ? draw.eligible : draw.winners.map(w => w.account);
+    const names = draw.eligible.length ? draw.eligible.map(e => typeof e === 'string' ? e : e.account) : draw.winners.map(w => w.account);
     const spin = setInterval(() => setSpinner(names[Math.floor(Math.random() * names.length)]), 70);
     const stop = setTimeout(() => { clearInterval(spin); setShown(n => n + 1); }, 2200);
     return () => { clearInterval(spin); clearTimeout(stop); };

@@ -11,7 +11,11 @@
 // 1. The seed is the hash of the FIRST NEAR block produced at or after the draw time. Nobody can know it in advance.
 // 2. Eligible = every holder whose balance never dropped below the minimum at the checkpoints of the last
 //    72 h (weekly) or 120 h (Grand Prize): one every 6 hours plus 6 extra moments derived from the seed.
-// 3. Winners are picked from the alphabetical list of eligible accounts with SHA-256(seed:round:i).
+// 3. Tickets: by the LOWEST balance in the window, in dollars at this week's rate:
+//    $50 = 1, $200 = 2, $300 = 3, $400 = 4, $500 = 5, $1,000 = 6, $2,000 = 7, $3,000 = 8, $4,000 = 9, $5,000+ = 10.
+// 4. Winners: SHA-256(seed:kind:i) mod (tickets still in the pot) picks a ticket along the alphabetical list;
+//    its holder wins and leaves the pot with all their tickets.
+// 5. Linked wallets (sub-accounts of the same parent) are flagged for the founder's check before paying.
 import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 
@@ -28,6 +32,9 @@ function setKind(k) {
 }
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
+const TIERS_USD = [50, 200, 300, 400, 500, 1000, 2000, 3000, 4000, 5000];
+/** Tickets for a lowest balance, with minRaw = the tokens worth $50 this week. */
+const ticketsFor = (lowest, minRaw) => TIERS_USD.filter(usd => lowest * 50n >= minRaw * BigInt(usd)).length;
 const sha = text => createHash("sha256").update(text).digest("hex");
 
 function drawTime() {
@@ -139,16 +146,30 @@ async function main() {
   console.log(`${candidates.length} holders, ${checkpoints.length} checkpoints, minimum ${rules.minTokens}`);
   const eligible = [];
   for (const account of candidates) {
-    let ok = true;
-    for (const cp of checkpoints) { if ((await balance(rules.token, account, cp.height)) < min) { ok = false; break; } }
-    if (ok) eligible.push(account);
+    let lowest = null;
+    for (const cp of checkpoints) {
+      const b = await balance(rules.token, account, cp.height);
+      if (lowest === null || b < lowest) lowest = b;
+      if (b < min) break;
+    }
+    if (lowest !== null && lowest >= min) eligible.push({ account, tickets: ticketsFor(lowest, min) });
   }
-  eligible.sort();
+  eligible.sort((a, b) => (a.account < b.account ? -1 : a.account > b.account ? 1 : 0));
 
-  const pool = [...eligible], winners = [];
+  // Linked wallets: eligible sub-accounts that share a parent account (x.parent.near, y.parent.near).
+  const parentOf = a => (a.split(".").length > 2 ? a.split(".").slice(1).join(".") : null);
+  const byParent = new Map();
+  for (const e of eligible) { const p = parentOf(e.account); if (p) byParent.set(p, [...(byParent.get(p) ?? []), e.account]); }
+  const linked = [...byParent.values()].filter(group => group.length > 1);
+
+  const pool = eligible.map(e => ({ ...e })), winners = [];
   for (let i = 0; i < WINNERS && pool.length; i++) {
-    const pick = Number(BigInt("0x" + sha(`${seed.hash}:${kind}:${i}`)) % BigInt(pool.length));
-    winners.push({ account: pool.splice(pick, 1)[0], share: Math.round(SHARES[i] * 100) / 100, title: i === 0 ? (kind === "monthly" ? "The Big Heist" : "The Lucky Outlaw") : undefined });
+    const total = pool.reduce((sum, e) => sum + e.tickets, 0);
+    let ticket = Number(BigInt("0x" + sha(`${seed.hash}:${kind}:${i}`)) % BigInt(total));
+    let index = 0;
+    while (ticket >= pool[index].tickets) { ticket -= pool[index].tickets; index++; }
+    const [won] = pool.splice(index, 1);
+    winners.push({ account: won.account, tickets: won.tickets, share: Math.round(SHARES[i] * 100) / 100, title: i === 0 ? (kind === "monthly" ? "The Big Heist" : "The Lucky Outlaw") : undefined, check: `https://nearblocks.io/address/${won.account}` });
   }
 
   const date = new Date(T).toISOString().slice(0, 10);
@@ -156,7 +177,7 @@ async function main() {
     kind, prize: kind === "monthly" ? "Grand Prize" : "Weekly prize", date, drawTime: new Date(T).toISOString(), holdHours: HOLD_HOURS, minTokens: rules.minTokens, symbol: rules.symbol,
     seedBlock: { height: seed.height, hash: seed.hash, time: new Date(seed.time).toISOString() },
     snapshotBlock: snapshot.height, checkpoints: checkpoints.map(c => c.height).sort((a, b) => a - b),
-    holdersChecked: candidates.length, eligible, winners,
+    holdersChecked: candidates.length, totalTickets: eligible.reduce((s, e) => s + e.tickets, 0), eligible, linked, winners,
   };
   await mkdir("public/draws", { recursive: true });
   await writeFile(`public/draws/${kind}-${date}.json`, JSON.stringify(result, null, 2) + "\n");
