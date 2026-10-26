@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { drawWinners } from '@/lib/draw-math';
 
 interface Entry { kind: 'weekly' | 'monthly'; date: string; file: string; eligible: number; winners: number }
 interface Draw {
@@ -21,6 +22,12 @@ function tweet(draw: Draw) {
 export default function DrawList() {
   const [draws, setDraws] = useState<Draw[] | null>(null);
   const [copied, setCopied] = useState('');
+  const [checks, setChecks] = useState<Record<string, 'ok' | 'bad'>>({});
+  async function verify(draw: Draw) {
+    const again = await drawWinners(draw.seedBlock.hash, draw.kind, draw.eligible, draw.winners.length);
+    const same = again.length === draw.winners.length && again.every((p, i) => p.account === draw.winners[i].account);
+    setChecks(current => ({ ...current, [draw.kind + draw.date]: same ? 'ok' : 'bad' }));
+  }
   useEffect(() => {
     (async () => {
       try {
@@ -42,6 +49,8 @@ export default function DrawList() {
       </ol>
       <p className="loot-card-note">{draw.eligible.length} of {draw.holdersChecked} holders were eligible (at least {Number(draw.minTokens).toLocaleString('en-US')} tokens for {draw.holdHours} h). Seed: <a href={`https://nearblocks.io/blocks/${draw.seedBlock.hash}`} target="_blank" rel="noopener noreferrer">block #{draw.seedBlock.height} ↗</a></p>
       <details className="draw-eligible"><summary>All eligible holders ({draw.eligible.length})</summary><p>{draw.eligible.join(', ')}</p></details>
+      <div className="draw-actions"><button type="button" className="button" onClick={() => void verify(draw)}>CHECK THIS DRAW</button>
+      {checks[draw.kind + draw.date] && <span className={`draw-check ${checks[draw.kind + draw.date]}`} role="status">{checks[draw.kind + draw.date] === 'ok' ? '✓ Your device re-ran the draw: the winners match.' : '✗ The winners do not match. Tell the guild.'}</span>}</div>
       <button type="button" className="button" onClick={() => { void navigator.clipboard?.writeText(tweet(draw)).then(() => { setCopied(draw.date + draw.kind); setTimeout(() => setCopied(''), 2000); }); }}>{copied === draw.date + draw.kind ? 'COPIED ✓' : 'COPY THE TWEET'}</button>
     </article>)}
   </section>;
