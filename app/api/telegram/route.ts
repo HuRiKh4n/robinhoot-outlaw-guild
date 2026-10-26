@@ -10,6 +10,11 @@ export const maxDuration = 30;
 
 // Best-effort flood control per instance: one AI answer per person every 20 s.
 const lastAnswer = new Map<number, number>();
+// When the bard ends with a question to someone, that person's next message (within 3 min) counts as an answer to him.
+const openQuestion = new Map<number, { user: number; at: number; said: string }>();
+const asked = (chat: number, user: number | undefined, text: string) => {
+  if (user && /\?\s*\S{0,3}\s*$/.test(text)) openQuestion.set(chat, { user, at: Date.now(), said: text.slice(-300) }); else openQuestion.delete(chat);
+};
 
 interface TgUser { id: number; first_name?: string; is_bot?: boolean; username?: string }
 interface TgMessage {
@@ -53,21 +58,28 @@ export async function POST(request: NextRequest) {
       case "loot":
         await reply(chat, `💰 The Sheriff's tax is 2% in NEAR on every trade: 80% to the Guild Chest for outlaws who do the work, 20% to keep the hideout lit. Every wallet is public.\n\n${SITE}/loot`, message.message_id);
         return NextResponse.json({ ok: true });
-      case "tale":
-        await reply(chat, await bardSay("Tell the legend of how the Outlaw Guild was born, as a short tavern song."), message.message_id);
+      case "tale": {
+        const song = await bardSay("Tell the legend of how the Outlaw Guild was born, as a short tavern song.");
+        await reply(chat, song, message.message_id);
+        asked(chat, message.from?.id, song);
         return NextResponse.json({ ok: true });
+      }
     }
 
     const mentioned = botName && text.toLowerCase().includes(`@${botName}`);
     const repliedToBard = Boolean(botName) && message.reply_to_message?.from?.username?.toLowerCase() === botName;
     const privateChat = message.chat.type === "private";
-    if (command === "bard" || mentioned || repliedToBard || privateChat) {
+    const pending = openQuestion.get(chat);
+    const answeringBard = !command && Boolean(pending) && pending!.user === message.from?.id && Date.now() - pending!.at < 180000;
+    if (command === "bard" || mentioned || repliedToBard || privateChat || answeringBard) {
       const from = message.from?.id ?? 0;
       const now = Date.now();
       if (now - (lastAnswer.get(from) ?? 0) < 20000) return NextResponse.json({ ok: true });
       lastAnswer.set(from, now);
       const question = (command === "bard" ? args : text.replace(new RegExp(`@${botName}`, "ig"), "")).trim() || "Sing me something about the guild.";
-      await reply(chat, await bardSay(question, message.from?.first_name), message.message_id);
+      const answer = await bardSay(answeringBard ? `You just ended with: "${pending!.said}". They reply: "${question}". Answer that reply in character.` : question, message.from?.first_name);
+      await reply(chat, answer, message.message_id);
+      asked(chat, message.from?.id, answer);
     }
   } catch {
     // Never make Telegram retry forever.
