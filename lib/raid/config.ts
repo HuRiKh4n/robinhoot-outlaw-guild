@@ -14,7 +14,6 @@ export function raidConfig() {
     manualTokens: manualTokens && /^\d+$/.test(manualTokens) ? manualTokens : null,
     rpc,
     excluded,
-    holdHours: 72,
     fixedEveryHours: 6,
     randomChecks: 6,
   };

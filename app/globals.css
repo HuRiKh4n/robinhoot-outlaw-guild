@@ -778,3 +778,9 @@ nav.site-header{backdrop-filter:none;-webkit-backdrop-filter:none}
 .loot-soon{font:italic 16px 'Cormorant Garamond',Georgia,serif;color:#8f846f}
 .loot-fine{max-width:700px;margin:10px auto 40px;padding:0 20px;text-align:center;color:#8f846f;font-size:13px;line-height:1.7}
 @media(max-width:700px){.loot-wallets{grid-template-columns:1fr}.loot-page{padding-bottom:90px}}
+.raid-prize-toggle{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin:6px 0 4px}
+.raid-prize-toggle button{background:none;border:1px solid #c9a46466;color:#b9b0a0;padding:10px 14px;font:600 12px 'Cormorant Garamond',Georgia,serif;letter-spacing:.18em;text-transform:uppercase;cursor:pointer}
+.raid-prize-toggle button[aria-pressed=true]{border-color:var(--gold);color:var(--ink);background:#c9a4641a}
+.loot-table-wrap{overflow-x:auto}
+.loot-example-table th{text-align:left;color:#cfc4ad;font-weight:500;width:46%}
+.loot-example-table td{color:var(--ink)}

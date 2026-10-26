@@ -43,16 +43,33 @@ export default function LootPage() {
 
     <section className="loot-section" aria-labelledby="chest-title">
       <h2 id="chest-title">The Guild Chest</h2>
-      <p className="loot-lead">Two prizes, both won by work, never by luck.</p>
+      <p className="loot-lead">Every week the chest is split three ways. Part is paid out at once, part grows into a Grand Prize, and part is kept for lean times.</p>
       <Split parts={[
-        { pct: 60, label: 'The Bounty of the Week', note: 'One themed bounty every Monday, 1 to 3 winners on Sunday', tone: 'gold' },
-        { pct: 40, label: 'The Assault on the Castle', note: 'Builds up all month into one big prize, chosen by the guild', tone: 'blood' },
+        { pct: 36, label: 'The weekly prize', note: 'Paid every week to 5 outlaws', tone: 'gold' },
+        { pct: 54, label: 'The Grand Prize', note: 'Builds up all month; 60% is paid to 10 outlaws, 40% stays in the chest', tone: 'blood' },
+        { pct: 10, label: 'The reserve', note: 'Kept for lean weeks, so the prizes stay steady', tone: 'ember' },
       ]} />
       <ol className="raid-how">
-        <li><b>Ride with the guild.</b> To win, hold at least $50 of $RHOOT for 72 hours in a row. The amount in tokens is set every Monday. <Link href="/raid">Check if you are ready →</Link></li>
-        <li><b>Do the job.</b> Winners are picked for the work they bring: memes, art, stories, new outlaws at the campfire. <Link href="/bounties">See the bounty board →</Link></li>
+        <li><b>Bring your outlaw.</b> Only wallets registered on this site with their own outlaw can win. <Link href="/my-outlaw">Forge yours →</Link></li>
+        <li><b>Stay in the guild.</b> Hold at least $50 of $RHOOT for 72 hours in a row for the weekly prize, 120 hours for the Grand Prize. <Link href="/raid">Check if you are ready →</Link></li>
         <li><b>Get paid in NEAR.</b> Straight from the Guild Chest, and every payout is posted in public.</li>
       </ol>
+    </section>
+
+    <section className="loot-section" aria-labelledby="example-title">
+      <h2 id="example-title">What the chest could hold</h2>
+      <p className="loot-lead">An example, not a promise: if the guild trades <b>$20,000 a day</b>, this is how the loot would flow. Less volume, smaller prizes; more volume, bigger ones.</p>
+      <div className="loot-table-wrap"><table className="raid-table loot-example-table">
+        <tbody>
+          <tr><th scope="row">Sheriff&rsquo;s tax collected</th><td>$400 a day · $2,800 a week</td></tr>
+          <tr><th scope="row">To the Guild Chest (80%)</th><td>$2,240 a week</td></tr>
+          <tr><th scope="row">Weekly prize, 5 outlaws</th><td><b>$806 a week · about $161 each</b></td></tr>
+          <tr><th scope="row">Grand Prize, 10 outlaws</th><td><b>about $311 each in month one, growing to about $518</b> as the chest fills</td></tr>
+          <tr><th scope="row">Left in the chest after each Grand Prize</th><td>from about $2,000 to about $3,500</td></tr>
+          <tr><th scope="row">The reserve</th><td>about $960 a month</td></tr>
+        </tbody>
+      </table></div>
+      <p className="loot-example">Prizes are paid in NEAR, so their dollar value moves with the price of NEAR. Figures are rounded.</p>
     </section>
 
     <section className="loot-section" aria-labelledby="bag-title">

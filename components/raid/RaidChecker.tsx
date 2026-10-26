@@ -5,8 +5,8 @@ import { useWalletState } from '@/hooks/useWalletState';
 
 interface Verdict { account: string; eligible: boolean; reason: string; balanceNow?: string; heldHours?: number }
 
-async function check(accounts: string[]): Promise<Verdict[]> {
-  const response = await fetch('/api/raid/check', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ accounts }) });
+async function check(accounts: string[], prize: 'weekly' | 'monthly'): Promise<Verdict[]> {
+  const response = await fetch('/api/raid/check', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ accounts, prize }) });
   const data = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(data.error ?? 'The ledger could not be read. Try again.');
   return data.results as Verdict[];
@@ -20,11 +20,12 @@ export default function RaidChecker({ open }: { open: boolean }) {
   const [results, setResults] = useState<Verdict[]>([]);
   const [busy, setBusy] = useState<'mine' | 'list' | null>(null);
   const [error, setError] = useState('');
+  const [prize, setPrize] = useState<'weekly' | 'monthly'>('weekly');
 
   async function checkMine() {
     if (!account) return;
     setBusy('mine'); setError(''); setMine(null);
-    try { setMine((await check([account.accountId]))[0]); } catch (e) { setError((e as Error).message); } finally { setBusy(null); }
+    try { setMine((await check([account.accountId], prize))[0]); } catch (e) { setError((e as Error).message); } finally { setBusy(null); }
   }
   async function checkList() {
     const accounts = [...new Set(list.split(/[\s,;]+/).map(item => item.trim().toLowerCase()).filter(Boolean))];
@@ -32,7 +33,7 @@ export default function RaidChecker({ open }: { open: boolean }) {
     setBusy('list'); setError(''); setResults([]);
     try {
       for (let i = 0; i < accounts.length; i += 10) {
-        const batch = await check(accounts.slice(i, i + 10));
+        const batch = await check(accounts.slice(i, i + 10), prize);
         setResults(previous => [...previous, ...batch]);
       }
     } catch (e) { setError((e as Error).message); } finally { setBusy(null); }
@@ -40,6 +41,10 @@ export default function RaidChecker({ open }: { open: boolean }) {
 
   return <section className="raid-check" aria-labelledby="check-title">
     <h2 id="check-title">Are you ready to ride?</h2>
+    <div className="raid-prize-toggle" role="group" aria-label="Which prize">
+      <button type="button" aria-pressed={prize === 'weekly'} onClick={() => { setPrize('weekly'); setMine(null); setResults([]); }}>Weekly prize · 72 h</button>
+      <button type="button" aria-pressed={prize === 'monthly'} onClick={() => { setPrize('monthly'); setMine(null); setResults([]); }}>Grand Prize · 120 h</button>
+    </div>
     <div className="raid-card">
       {account
         ? <><p>Connected as <b>{account.accountId}</b></p><button type="button" className="button" disabled={!open || busy !== null} onClick={() => void checkMine()}>{busy === 'mine' ? 'READING THE LEDGER…' : 'CHECK MY WALLET'}</button></>

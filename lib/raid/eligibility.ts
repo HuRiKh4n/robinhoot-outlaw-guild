@@ -21,9 +21,9 @@ export interface RaidRules {
 const pow10 = (n: number) => BigInt(10) ** BigInt(n);
 
 /** This week's rules: the USD threshold turned into a fixed token amount for the whole week. */
-export async function raidRules(now = Date.now()): Promise<RaidRules> {
+export async function raidRules(now = Date.now(), holdHours = 72): Promise<RaidRules> {
   const config = raidConfig();
-  const base = { minUsd: config.minUsd, holdHours: config.holdHours, weekStartsAt: weekStart(now) };
+  const base = { minUsd: config.minUsd, holdHours, weekStartsAt: weekStart(now) };
   if (!config.token) return { ...base, open: false, reason: "The raid opens after $RHOOT launches." };
   const archive = new NearArchive(config.rpc);
   const meta = await archive.metadata(config.token);
@@ -51,13 +51,13 @@ export async function raidRules(now = Date.now()): Promise<RaidRules> {
 export interface Checkpoint { at: number; height: number; kind: "fixed" | "random" }
 
 /** 13 fixed checkpoints (every 6 h across the last 72 h, now included) + 6 random ones nobody can predict. */
-export async function checkpoints(archive: NearArchive, now = Date.now()): Promise<Checkpoint[]> {
+export async function checkpoints(archive: NearArchive, now = Date.now(), holdHours = 72): Promise<Checkpoint[]> {
   const config = raidConfig();
   const head = await archive.block();
   const end = Math.min(now, head.time);
-  const from = end - config.holdHours * 3600_000;
+  const from = end - holdHours * 3600_000;
   const times: Array<{ at: number; kind: Checkpoint["kind"] }> = [];
-  for (let h = 0; h <= config.holdHours; h += config.fixedEveryHours) times.push({ at: from + h * 3600_000, kind: "fixed" });
+  for (let h = 0; h <= holdHours; h += config.fixedEveryHours) times.push({ at: from + h * 3600_000, kind: "fixed" });
   for (let i = 0; i < config.randomChecks; i++) times.push({ at: from + Math.floor(Math.random() * (end - from)), kind: "random" });
   times.sort((a, b) => a.at - b.at);
   const found: Checkpoint[] = [];
