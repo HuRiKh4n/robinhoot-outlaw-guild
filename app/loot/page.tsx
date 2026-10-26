@@ -45,13 +45,14 @@ export default function LootPage() {
       <h2 id="chest-title">The Guild Chest</h2>
       <p className="loot-lead">Every week the chest is split three ways. Part is paid out at once, part grows into a Grand Prize, and part is kept for lean times.</p>
       <Split parts={[
-        { pct: 36, label: 'The weekly prize', note: 'Paid every week to 5 outlaws', tone: 'gold' },
-        { pct: 54, label: 'The Grand Prize', note: 'Builds up all month; 60% is paid to 10 outlaws, 40% stays in the chest', tone: 'blood' },
+        { pct: 36, label: 'The weekly prize', note: 'Every week, 5 outlaws: 3 chosen for the best bounties, 2 drawn by lot', tone: 'gold' },
+        { pct: 54, label: 'The Grand Prize', note: 'Builds up all month; 60% goes to 10 outlaws drawn by lot, 40% stays in the chest', tone: 'blood' },
         { pct: 10, label: 'The reserve', note: 'Kept for lean weeks, so the prizes stay steady', tone: 'ember' },
       ]} />
       <ol className="raid-how">
         <li><b>Bring your outlaw.</b> Only wallets registered on this site with their own outlaw can win. <Link href="/my-outlaw">Forge yours →</Link></li>
         <li><b>Stay in the guild.</b> Hold at least $50 of $RHOOT for 72 hours in a row for the weekly prize, 120 hours for the Grand Prize. <Link href="/raid">Check if you are ready →</Link></li>
+        <li><b>Win by deed or by luck.</b> Each week the 3 best bounties win, and 2 more outlaws are drawn by lot. The Grand Prize is drawn by lot among all eligible outlaws. Every draw is public: it is seeded by a NEAR block announced in advance, so anyone can check it.</li>
         <li><b>Get paid in NEAR.</b> Straight from the Guild Chest, and every payout is posted in public.</li>
       </ol>
     </section>
