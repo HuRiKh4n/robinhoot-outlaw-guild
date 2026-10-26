@@ -3,6 +3,7 @@ import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import DrawList from '@/components/draws/DrawList';
 import DrawDemo from '@/components/draws/DrawDemo';
+import DrawLive from '@/components/draws/DrawLive';
 
 export const metadata: Metadata = { title: 'The Draws | RobinHoot', description: 'Every Hold & Win draw, its NEAR seed block and its winners. Anyone can check it.' };
 
@@ -15,6 +16,7 @@ export default function DrawsPage() {
       <div className="ts-rule" aria-hidden="true"><i /></div>
       <p className="raid-lead">Every Sunday, and on the 1st of every month, the guild draws its winners from the holders who stayed. The dice is the first NEAR block after 20:00 UTC: nobody can know it in advance, and anyone can check it.</p>
     </section>
+    <DrawLive />
     <section className="raid-rules" aria-labelledby="how-title">
       <h2 id="how-title">How the draw works</h2>
       <div className="draw-how">
