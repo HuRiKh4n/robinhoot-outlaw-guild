@@ -847,3 +847,4 @@ nav.site-header{background:#07070a}
 @keyframes liveIn{from{transform:scale(1.08);background:#c9a46455}to{transform:none}}
 @media(max-width:700px){.live-clock div{min-width:60px}.live-clock strong{font-size:34px}}
 @media(prefers-reduced-motion:reduce){.live-pulse,.live-winners li.is-in{animation:none}}
+.draw-sample-label{margin:0;font:600 11px Oswald,sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#d86a4a}
