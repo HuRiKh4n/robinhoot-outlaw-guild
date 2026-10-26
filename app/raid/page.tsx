@@ -19,21 +19,21 @@ export default async function RaidPage() {
       <p className="raid-kicker">Every week, the guild rides out</p>
       <h1>The Weekly Raid</h1>
       <div className="ts-rule" aria-hidden="true"><i /></div>
-      <p className="raid-lead">The loot from the Sheriff&rsquo;s tax goes to outlaws who stay. Hold for three days in a row for the weekly prize, five days for the monthly Grand Prize, and your name can be called when the chest opens.</p>
+      <p className="raid-lead">The loot from the Sheriff&rsquo;s tax goes to outlaws who stay. Hold for three days in a row for the weekly prize, five days for the Grand Prize, and your name can be called when the chest opens.</p>
     </section>
 
     <section className="raid-rules" aria-labelledby="rules-title">
       <h2 id="rules-title">This week&rsquo;s terms</h2>
       {open && rules ? <div className="raid-terms">
         <div><span>Hold at least</span><strong>{Number(rules.minTokens).toLocaleString('en-US')} ${rules.symbol}</strong><small>about ${rules.minUsd} at the {rules.priceSource}</small></div>
-        <div><span>For</span><strong>72 h · 120 h</strong><small>weekly prize · monthly Grand Prize, without dropping below once</small></div>
+        <div><span>For</span><strong>72 h · 120 h</strong><small>weekly prize · Grand Prize, without dropping below once</small></div>
         <div><span>Week of</span><strong>{day(rules.weekStartsAt)}</strong><small>the amount is fixed until next Monday</small></div>
       </div> : <p className="raid-closed">{rules?.reason ?? 'The raid ledger could not be read right now. Come back soon.'}</p>}
       <ol className="raid-how">
         <li><b>The amount is set on Monday.</b> ${rules?.minUsd ?? 50} worth of $RHOOT at last week&rsquo;s average price. If the price moves during the week, the amount stays the same.</li>
         <li><b>The chain remembers.</b> When the chest opens, the guild looks at your balance every 6 hours over the last 72 hours (120 for the Grand Prize) and at 6 more moments that nobody knows in advance.</li>
         <li><b>Every check must pass.</b> Buy the day before, or sell and buy back in between, and the ledger shows it.</li>
-        <li><b>The prize is paid in NEAR,</b> from the Guild Chest: every Sunday 5 holders are drawn, and on the 1st of every month 10 more win the Grand Prize. Holding is your only ticket. <Link href="/draws">See the draws →</Link> <Link href="/loot">Where the gold comes from →</Link></li>
+        <li><b>The prize is paid in NEAR,</b> from the Guild Chest: every Sunday there is a draw: three Sundays out of four, 3 holders win the weekly prize; every fourth Sunday, 5 holders win the Grand Prize. Holding is your only ticket. <Link href="/draws">See the draws →</Link> <Link href="/loot">Where the gold comes from →</Link></li>
       </ol>
     </section>
 

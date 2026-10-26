@@ -6,18 +6,18 @@ type Kind = 'weekly' | 'monthly';
 interface Draw { kind: Kind; date: string; eligible: string[]; seedBlock: { height: number; hash: string }; winners: Array<{ account: string; share: number; title?: string }> }
 const RPCS = ['https://rpc.mainnet.fastnear.com', 'https://free.rpc.fastnear.com'];
 
-/** Next Sunday 20:00 UTC / next 1st-of-month 20:00 UTC (or the one just passed, within the last 6 hours). */
-function nextDraw(kind: Kind, now: number) {
+/** Next Sunday 20:00 UTC (or the one just passed, within the last 6 hours). */
+function nextSunday(now: number) {
   const d = new Date(now);
-  let t: number;
-  if (kind === 'monthly') {
-    t = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), 1, 20);
-    if (t + 6 * 3600_000 < now) t = Date.UTC(d.getUTCFullYear(), d.getUTCMonth() + 1, 1, 20);
-  } else {
-    t = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() - d.getUTCDay(), 20);
-    if (t + 6 * 3600_000 < now) t += 7 * 864e5;
-  }
+  let t = Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() - d.getUTCDay(), 20);
+  if (t + 6 * 3600_000 < now) t += 7 * 864e5;
   return t;
+}
+/** Sundays 1-3 of every 4 since the cycle start: weekly; the 4th: Grand Prize. */
+function kindOf(t: number, cycleStart: string | null): Kind {
+  if (!cycleStart) return 'weekly';
+  const weeks = Math.round((t - Date.parse(`${cycleStart}T20:00:00Z`)) / (7 * 864e5));
+  return weeks >= 0 && weeks % 4 === 3 ? 'monthly' : 'weekly';
 }
 
 async function rpcBlock(params: object) {
@@ -56,20 +56,22 @@ function Clock({ ms }: { ms: number }) {
 export default function DrawLive() {
   const [now, setNow] = useState(() => Date.now());
   const [open, setOpen] = useState<boolean | null>(null);
+  const [cycleStart, setCycleStart] = useState<string | null>(null);
   const [dice, setDice] = useState<{ height: number; hash: string } | null>(null);
   const [draw, setDraw] = useState<Draw | null>(null);
   const [shown, setShown] = useState(0);
   const [spinner, setSpinner] = useState('');
   const fetching = useRef(false);
 
-  const weekly = nextDraw('weekly', now), monthly = nextDraw('monthly', now);
-  const kind: Kind = Math.abs(monthly - weekly) < 3600_000 || monthly < weekly ? 'monthly' : 'weekly';
-  const target = kind === 'monthly' ? monthly : weekly;
+  const target = nextSunday(now);
+  const kind = kindOf(target, cycleStart);
+  let grandIn = 0;
+  while (grandIn < 4 && kindOf(target + grandIn * 7 * 864e5, cycleStart) !== 'monthly') grandIn++;
   const date = new Date(target).toISOString().slice(0, 10);
   const live = now >= target;
 
   useEffect(() => { const id = setInterval(() => setNow(Date.now()), 1000); return () => clearInterval(id); }, []);
-  useEffect(() => { fetch('/api/raid').then(r => r.json()).then(r => setOpen(Boolean(r.open))).catch(() => setOpen(false)); }, []);
+  useEffect(() => { fetch('/api/raid').then(r => r.json()).then(r => { setOpen(Boolean(r.open && r.cycleStart)); setCycleStart(r.cycleStart ?? null); }).catch(() => setOpen(false)); }, []);
 
   // At zero: cast the dice live, then wait for the guild's result and reveal it.
   useEffect(() => {
@@ -103,7 +105,7 @@ export default function DrawLive() {
     {!live && <>
       <Clock ms={target - now} />
       <p className="live-when">{new Date(target).toLocaleString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })} UTC</p>
-      {kind === 'weekly' && <p className="live-next">Grand Prize in <b>{Math.ceil((monthly - now) / 864e5)} days</b></p>}
+      {open && kind === 'weekly' && grandIn < 4 && <p className="live-next">The Grand Prize comes in <b>{grandIn} {grandIn === 1 ? 'Sunday' : 'Sundays'}</b></p>}
       {open === false && <p className="live-next">The first draw comes the first Sunday after the coin is live.</p>}
     </>}
     {live && open && <>

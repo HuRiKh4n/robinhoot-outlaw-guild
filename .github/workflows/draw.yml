@@ -2,16 +2,15 @@ name: Hold & Win draw
 
 on:
   schedule:
-    - cron: "30 20 * * 0"   # every Sunday 20:30 UTC: weekly draw (seed = first block after 20:00)
-    - cron: "45 20 1 * *"   # the 1st of every month 20:45 UTC: Grand Prize draw
+    - cron: "30 20 * * 0"   # every Sunday 20:30 UTC (seed = first NEAR block after 20:00). Weekly or Grand Prize by the 4-Sunday cycle.
   workflow_dispatch:
     inputs:
       kind:
-        description: "weekly or monthly"
+        description: "auto (follow the cycle), weekly, or monthly (= Grand Prize)"
         required: true
-        default: weekly
+        default: auto
       date:
-        description: "Draw day YYYY-MM-DD (empty = most recent)"
+        description: "Sunday YYYY-MM-DD (empty = most recent)"
         required: false
 
 permissions:
@@ -32,10 +31,8 @@ jobs:
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             node scripts/draw.mjs "${{ inputs.kind }}" ${{ inputs.date }}
-          elif [ "${{ github.event.schedule }}" = "45 20 1 * *" ]; then
-            node scripts/draw.mjs monthly
           else
-            node scripts/draw.mjs weekly
+            node scripts/draw.mjs auto
           fi
       - name: Publish result
         run: |
