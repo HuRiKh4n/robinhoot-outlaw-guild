@@ -52,7 +52,7 @@ export default function LootPage() {
       <ol className="raid-how">
         <li><b>Bring your outlaw.</b> Only wallets registered on this site with their own outlaw can win. <Link href="/my-outlaw">Forge yours →</Link></li>
         <li><b>Stay in the guild.</b> Hold at least $50 of $RHOOT for 72 hours in a row for the weekly prize, 120 hours for the Grand Prize. <Link href="/raid">Check if you are ready →</Link></li>
-        <li><b>Win by deed or by luck.</b> Each week the 3 best bounties win, and 2 more outlaws are drawn by lot. The Grand Prize is drawn by lot among all eligible outlaws. Every draw is public: it is seeded by a NEAR block announced in advance, so anyone can check it.</li>
+        <li><b>Win by deed or by luck.</b> Each week the 3 best bounties win, and 2 more outlaws are drawn by lot; the best bounty of the week takes the biggest share (28%), the other four share the rest equally (18% each). The Grand Prize is drawn by lot among all eligible outlaws: one takes The Big Heist (30%), the other nine share the rest equally. Every draw is public: it is seeded by a NEAR block announced in advance, so anyone can check it.</li>
         <li><b>Get paid in NEAR.</b> Straight from the Guild Chest, and every payout is posted in public.</li>
       </ol>
     </section>
@@ -64,8 +64,8 @@ export default function LootPage() {
         <tbody>
           <tr><th scope="row">Sheriff&rsquo;s tax collected</th><td>$400 a day · $2,800 a week</td></tr>
           <tr><th scope="row">To the Guild Chest (80%)</th><td>$2,240 a week</td></tr>
-          <tr><th scope="row">Weekly prize, 5 outlaws</th><td><b>$806 a week · about $161 each</b></td></tr>
-          <tr><th scope="row">Grand Prize, 10 outlaws</th><td><b>about $311 each in month one, growing to about $518</b> as the chest fills</td></tr>
+          <tr><th scope="row">Weekly prize, 5 outlaws</th><td><b>$806 a week:</b> about $226 for the best bounty, about $145 each for the other four</td></tr>
+          <tr><th scope="row">Grand Prize, 10 outlaws</th><td><b>The Big Heist: about $930 in month one, growing to about $1,550</b> as the chest fills; the other nine about $240 each, growing to about $400</td></tr>
           <tr><th scope="row">Left in the chest after each Grand Prize</th><td>from about $2,000 to about $3,500</td></tr>
           <tr><th scope="row">The reserve</th><td>about $960 a month</td></tr>
         </tbody>
