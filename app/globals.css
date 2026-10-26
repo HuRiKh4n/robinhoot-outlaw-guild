@@ -829,3 +829,21 @@ nav.site-header{background:#07070a}
 .draw-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .draw-check{font-size:13px}.draw-check.ok{color:#7fb069}.draw-check.bad{color:#d86a4a}
 @media(max-width:700px){.draw-how{grid-template-columns:1fr 1fr}.draw-sample{grid-template-columns:1fr}}
+.live-draw{max-width:720px;margin:0 auto 10px;padding:28px 20px;text-align:center;display:grid;gap:12px;justify-items:center;border-top:1px solid #c9a46433;border-bottom:1px solid #c9a46433;background:radial-gradient(ellipse at 50% 0%,#c9a4641a,transparent 70%)}
+.live-clock{display:flex;gap:10px;justify-content:center}
+.live-clock div{min-width:72px;border:1px solid #c9a46466;background:#0d0c10e6;padding:12px 6px;display:grid;gap:4px}
+.live-clock strong{font:600 44px/1 'Cormorant Garamond',Georgia,serif;color:var(--ink)}
+.live-clock span{font:600 10px Oswald,sans-serif;letter-spacing:.24em;text-transform:uppercase;color:#a99c84}
+.live-when,.live-next{margin:0;color:#a99c84;font-size:13px}.live-next b{color:var(--gold)}
+.live-status{margin:0;color:#cfc4ad;font:italic 20px 'Cormorant Garamond',Georgia,serif}
+.live-status a{color:var(--gold)}.live-status code{font:11px monospace;color:#8f846f;word-break:break-all}
+.live-pulse{animation:livePulse 1.6s ease-in-out infinite}
+@keyframes livePulse{50%{opacity:.4}}
+.live-winners{list-style:none;margin:0;padding:0;display:grid;gap:8px;width:100%;max-width:460px}
+.live-winners li{display:flex;align-items:center;gap:10px;border:1px solid #c9a46466;padding:12px 14px;color:var(--ink);font-size:16px;word-break:break-all;text-align:left}
+.live-winners li em{margin-left:auto;color:var(--gold);font-style:normal;font-size:12px;white-space:nowrap}
+.live-winners li.is-in{animation:liveIn .5s ease-out;background:#c9a4641a}
+.live-winners li.is-spinning{color:#8f846f;border-style:dashed}
+@keyframes liveIn{from{transform:scale(1.08);background:#c9a46455}to{transform:none}}
+@media(max-width:700px){.live-clock div{min-width:60px}.live-clock strong{font-size:34px}}
+@media(prefers-reduced-motion:reduce){.live-pulse,.live-winners li.is-in{animation:none}}
