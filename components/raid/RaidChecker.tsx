@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useWalletState } from '@/hooks/useWalletState';
 
-interface Verdict { account: string; eligible: boolean; reason: string; balanceNow?: string; heldHours?: number }
+interface Verdict { account: string; eligible: boolean; reason: string; balanceNow?: string; heldHours?: number; tickets?: number }
 
 async function check(accounts: string[], prize: 'weekly' | 'monthly'): Promise<Verdict[]> {
   const response = await fetch('/api/raid/check', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ accounts, prize }) });
@@ -50,7 +50,7 @@ export default function RaidChecker({ open }: { open: boolean }) {
         ? <><p>Connected as <b>{account.accountId}</b></p><button type="button" className="button" disabled={!open || busy !== null} onClick={() => void checkMine()}>{busy === 'mine' ? 'READING THE LEDGER…' : 'CHECK MY WALLET'}</button></>
         : <p>Connect your wallet at the top of the page, then come back here to check it.</p>}
       {mine && <p className={`raid-verdict ${mine.eligible ? 'is-yes' : 'is-no'}`} role="status">
-        <strong>{mine.eligible ? 'You ride with the guild this week.' : 'Not yet, outlaw.'}</strong>
+        <strong>{mine.eligible ? `You are in the draw with ${mine.tickets ?? 1} ${mine.tickets === 1 ? 'ticket' : 'tickets'}.` : 'Not yet, outlaw.'}</strong>
         <span>{mine.reason}</span>
         {mine.balanceNow !== undefined && <small>Balance now: {Number(mine.balanceNow).toLocaleString('en-US')} · held above the line for about {mine.heldHours} h</small>}
       </p>}
@@ -61,7 +61,7 @@ export default function RaidChecker({ open }: { open: boolean }) {
       <textarea value={list} onChange={event => setList(event.target.value)} rows={6} placeholder={'outlaw-one.near\noutlaw-two.near'} />
       <button type="button" className="button" disabled={!open || busy !== null} onClick={() => void checkList()}>{busy === 'list' ? `CHECKING… ${results.length} DONE` : 'CHECK THE LIST'}</button>
       {results.length > 0 && <table className="raid-table"><thead><tr><th>Account</th><th>Ready?</th><th>Why</th></tr></thead><tbody>
-        {results.map(item => <tr key={item.account}><td>{item.account}</td><td>{item.eligible ? '✓ yes' : '✗ no'}</td><td>{item.reason}</td></tr>)}
+        {results.map(item => <tr key={item.account}><td>{item.account}</td><td>{item.eligible ? `✓ ${item.tickets ?? 1} 🎟️` : '✗ no'}</td><td>{item.reason}</td></tr>)}
       </tbody></table>}
     </details>
     {error && <p role="alert" className="wallet-error">{error}</p>}

@@ -75,6 +75,7 @@ export interface Verdict {
   balanceNow?: string;        // whole tokens, rounded down
   heldHours?: number;         // how long the balance has stayed above the threshold, by fixed checkpoints
   lowest?: string;            // lowest balance seen, whole tokens
+  tickets?: number;           // draw tickets for that lowest balance
 }
 
 export async function checkAccount(archive: NearArchive, rules: RaidRules, points: Checkpoint[], account: string): Promise<Verdict> {
@@ -100,6 +101,7 @@ export async function checkAccount(archive: NearArchive, rules: RaidRules, point
     }
     heldSince = point.at;
   }
-  return { account, eligible: true, balanceNow: (balanceNow! / unit).toString(), heldHours: rules.holdHours, lowest: (lowest! / unit).toString(),
+  const tickets = [50, 200, 300, 400, 500, 1000, 2000, 3000, 4000, 5000].filter(usd => lowest! * BigInt(50) >= min * BigInt(usd)).length;
+  return { account, eligible: true, tickets, balanceNow: (balanceNow! / unit).toString(), heldHours: rules.holdHours, lowest: (lowest! / unit).toString(),
     reason: `Held at least ${shown} at all ${points.length} checks over ${rules.holdHours} h.` };
 }
