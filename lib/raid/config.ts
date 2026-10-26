@@ -14,6 +14,8 @@ export function raidConfig() {
     manualTokens: manualTokens && /^\d+$/.test(manualTokens) ? manualTokens : null,
     rpc,
     excluded,
+    // First Sunday of the draw cycle (YYYY-MM-DD). Sundays 1-3 of every 4: weekly prize; the 4th: Grand Prize.
+    cycleStart: /^\d{4}-\d{2}-\d{2}$/.test(process.env.DRAW_CYCLE_START ?? '') ? process.env.DRAW_CYCLE_START! : null,
     fixedEveryHours: 6,
     randomChecks: 6,
   };

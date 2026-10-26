@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
   let hours = 72;
   try {
     const body = await request.json();
-    hours = body?.prize === 'monthly' ? 120 : 72;
+    hours = body?.prize === 'monthly' || body?.prize === 'grand' ? 120 : 72;
     accounts = [...new Set((Array.isArray(body?.accounts) ? body.accounts : []).map((item: unknown) => String(item).trim().toLowerCase()).filter(Boolean))] as string[];
   } catch { return NextResponse.json({ error: "Send a list of NEAR accounts." }, { status: 400 }); }
   if (!accounts.length || accounts.length > MAX) return NextResponse.json({ error: `Send between 1 and ${MAX} accounts at a time.` }, { status: 400 });

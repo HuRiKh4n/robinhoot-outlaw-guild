@@ -1,13 +1,16 @@
 // RobinHoot "Hold & Win" draw. Runs in GitHub Actions; anyone can re-run it and get the same winners.
 //
-//   node scripts/draw.mjs weekly            -> the most recent Sunday 20:00 UTC draw
-//   node scripts/draw.mjs monthly           -> the most recent 1st-of-month 20:00 UTC draw
-//   node scripts/draw.mjs weekly 2026-11-08 -> a specific draw day (re-check an old draw)
+//   node scripts/draw.mjs                   -> the most recent Sunday 20:00 UTC draw; weekly or Grand Prize by the cycle
+//   node scripts/draw.mjs auto 2026-11-08   -> a specific Sunday (re-check an old draw)
+//   node scripts/draw.mjs monthly 2026-11-29 -> force the kind (monthly = Grand Prize)
+//
+// The cycle: every Sunday there is a draw. Counting from DRAW_CYCLE_START (set on the site), Sundays 1, 2 and 3
+// are the weekly prize (3 winners), the 4th is the Grand Prize (5 winners), then it starts again.
 //
 // How it is fair:
 // 1. The seed is the hash of the FIRST NEAR block produced at or after the draw time. Nobody can know it in advance.
 // 2. Eligible = every holder whose balance never dropped below the minimum at the checkpoints of the last
-//    72 h (weekly) or 120 h (monthly): one every 6 hours plus 6 extra moments derived from the seed.
+//    72 h (weekly) or 120 h (Grand Prize): one every 6 hours plus 6 extra moments derived from the seed.
 // 3. Winners are picked from the alphabetical list of eligible accounts with SHA-256(seed:round:i).
 import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
@@ -15,10 +18,14 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 const SITE = process.env.SITE_URL || "https://www.robinhoot.fun";
 const RPC = process.env.NEAR_ARCHIVAL_RPC_URL || "https://archival-rpc.mainnet.fastnear.com";
 const HOLDERS_API = process.env.HOLDERS_API || "https://api.nearblocks.io/v1/fts";
-const kind = process.argv[2] === "monthly" ? "monthly" : "weekly";
-const HOLD_HOURS = kind === "monthly" ? 120 : 72;
-const WINNERS = kind === "monthly" ? 10 : 5;
-const SHARES = kind === "monthly" ? [30, ...Array(9).fill(70 / 9)] : [28, 18, 18, 18, 18];
+const forced = ["weekly", "monthly"].includes(process.argv[2]) ? process.argv[2] : null;
+let kind, HOLD_HOURS, WINNERS, SHARES;
+function setKind(k) {
+  kind = k;
+  HOLD_HOURS = k === "monthly" ? 120 : 72;
+  WINNERS = k === "monthly" ? 5 : 3;
+  SHARES = k === "monthly" ? [50, 12.5, 12.5, 12.5, 12.5] : [40, 30, 30];
+}
 
 const sleep = ms => new Promise(r => setTimeout(r, ms));
 const sha = text => createHash("sha256").update(text).digest("hex");
@@ -27,11 +34,6 @@ function drawTime() {
   const arg = process.argv[3];
   if (arg) return Date.parse(`${arg}T20:00:00Z`);
   const now = new Date();
-  if (kind === "monthly") {
-    let t = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1, 20);
-    if (t > now.getTime()) t = Date.UTC(now.getUTCFullYear(), now.getUTCMonth() - 1, 1, 20);
-    return t;
-  }
   const day = now.getUTCDay(); // 0 = Sunday
   let t = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - day, 20);
   if (t > now.getTime()) t -= 7 * 864e5;
@@ -111,6 +113,14 @@ async function main() {
   const min = BigInt(rules.minRaw);
   const excluded = new Set(rules.excluded ?? []);
   const T = drawTime();
+  if (new Date(T).getUTCDay() !== 0) throw new Error("Draws happen on Sundays");
+  if (forced) setKind(forced);
+  else {
+    if (!rules.cycleStart) throw new Error("DRAW_CYCLE_START is not set on the site");
+    const weeks = Math.round((T - Date.parse(`${rules.cycleStart}T20:00:00Z`)) / (7 * 864e5));
+    if (weeks < 0) throw new Error("The draw cycle has not started yet");
+    setKind(weeks % 4 === 3 ? "monthly" : "weekly");
+  }
   const head = await block();
   if (head.time < T) throw new Error("The draw time has not come yet");
   const seed = await firstBlockAfter(T, head);
@@ -143,7 +153,7 @@ async function main() {
 
   const date = new Date(T).toISOString().slice(0, 10);
   const result = {
-    kind, date, drawTime: new Date(T).toISOString(), holdHours: HOLD_HOURS, minTokens: rules.minTokens, symbol: rules.symbol,
+    kind, prize: kind === "monthly" ? "Grand Prize" : "Weekly prize", date, drawTime: new Date(T).toISOString(), holdHours: HOLD_HOURS, minTokens: rules.minTokens, symbol: rules.symbol,
     seedBlock: { height: seed.height, hash: seed.hash, time: new Date(seed.time).toISOString() },
     snapshotBlock: snapshot.height, checkpoints: checkpoints.map(c => c.height).sort((a, b) => a - b),
     holdersChecked: candidates.length, eligible, winners,
