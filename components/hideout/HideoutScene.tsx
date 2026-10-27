@@ -7,7 +7,7 @@ import { useSound } from '@/components/sound/SoundProvider';
 import Particles from '@/components/motion/Particles';
 
 /** Set to true once animated loops of the dark hideout are in public/hideout/hideout-{wide,tall}-loop.{webm,mp4}. */
-const HAS_VIDEO = false;
+const HAS_VIDEO = true;
 
 const place = (wide: Box, tall: Box) => ({
   '--x': wide[0], '--y': wide[1], '--w': wide[2], '--h': wide[3],
