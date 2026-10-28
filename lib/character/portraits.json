@@ -1011,5 +1011,16 @@
     "width": 1024,
     "height": 1536,
     "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "owl-rogue-shadow-hood",
+    "species": "Owl",
+    "class": "Rogue",
+    "outfit": "Shadow Hood",
+    "status": "ready",
+    "src": "/characters/owl/rogue/shadow-hood.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
   }
 ]
