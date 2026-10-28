@@ -31,6 +31,7 @@ export default function BuiltOnNear() {
         <li><b>The bard.</b> Tobias Lutewhistle, the raccoon bard of the Telegram tavern, answers outlaws in character, tells tales and keeps the fire warm. His words come from a language model on NEAR AI Cloud.</li>
         <li><b>The painter.</b> When you join the Guild, your outlaw starts from a portrait painted by hand for the Guild. NEAR AI adds your marks (a scar, a coin necklace, war paint…) so your outlaw is yours alone, then it goes on your WANTED poster. <Link href="/my-outlaw">Make your outlaw →</Link></li>
         <li><b>Private by design.</b> NEAR AI Cloud runs models inside trusted execution environments (TEE): the hardware keeps prompts and answers sealed, and each answer can carry a signature that proves which model wrote it.</li>
+        <li><b>The Guild Council.</b> Tobias runs on his own as an IronClaw agent, NEAR&rsquo;s secure open-source AI agent. Holders vote his weekly mission and changes to his SOUL. <Link href="/council">The Council →</Link></li>
         <li><b>Coming next.</b> In &ldquo;Rob the Sheriff&rdquo; your outlaw faces the Sheriff, an AI guard whose verdicts are signed and checked on NEAR.</li>
       </ol>
     </section>
