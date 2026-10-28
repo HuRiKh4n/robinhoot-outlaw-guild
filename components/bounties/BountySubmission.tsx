@@ -32,14 +32,14 @@ export default function BountySubmission({ bountyId }: { bountyId: string }) {
       const value = await response.json();
       if (!response.ok) throw new Error(value.error ?? "Submission failed.");
       setExisting(value.status);
-      setMessage("Evidence received and stored. Awaiting manual review; no RP or $RHOOT has been awarded.");
+      setMessage("Evidence received and stored. Awaiting manual review; no RP or coin has been awarded.");
     } catch (error) {
       setMessage(error instanceof Error ? error.message : "Submission failed.");
     } finally { setBusy(false); }
   }
   return <section className="contract-closed" aria-labelledby="submit-title">
     <h2 id="submit-title">Submit your evidence</h2>
-    <p>Preview test: one submission per contract and verified NEAR wallet. Submissions are stored off-chain for future manual review. No Reputation Points or $RHOOT are awarded.</p>
+    <p>Preview test: one submission per contract and verified NEAR wallet. Submissions are stored off-chain for future manual review. No Reputation Points or coins are awarded.</p>
     {!account ? <p>Connect your NEAR wallet and <Link href="/guild-identity">verify your Guild Identity</Link> first.</p> :
       existing ? <p role="status">Your submission status: <strong>{existing.toUpperCase()}</strong>. No further submissions are accepted for this contract.</p> :
       <form onSubmit={submit} style={{display:"grid",gap:12,maxWidth:600}}>
