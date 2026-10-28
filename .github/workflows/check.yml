@@ -13,6 +13,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: npm
-      - run: npm ci --no-audit --no-fund
-      - run: npm run typecheck
+      - run: npm install --no-audit --no-fund
+      - name: Typecheck
+        run: |
+          npx next typegen || true
+          npx tsc --noEmit --pretty false > tsc.txt || true
+          # Each error becomes an annotation (readable from the API).
+          sed -nE 's/^([^(]+)\(([0-9]+),([0-9]+)\): error (TS[0-9]+): (.*)$/::error file=\1,line=\2,col=\3::\4 \5/p' tsc.txt | head -50
+          test ! -s tsc.txt
