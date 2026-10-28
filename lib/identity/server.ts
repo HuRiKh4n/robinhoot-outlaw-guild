@@ -31,6 +31,12 @@ export function identityConfig() {
   return { origin, database, rpc };
 }
 let service: GuildIdentity | undefined;
+let shared: Database | undefined;
+/** The Guild database (same pool as the identity service), for other Guild features like the Council. */
+export function guildDatabase(): Database {
+  identityService();
+  return shared!;
+}
 export function identityService() {
   const config = identityConfig();
   if (!config)
@@ -76,6 +82,7 @@ export function identityService() {
       }
     },
   };
+  shared = database;
   service = new GuildIdentity(
     database,
     config.origin,

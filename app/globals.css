@@ -870,3 +870,29 @@ nav.site-header{background:#07070a}
 .draw-outlaw{width:56px;height:auto;border-radius:6px;border:1px solid rgba(230,208,168,.35);margin-right:10px;vertical-align:middle;background:#151612}
 .draw-winners li.has-outlaw{align-items:center}
 .draw-winners li small{opacity:.7;margin-left:4px}
+
+/* The Guild Council */
+.council-now .council-card.is-mission{border-color:#e6b45a}
+.council-card{border:1px solid rgba(230,208,168,.25);border-radius:12px;padding:16px;background:#12140f;display:grid;gap:8px;list-style:none}
+.council-card h3,.council-card h4{margin:0}
+.council-card.is-mine{border-color:#e6b45a;box-shadow:0 0 0 1px #e6b45a inset}
+.council-card.is-vetoed{opacity:.6}
+.council-card .button{justify-self:start}
+.council-list{display:grid;gap:12px;padding:0;margin:12px 0 24px}
+.council-head{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.council-head b{color:#e6b45a;white-space:nowrap}
+.council-bar{height:6px;border-radius:3px;background:rgba(230,208,168,.12);overflow:hidden}
+.council-bar i{display:block;height:100%;background:#e6b45a}
+.council-sub{margin:24px 0 4px;font-size:1.05rem}
+.council-me{border:1px dashed rgba(230,208,168,.3);border-radius:10px;padding:12px 14px;margin:8px 0 12px}
+.council-me p{margin:0 0 4px}
+.council-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.council-link{background:none;border:0;color:inherit;text-decoration:underline;opacity:.7;cursor:pointer;justify-self:start;padding:4px 0}
+.council-veto{color:#e07a5f;margin:0}
+.council-pre{white-space:pre-wrap;font-size:.9rem;background:#0b0d0a;border:1px solid rgba(230,208,168,.18);border-radius:8px;padding:12px;max-height:420px;overflow:auto}
+.council-hash{font-size:.75rem;overflow-wrap:anywhere}
+.council-form{display:grid;gap:12px;max-width:760px}
+.council-form label{display:grid;gap:6px}
+.council-form input,.council-form textarea,.council-card input{width:100%;background:#0b0d0a;color:inherit;border:1px solid rgba(230,208,168,.3);border-radius:8px;padding:10px;font:inherit}
+.council-log{padding:0;list-style:none;display:grid;gap:8px}
+.council-log time{opacity:.6;font-size:.85rem;margin-right:6px}
