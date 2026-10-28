@@ -890,5 +890,60 @@
     "width": 1024,
     "height": 1536,
     "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "bear-mage-arcane-robes",
+    "species": "Bear",
+    "class": "Mage",
+    "outfit": "Arcane Robes",
+    "status": "ready",
+    "src": "/characters/bear/mage/arcane-robes.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "bear-ranger-leather-vest",
+    "species": "Bear",
+    "class": "Ranger",
+    "outfit": "Leather Vest",
+    "status": "ready",
+    "src": "/characters/bear/ranger/leather-vest.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "bear-rogue-shadow-hood",
+    "species": "Bear",
+    "class": "Rogue",
+    "outfit": "Shadow Hood",
+    "status": "ready",
+    "src": "/characters/bear/rogue/shadow-hood.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "bear-scout-wanderer-pack",
+    "species": "Bear",
+    "class": "Scout",
+    "outfit": "Wanderer Pack",
+    "status": "ready",
+    "src": "/characters/bear/scout/wanderer-pack.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "bear-trickster-card-sharp",
+    "species": "Bear",
+    "class": "Trickster",
+    "outfit": "Card Sharp",
+    "status": "ready",
+    "src": "/characters/bear/trickster/card-sharp.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
   }
 ]
