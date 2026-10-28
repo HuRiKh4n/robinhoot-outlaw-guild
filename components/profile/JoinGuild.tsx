@@ -140,7 +140,7 @@ export default function JoinGuild({ draft, onPortrait }: { draft: OutlawDraft; o
         {busy === 'paint' ? 'PAINTING…' : portrait ? 'PAINT A NEW PORTRAIT' : 'PAINT MY UNIQUE PORTRAIT'}
       </button>
       {!draft.details.length && <p className="note">Pick at least one mark (the Marks tab above) so the painter knows what makes you different.</p>}
-      <p className="note">Three paintings a day.</p>
+      <p className="note">Three paintings a day. Painted by NEAR AI: <Link href="/near">how it works →</Link></p>
       <RankLadder />
     </>}
     {status && <p role="status" className="join-status">{status}</p>}
