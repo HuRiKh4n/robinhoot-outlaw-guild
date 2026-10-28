@@ -3,7 +3,9 @@
 import { useState } from 'react';
 import { useWalletState } from '@/hooks/useWalletState';
 
-interface Verdict { account: string; eligible: boolean; reason: string; balanceNow?: string; heldHours?: number; tickets?: number }
+interface Verdict { account: string; eligible: boolean; reason: string; balanceNow?: string; heldHours?: number; tickets?: number; baseTickets?: number;
+  outlaw?: { name: string; species: string } | null;
+  rank?: { name: string; icon: string; bonus: number; days: number; next: { name: string; inDays: number } | null } }
 
 async function check(accounts: string[], prize: 'weekly' | 'monthly'): Promise<Verdict[]> {
   const response = await fetch('/api/raid/check', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ accounts, prize }) });
@@ -53,6 +55,8 @@ export default function RaidChecker({ open }: { open: boolean }) {
         <strong>{mine.eligible ? `You are in the draw with ${mine.tickets ?? 1} ${mine.tickets === 1 ? 'ticket' : 'tickets'}.` : 'Not yet, outlaw.'}</strong>
         <span>{mine.reason}</span>
         {mine.balanceNow !== undefined && <small>Balance now: {Number(mine.balanceNow).toLocaleString('en-US')} · held above the line for about {mine.heldHours} h</small>}
+        {mine.rank && <small>{mine.rank.icon} {mine.outlaw?.name} is a <b>{mine.rank.name}</b> ({mine.rank.days} days in a row): {mine.baseTickets} from your balance + {mine.rank.bonus} rank bonus.{mine.rank.next ? ` ${mine.rank.next.name} in ${mine.rank.next.inDays} more days.` : ''}</small>}
+        {mine.eligible && !mine.outlaw && <small>Join the Guild with your outlaw for bonus tickets: <a href="/my-outlaw">make your outlaw →</a></small>}
       </p>}
     </div>
     <details className="raid-card raid-list">

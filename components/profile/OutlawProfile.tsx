@@ -9,6 +9,8 @@ import { resolveAppearance } from '@/lib/character/appearance';
 import { useWalletState } from '@/hooks/useWalletState';
 import ChoiceDeck from '@/components/character/ChoiceDeck';
 import { classDraft, defaultDraft, draftKey, parseDraft, type OutlawDraft } from '@/lib/profile/draft';
+import { detailLabel } from '@/lib/character/details';
+import JoinGuild from './JoinGuild';
 
 export default function OutlawProfile({ dedicated = false }: { dedicated?: boolean }) {
   const { account, ready } = useWalletState();
@@ -23,6 +25,7 @@ function DraftEditor({ accountId, dedicated }: { accountId?: string; dedicated: 
   const [saved, setSaved] = useState('');
   const [hasDraft, setHasDraft] = useState(false);
   const [guestAvailable, setGuestAvailable] = useState(false);
+  const [painted, setPainted] = useState<string>();
   const input = useRef<HTMLInputElement>(null);
   useEffect(() => {
     try {
@@ -89,7 +92,7 @@ function DraftEditor({ accountId, dedicated }: { accountId?: string; dedicated: 
           <p className="eyebrow">THE PORTRAIT</p>
           <CharacterPreview draft={draft} large />
           <p className="portrait-identity">{draft.name || 'UNKNOWN OUTLAW'}</p>
-          <p className="portrait-story">{draft.outfit} / {draft.personality}</p>
+          <p className="portrait-story">{draft.outfit}{draft.details.length ? ` / ${draft.details.map(detailLabel).join(', ')}` : ''}</p>
           <div className="art-availability" role="status"><strong>{appearance.kind === 'cinematic' ? 'PAINTED BY THE GUILD' : 'NOT PAINTED YET'}</strong><p>{appearance.note}</p></div>
         </div>
         <div id="customize" className="controls" aria-busy={!loaded}>
@@ -104,13 +107,14 @@ function DraftEditor({ accountId, dedicated }: { accountId?: string; dedicated: 
           <p className="note" role="status">{saved}</p>
         </div>
       </div>
+      {dedicated && <JoinGuild draft={draft} onPortrait={setPainted} />}
       <div id="wanted-poster" className="creator cinematic-keepsakes">
-        {dedicated ? <><div className="poster-group"><div className="poster"><div className="wanted">WANTED</div><CharacterPreview draft={draft} /><h3>{draft.name || 'UNKNOWN OUTLAW'}</h3><p>{draft.class} · {draft.species} · {draft.outfit}</p><p>{draft.personality} · A SKETCH · NOT YET IN THE LEDGER</p></div><CharacterDownload draft={draft} /></div><CharacterCard draft={draft} accountId={accountId} /></> : <div className="poster-group"><div className="poster">
+        {dedicated ? <><div className="poster-group"><div className="poster"><div className="wanted">WANTED</div>{painted ? <figure className="character-preview"><div className="portrait-frame"><img className="portrait-reveal" src={painted} width={832} height={1248} alt={`${draft.name} painted portrait`} /></div></figure> : <CharacterPreview draft={draft} />}<h3>{draft.name || 'UNKNOWN OUTLAW'}</h3><p>{draft.class} · {draft.species} · {draft.outfit}</p><p>{draft.details.length ? draft.details.map(detailLabel).join(' · ') : 'NO MARKS YET'}</p><strong>WANTED BY THE SHERIFF</strong></div><CharacterDownload draft={draft} source={painted} /></div><CharacterCard draft={draft} accountId={accountId} /></> : <div className="poster-group"><div className="poster">
           <div className="wanted">WANTED</div>
           <CharacterPreview draft={draft} />
           <h3>{draft.name || 'UNKNOWN OUTLAW'}</h3>
           <p>{draft.class.toUpperCase()} · {draft.species.toUpperCase()} · {draft.outfit.toUpperCase()}</p>
-          <p>KNOWN FOR: {draft.personality.toUpperCase()} MISCHIEF</p>
+          <p>{draft.details.length ? `MARKS: ${draft.details.map(detailLabel).join(', ').toUpperCase()}` : 'KNOWN FOR: ROBBING THE SHERIFF'}</p>
           <strong>REWARD: 100 LOOT</strong>
           <small>OUTLAW ID: PREVIEW-001 · DEMO ONLY</small>
           <small>ROBINHOOT · OUTLAW GUILD · NEAR</small>
@@ -128,15 +132,15 @@ function DraftEditor({ accountId, dedicated }: { accountId?: string; dedicated: 
           <p className="eyebrow">{accountId ? 'ACCOUNT DRAFT · MAINNET' : 'UNCONNECTED DRAFT MODE'}</p>
           <h3>{draft.name || 'UNKNOWN OUTLAW'}</h3>
           <p className="profile-account">{accountId ?? 'No wallet connected — keep creating.'}</p>
-          <dl><div><dt>CLASS</dt><dd>{draft.class}</dd></div><div><dt>SPECIES</dt><dd>{draft.species}</dd></div><div><dt>OUTFIT</dt><dd>{draft.outfit}</dd></div><div><dt>PERSONALITY</dt><dd>{draft.personality}</dd></div></dl>
+          <dl><div><dt>CLASS</dt><dd>{draft.class}</dd></div><div><dt>SPECIES</dt><dd>{draft.species}</dd></div><div><dt>OUTFIT</dt><dd>{draft.outfit}</dd></div><div><dt>MARKS</dt><dd>{draft.details.length ? draft.details.map(detailLabel).join(', ') : 'None yet'}</dd></div></dl>
           {!dedicated && <Link className="profile-inline-link" href="/my-outlaw">OPEN MY OUTLAW / PASSPORT →</Link>}
           <button type="button" className="button profile-edit" onClick={() => { input.current?.focus(); input.current?.scrollIntoView({ block: 'center', behavior: 'smooth' }); }}>EDIT PROFILE ↑</button>
         </div>
       </div>
       </>}
       <div className="prototype-notice">
-        <strong>Kept in your satchel, not in the royal ledger.</strong>
-        <p>Your outlaw is saved only in this browser. Linking a wallet just tells us your name: it doesn&rsquo;t prove anything, register anything or earn anything yet.</p>
+        <strong>Your satchel and the Guild ledger.</strong>
+        <p>While you design, your outlaw is saved in this browser. When you join the Guild, it is saved with your wallet (one outlaw per wallet) and earns you bonus tickets at the Sunday draws.</p>
         <p>{accountId ? 'Each wallet keeps its own outlaw on this device. Switch wallets and you will meet a different one.' : 'Without a wallet, your outlaw lives in this tab until you close it.'}</p>
       </div>
     </section>

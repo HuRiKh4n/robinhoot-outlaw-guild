@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { OutlawDraft } from '@/lib/profile/draft';
 import { resolveAppearance } from '@/lib/character/appearance';
 import DownloadPngButton from './DownloadPngButton';
+import { detailLabel } from '@/lib/character/details';
 
 const shortAccount = (value: string) => value.length > 24 ? `${value.slice(0, 10)}…${value.slice(-9)}` : value;
 
@@ -20,7 +21,7 @@ export default function CharacterCard({ draft, accountId }: { draft: OutlawDraft
   const appearance = resolveAppearance(draft);
   const fingerprint = JSON.stringify([draft, displayedAccount]);
   const currentAsset = asset?.fingerprint === fingerprint ? asset : undefined;
-  const shareText = `ROBINHOOT · GUILD PASSPORT\n${draft.name || 'UNKNOWN OUTLAW'}\n${draft.class} · ${draft.species}\n${draft.outfit} · ${draft.personality}${displayedAccount ? `\nNEAR: ${displayedAccount}` : ''}\n${appearance.label}\n${appearance.note}\nPREVIEW / NOT MINTED / NOT REGISTERED\nLocal draft only. Wallet connection is not proof of ownership or authentication. No on-chain or server verification.`;
+  const shareText = `ROBINHOOT · GUILD PASSPORT\n${draft.name || 'UNKNOWN OUTLAW'}\n${draft.class} · ${draft.species}\n${draft.outfit}${displayedAccount ? `\nNEAR: ${displayedAccount}` : ''}\n${appearance.label}\n${appearance.note}\nPREVIEW / NOT MINTED / NOT REGISTERED\nLocal draft only. Wallet connection is not proof of ownership or authentication. No on-chain or server verification.`;
 
   useEffect(() => {
     let active = true;
@@ -71,13 +72,13 @@ export default function CharacterCard({ draft, accountId }: { draft: OutlawDraft
     <div className="profile-heading"><div><p className="eyebrow">CARRY THE LEGEND</p><h2 id="passport-title">GUILD PASSPORT</h2></div><span className="prototype-badge">CHARACTER CARD PREVIEW</span></div>
     <div className="passport-layout">
       <div className="passport-art">
-        <canvas ref={canvas} width={840} height={1120} role="img" aria-label={`Guild Passport preview for ${draft.name || 'UNKNOWN OUTLAW'}, ${draft.class}, ${draft.species}, ${draft.outfit}, ${draft.personality}${displayedAccount ? `, NEAR ${displayedAccount}` : ''}. ${appearance.label}. Preview, not minted, not registered.`}>Your passport identity is listed alongside this image.</canvas>
+        <canvas ref={canvas} width={840} height={1120} role="img" aria-label={`Guild Passport preview for ${draft.name || 'UNKNOWN OUTLAW'}, ${draft.class}, ${draft.species}, ${draft.outfit}${displayedAccount ? `, NEAR ${displayedAccount}` : ''}. ${appearance.label}. Preview, not minted, not registered.`}>Your passport identity is listed alongside this image.</canvas>
         <DownloadPngButton url={currentAsset?.url} filename="robinhoot-passport-preview.png" label="DOWNLOAD GUILD PASSPORT" failed={failed} />
       </div>
       <div className="passport-tools">
         <h3>YOUR OUTLAW, ON A CARD.</h3>
         <p className="passport-flags">Preview / Not minted / Not registered</p>
-        <dl><div><dt>NAME</dt><dd>{draft.name || 'UNKNOWN OUTLAW'}</dd></div><div><dt>IDENTITY</dt><dd>{draft.class} · {draft.species}</dd></div><div><dt>OUTFIT</dt><dd>{draft.outfit}</dd></div><div><dt>PERSONALITY</dt><dd>{draft.personality}</dd></div></dl>
+        <dl><div><dt>NAME</dt><dd>{draft.name || 'UNKNOWN OUTLAW'}</dd></div><div><dt>IDENTITY</dt><dd>{draft.class} · {draft.species}</dd></div><div><dt>OUTFIT</dt><dd>{draft.outfit}</dd></div><div><dt>MARKS</dt><dd>{draft.details.length ? draft.details.map(detailLabel).join(', ') : 'None yet'}</dd></div></dl>
         {accountId && <label className="passport-account-option"><input type="checkbox" checked={includeAccount} onChange={event => setIncludeAccount(event.target.checked)} />Include shortened NEAR account on the card and shared text</label>}
         <p>{appearance.label}. {appearance.note} Available artwork is shared by every preview and PNG. Unavailable selections export identity details only.</p>
         {failed && <p className="note">Image download is unavailable. Share or copy your details instead.</p>}
@@ -119,7 +120,7 @@ export function drawPassport(ctx: CanvasRenderingContext2D, draft: OutlawDraft, 
   let fontSize = 49;
   do { ctx.font = `bold ${fontSize}px sans-serif`; fontSize--; } while (ctx.measureText(name).width > 690 && fontSize > 23);
   ctx.fillText(name, 420, 628, 690);
-  const rows = [['CLASS', draft.class], ['SPECIES', draft.species], ['OUTFIT', draft.outfit], ['PERSONALITY', draft.personality]];
+  const rows = [['CLASS', draft.class], ['SPECIES', draft.species], ['OUTFIT', draft.outfit], ['MARKS', draft.details.map(detailLabel).join(', ') || 'None yet']];
   ctx.textAlign = 'left';
   rows.forEach(([label, value], index) => {
     const x = index % 2 === 0 ? 80 : 440; const y = index < 2 ? 696 : 802;

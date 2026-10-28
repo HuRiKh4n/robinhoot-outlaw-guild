@@ -1,7 +1,8 @@
 'use client';
 
 import { useId, useRef, useState } from 'react';
-import { classDraft, classes, offeredSpecies, outfitsFor, personalities, type OutlawDraft } from '@/lib/profile/draft';
+import { classDraft, classes, offeredSpecies, outfitsFor, type OutlawDraft } from '@/lib/profile/draft';
+import { DETAILS, MAX_DETAILS, detailLabel } from '@/lib/character/details';
 import { resolveAppearance } from '@/lib/character/appearance';
 import { useSound } from '@/components/sound/SoundProvider';
 
@@ -9,7 +10,7 @@ const groups = [
   { field: 'species', label: 'Species', choices: offeredSpecies },
   { field: 'class', label: 'Class', choices: classes },
   { field: 'outfit', label: 'Outfit', choices: [] as readonly string[] },
-  { field: 'personality', label: 'Spirit', choices: personalities },
+  { field: 'details', label: 'Marks', choices: DETAILS.map(detail => detail.id) },
 ] as const;
 type Field = typeof groups[number]['field'];
 
@@ -32,14 +33,25 @@ export default function ChoiceDeck({ draft, disabled, onChange }: {
         if (event.key === 'Home') next = 0;
         if (event.key === 'End') next = groups.length - 1;
         if (next !== undefined) { event.preventDefault(); move(next); }
-      }}>{item.label}<span>{draft[item.field]}</span></button>)}
+      }}>{item.label}<span>{item.field === 'details' ? (draft.details.length ? draft.details.map(detailLabel).join(', ') : 'None yet') : draft[item.field]}</span></button>)}
     </div>
     {groups.map((item, index) => <div key={item.field} role="tabpanel" id={`${id}-panel-${item.field}`} aria-labelledby={`${id}-${item.field}`} hidden={active !== index}>
-      {active === index && <fieldset className="choice-panel"><legend>{group.label === 'Spirit' ? 'YOUR PERSONALITY' : `YOUR ${group.label.toUpperCase()}`}</legend>
+      {active === index && group.field === 'details' && <fieldset className="choice-panel"><legend>YOUR MARKS · UP TO {MAX_DETAILS}</legend>
+        <div className="choice-grid">{DETAILS.map(detail => {
+          const on = draft.details.includes(detail.id);
+          const full = !on && draft.details.length >= MAX_DETAILS;
+          return <label className={`choice-card${on ? ' is-selected' : ''}`} key={detail.id}>
+            <input type="checkbox" aria-label={detail.label} checked={on} disabled={disabled || full} onChange={() => { play('coin'); onChange('details', on ? draft.details.filter(id => id !== detail.id) : [...draft.details, detail.id]); }} />
+            <span className="choice-card-copy"><strong>{detail.label}</strong><small>{full ? 'Three marks max' : 'Painted on your portrait'}</small></span><span className="choice-check" aria-hidden="true">{on ? '✓' : '+'}</span>
+          </label>;
+        })}</div>
+        <p className="choice-help">Pick up to three marks. The guild painter adds them to your portrait when you join the Guild.</p>
+      </fieldset>}
+      {active === index && group.field !== 'details' && <fieldset className="choice-panel"><legend>{`YOUR ${group.label.toUpperCase()}`}</legend>
         <div className="choice-grid">{(group.field === 'outfit' ? outfitsFor(draft.class) : group.field === 'species' && !group.choices.includes(draft.species as never) ? [...group.choices, draft.species] : group.choices).map(value => {
           const next = group.field === 'class' ? classDraft(draft, value as OutlawDraft['class']) : { ...draft, [group.field]: value } as OutlawDraft;
           const art = resolveAppearance(next);
-          const metadata = group.field === 'personality';
+          const metadata = false;
           const exact = art.kind === 'cinematic';
           const thumbnail = exact && !metadata ? art.thumb : undefined;
           const status = metadata ? 'Story detail' : exact ? art.label.includes('fallback') ? 'Original portrait fallback' : 'Cinematic artwork' : 'Artwork unavailable';
@@ -49,7 +61,7 @@ export default function ChoiceDeck({ draft, disabled, onChange }: {
             <span className="choice-card-copy"><strong>{value}</strong><small>{status}</small></span><span className="choice-check" aria-hidden="true">{draft[group.field] === value ? '✓' : '+'}</span>
           </label>;
         })}</div>
-        <p className="choice-help">{group.field === 'outfit' ? 'Choose a class outfit. Missing original files are labelled unavailable; no different outfit is shown.' : group.field === 'personality' ? 'Personality shapes your story; it does not alter cinematic artwork.' : 'Cards show only available artwork for the current selection. Other combinations are clearly marked unavailable.'}</p>
+        <p className="choice-help">{group.field === 'outfit' ? 'Choose a class outfit.' : 'Pick the one that feels like you.'}</p>
       </fieldset>}
     </div>)}
   </div>;

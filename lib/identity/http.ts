@@ -2,6 +2,9 @@ import "server-only";
 import { NextRequest, NextResponse } from "next/server";
 import { IdentityError, SESSION_SECONDS, token } from "./core";
 import { identityConfig, identityService } from "./server";
+import { resolveAppearance } from "../character/appearance";
+import { DETAILS } from "../character/details";
+import { editPortrait, imageType } from "../portrait/ai";
 const bindingName = "__Host-rh-guild-binding";
 const sessionName = "__Host-rh-guild-session";
 const options = {
@@ -58,7 +61,7 @@ export function identityHandler(
 ) {
   return async function handleIdentity(
     request: NextRequest,
-    action: "challenge" | "verify" | "session" | "character" | "logout" | "bounty",
+    action: "challenge" | "verify" | "session" | "character" | "logout" | "bounty" | "portrait",
   ) {
     try {
       const config = getConfig();
@@ -142,6 +145,24 @@ export function identityHandler(
         const data = await body(request);
         fields(data, ["bountyId", "evidenceUrl", "description"]);
         return response(await service.submitBounty(session, expected, data.bountyId, data.evidenceUrl, data.description));
+      }
+      if (action === "portrait") {
+        const job = await service.portraitJob(session, expected);
+        const art = resolveAppearance(job.draft);
+        if (!art.src) throw new IdentityError(400, "This outfit has no base portrait yet.");
+        const base = await fetch(new URL(art.src, config.origin), { cache: "no-store" });
+        if (!base.ok) throw new IdentityError(503, "Base portrait unavailable. Try again.");
+        const marks = job.draft.details.map((id) => DETAILS.find((d) => d.id === id)?.prompt).filter(Boolean).join(", ");
+        const animal = job.draft.species === "Badger" ? "honey badger" : job.draft.species.toLowerCase();
+        const prompt =
+          `Keep exactly the same ${animal} character: same face, same fur or feathers, same body, same pose, same outfit, same weapons, ` +
+          `same painterly cinematic fantasy style, same dark grey smoky studio background and lighting, full body, centred. ` +
+          `Only add these personal marks: ${marks}. No text, no logos, no frame.`;
+        let bytes: Uint8Array;
+        try { bytes = await editPortrait(await base.arrayBuffer(), prompt); }
+        catch { throw new IdentityError(503, "The painter dropped the brush. Try again in a minute."); }
+        await service.savePortrait(job.linked, bytes, imageType(bytes), job.draftHash);
+        return response({ painted: true, url: `/api/outlaws/portrait?account=${encodeURIComponent(job.accountId)}&v=${Date.now()}` });
       }
       if (request.method === "GET")
         return response(await service.read(session, expected));

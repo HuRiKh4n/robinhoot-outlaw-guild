@@ -6,6 +6,7 @@ import { resolveAppearance } from "@/lib/character/appearance";
 import { waitForGuildLogout, revokeGuildSession } from "./logout";
 import { useWalletState } from "@/hooks/useWalletState";
 import { draftKey, parseDraft, type OutlawDraft } from "@/lib/profile/draft";
+import { detailLabel } from "@/lib/character/details";
 interface Saved {
   draft: OutlawDraft;
   revision: number;
@@ -228,7 +229,7 @@ function IdentityEditor({ active }: { active: RefObject<string | undefined> }) {
                   )}
                 </div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 12 }}>
-                  {[saved.draft.species, saved.draft.class, saved.draft.outfit, saved.draft.personality].map((item, index) => (
+                  {[saved.draft.species, saved.draft.class, saved.draft.outfit, ...saved.draft.details.map(detailLabel)].map((item, index) => (
                     <span key={index} style={{ border: "1px solid rgba(230,208,168,.35)", padding: "6px 10px", borderRadius: 6, fontSize: "0.9rem" }}>{item}</span>
                   ))}
                 </div>
@@ -253,7 +254,7 @@ function IdentityEditor({ active }: { active: RefObject<string | undefined> }) {
             <div style={{ border: "1px solid rgba(230,208,168,.35)", borderRadius: 8, padding: 16, display: "grid", gap: 12 }}>
               <h3 style={{ margin: 0 }}>Review before saving</h3>
               <p style={{ margin: 0, fontWeight: 700 }}>{candidate.name.trim()}</p>
-              <p style={{ margin: 0 }}>{candidate.species} · {candidate.class} · {candidate.outfit} · {candidate.personality}</p>
+              <p style={{ margin: 0 }}>{candidate.species} · {candidate.class} · {candidate.outfit}{candidate.details.length ? ` · ${candidate.details.map(detailLabel).join(', ')}` : ''}</p>
               {sameDraft ? (
                 <p style={{ margin: 0 }}>This character already matches your saved Guild profile. No update is needed.</p>
               ) : (

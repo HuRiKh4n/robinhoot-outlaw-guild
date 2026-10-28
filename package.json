@@ -6,13 +6,14 @@
     "validate:art": "node scripts/validate-character-assets.mjs",
     "register:art": "node scripts/register-character-art.mjs",
     "test:assets": "node --test scripts/validate-character-assets.test.mjs",
-    "prebuild": "npm run validate:art",
+    "prebuild": "npm run validate:art && node scripts/migrate.mjs",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "typecheck": "next typegen && tsc --noEmit",
     "test:e2e": "playwright test",
-    "test:security": "node --conditions=react-server --import tsx --test tests/security/*.test.ts"
+    "test:security": "node --conditions=react-server --import tsx --test tests/security/*.test.ts",
+    "migrate": "node scripts/migrate.mjs"
   },
   "dependencies": {
     "@hot-labs/near-connect": "^0.11.3",

@@ -852,3 +852,21 @@ nav.site-header{background:#07070a}
 .loot-tickets div{border:1px solid #c9a46444;padding:8px 6px;text-align:center;display:grid;gap:2px}
 .loot-tickets span{color:#a99c84;font-size:12px}.loot-tickets b{color:var(--ink);font-size:14px}
 @media(max-width:700px){.loot-tickets{grid-template-columns:repeat(2,1fr)}}
+
+/* Join the Guild + ranks */
+.join-guild{max-width:1100px;margin:32px auto;padding:24px 16px;border:1px solid rgba(230,208,168,.28);border-radius:14px;background:#0f120e;display:grid;gap:14px}
+.join-guild h2{margin:0;font-size:clamp(1.4rem,4vw,2.1rem)}
+.join-guild .button{justify-self:start}
+.join-member{display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap}
+.join-portrait{width:208px;height:auto;border-radius:10px;border:1px solid rgba(230,208,168,.35);background:#151612}
+.join-rank{font-weight:700;letter-spacing:.06em;margin:0 0 6px}
+.join-rank span{color:#e6b45a}
+.join-status{margin:0;color:#e6d0a8}
+.rank-ladder{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:6px}
+.rank-ladder div{border:1px solid rgba(230,208,168,.22);border-radius:10px;padding:12px;display:grid;gap:4px;background:#13160f}
+.rank-ladder strong{font-size:1rem}
+.rank-ladder span{color:#e6b45a;font-weight:700}
+.rank-ladder small{opacity:.75}
+.draw-outlaw{width:56px;height:auto;border-radius:6px;border:1px solid rgba(230,208,168,.35);margin-right:10px;vertical-align:middle;background:#151612}
+.draw-winners li.has-outlaw{align-items:center}
+.draw-winners li small{opacity:.7;margin-left:4px}
