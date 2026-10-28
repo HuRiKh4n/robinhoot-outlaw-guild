@@ -11,6 +11,9 @@ const DEMOS: Record<string, string> = {
   "1": "species=fox&class=ranger&outfit=leather-vest&details=an eyepatch, a golden tooth and a small lute on the back",
   "2": "species=wolf&class=warrior&outfit=berserker&details=a scar across the eye and a necklace of gold coins",
   "3": "species=fox&class=ranger&outfit=leather-vest&mode=new&details=an eyepatch and a golden tooth",
+  "4": "species=fox&class=ranger&outfit=leather-vest&full=Turn this fox into a big brown bear, an anthropomorphic bear outlaw with a round bear head, small round ears, thick brown fur and a short tail. Keep exactly the same outfit, same weapons, same pose, same painterly cinematic fantasy style, same dark grey smoky studio background and lighting, full body, centred. No text, no logos, no frame.",
+  "5": "species=fox&class=warrior&outfit=battle-armor&full=Turn this fox into a big brown bear, an anthropomorphic bear warrior with a round bear head, small round ears, thick brown fur and a short tail. Keep exactly the same armour, same weapons, same pose, same painterly cinematic fantasy style, same dark grey smoky studio background and lighting, full body, centred. No text, no logos, no frame.",
+  "6": "species=badger&class=mage&outfit=arcane-robes&full=Keep exactly the same honey badger mage: same face, same robes, same staff, same pose, same painterly style. Replace only the background and lighting with a plain dark grey smoky studio background and soft neutral studio light, like a character sheet. Full body, centred. No text, no logos, no frame.",
 };
 
 /** Private test of AI portraits built on our own base art.
@@ -38,10 +41,10 @@ export async function GET(request: NextRequest) {
   const details = (q.get("details") ?? "an eyepatch, a golden tooth and a small lute on the back").slice(0, 200);
   const model = q.get("model") ?? "black-forest-labs/FLUX.2-klein-4B";
   const animal = species === "badger" ? "honey badger" : species;
-  const prompt =
+  const prompt = q.get("full") ?? (
     `Keep exactly the same ${animal} character: same face, same fur colours, same body, same pose, same outfit, same painterly cinematic fantasy style, ` +
     `same dark grey smoky studio background and lighting, full body, centred. Only add these personal details: ${details}. ` +
-    `No text, no logos, no frame.`;
+    `No text, no logos, no frame.`);
 
   const started = Date.now();
   let response: Response;
