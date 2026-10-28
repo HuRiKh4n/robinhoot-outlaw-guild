@@ -9,7 +9,7 @@ import { detailLabel } from '@/lib/character/details';
 const shortAccount = (value: string) => value.length > 24 ? `${value.slice(0, 10)}…${value.slice(-9)}` : value;
 
 /** The preview and PNG share this canvas, with no external font or rendering library. */
-export default function CharacterCard({ draft, accountId }: { draft: OutlawDraft; accountId?: string }) {
+export default function CharacterCard({ draft, accountId, source: painted }: { draft: OutlawDraft; accountId?: string; source?: string }) {
   const canvas = useRef<HTMLCanvasElement>(null);
   const manualCopy = useRef<HTMLTextAreaElement>(null);
   const [includeAccount, setIncludeAccount] = useState(false);
@@ -19,9 +19,9 @@ export default function CharacterCard({ draft, accountId }: { draft: OutlawDraft
   const [manual, setManual] = useState(false);
   const displayedAccount = includeAccount && accountId ? shortAccount(accountId) : undefined;
   const appearance = resolveAppearance(draft);
-  const fingerprint = JSON.stringify([draft, displayedAccount]);
+  const fingerprint = JSON.stringify([draft, displayedAccount, painted]);
   const currentAsset = asset?.fingerprint === fingerprint ? asset : undefined;
-  const shareText = `ROBINHOOT · GUILD PASSPORT\n${draft.name || 'UNKNOWN OUTLAW'}\n${draft.class} · ${draft.species}\n${draft.outfit}${displayedAccount ? `\nNEAR: ${displayedAccount}` : ''}\n${appearance.label}\n${appearance.note}\nPREVIEW / NOT MINTED / NOT REGISTERED\nLocal draft only. Wallet connection is not proof of ownership or authentication. No on-chain or server verification.`;
+  const shareText = `ROBINHOOT · GUILD PASSPORT\n${draft.name || 'UNKNOWN OUTLAW'}\n${draft.class} · ${draft.species}\n${draft.outfit}${displayedAccount ? `\nNEAR: ${displayedAccount}` : ''}\n${appearance.label}\n${appearance.note}\nWANTED BY THE SHERIFF · robinhoot.fun`;
 
   useEffect(() => {
     let active = true;
@@ -48,7 +48,7 @@ export default function CharacterCard({ draft, accountId }: { draft: OutlawDraft
     // Clear the old portrait immediately; a failed replacement must not show stale artwork.
     const context = canvas.current?.getContext('2d');
     context?.clearRect(0, 0, 840, 1120);
-    const source = resolveAppearance(draft).src;
+    const source = painted ?? resolveAppearance(draft).src;
     if (source) image.src = source; else void render();
     return () => { active = false; image.onload = null; image.onerror = null; if (url) URL.revokeObjectURL(url); };
   // The fingerprint represents every value painted onto the image.
@@ -69,10 +69,10 @@ export default function CharacterCard({ draft, accountId }: { draft: OutlawDraft
   }
 
   return <section className="passport" aria-labelledby="passport-title">
-    <div className="profile-heading"><div><p className="eyebrow">CARRY THE LEGEND</p><h2 id="passport-title">GUILD PASSPORT</h2></div><span className="prototype-badge">CHARACTER CARD PREVIEW</span></div>
+    <div className="profile-heading"><div><p className="eyebrow">CARRY THE LEGEND</p><h2 id="passport-title">GUILD PASSPORT</h2></div><span className="prototype-badge">SHARE IT ON X</span></div>
     <div className="passport-layout">
       <div className="passport-art">
-        <canvas ref={canvas} width={840} height={1120} role="img" aria-label={`Guild Passport preview for ${draft.name || 'UNKNOWN OUTLAW'}, ${draft.class}, ${draft.species}, ${draft.outfit}${displayedAccount ? `, NEAR ${displayedAccount}` : ''}. ${appearance.label}. Preview, not minted, not registered.`}>Your passport identity is listed alongside this image.</canvas>
+        <canvas ref={canvas} width={840} height={1120} role="img" aria-label={`Guild Passport preview for ${draft.name || 'UNKNOWN OUTLAW'}, ${draft.class}, ${draft.species}, ${draft.outfit}${displayedAccount ? `, NEAR ${displayedAccount}` : ''}. ${appearance.label}.`}>Your passport identity is listed alongside this image.</canvas>
         <DownloadPngButton url={currentAsset?.url} filename="robinhoot-passport-preview.png" label="DOWNLOAD GUILD PASSPORT" failed={failed} />
       </div>
       <div className="passport-tools">
@@ -114,7 +114,7 @@ export function drawPassport(ctx: CanvasRenderingContext2D, draft: OutlawDraft, 
     ctx.fillText('CINEMATIC ARTWORK NOT YET AVAILABLE', 420, 325, 650);
     ctx.font = '18px sans-serif'; ctx.fillText('Identity details only · no substitute illustration', 420, 365, 650);
   }
-  ctx.fillStyle = '#a93624'; ctx.font = 'bold 20px sans-serif'; ctx.fillText(resolveAppearance(draft).exportLabel, 420, 560, 710);
+  ctx.fillStyle = '#a93624'; ctx.font = 'bold 20px sans-serif'; ctx.fillText(character ? 'AN OUTLAW OF THE GUILD' : resolveAppearance(draft).exportLabel, 420, 560, 710);
   ctx.fillStyle = '#402619';
   const name = draft.name || 'UNKNOWN OUTLAW';
   let fontSize = 49;
@@ -128,9 +128,9 @@ export function drawPassport(ctx: CanvasRenderingContext2D, draft: OutlawDraft, 
     ctx.fillStyle = '#402619'; ctx.font = '25px sans-serif'; ctx.fillText(value, x, y + 36, 325);
   });
   ctx.textAlign = 'center'; ctx.font = '19px monospace'; ctx.fillStyle = '#402619';
-  ctx.fillText(account ? `NEAR · ${account}` : 'ACCOUNT HIDDEN · LOCAL PREVIEW', 420, 906, 680);
-  ctx.fillStyle = '#8e271c'; ctx.font = 'bold 23px sans-serif'; ctx.fillText('PREVIEW / NOT MINTED / NOT REGISTERED', 420, 973, 700);
+  ctx.fillText(account ? `NEAR · ${account}` : 'ROBINHOOT.FUN', 420, 906, 680);
+  ctx.fillStyle = '#8e271c'; ctx.font = 'bold 23px sans-serif'; ctx.fillText('WANTED BY THE SHERIFF', 420, 973, 700);
   ctx.fillStyle = '#402619'; ctx.font = '17px sans-serif';
-  ctx.fillText('Wallet connection is not proof of ownership or authentication.', 420, 1015, 700);
-  ctx.fillText('No on-chain registration, server verification or membership.', 420, 1045, 700);
+  ctx.fillText('Hold the coin, ride with the Guild, rob the Sheriff.', 420, 1015, 700);
+  ctx.fillText('Make your outlaw at robinhoot.fun', 420, 1045, 700);
 }
