@@ -26,12 +26,23 @@ export const defaultDraft: OutlawDraft = {
 };
 
 /** Registry entries define class outfit choices even while their artwork is missing. */
-export function outfitsFor(characterClass: string): readonly string[] {
-  const registered = catalogue.filter(asset => asset.class === characterClass).map(asset => asset.outfit).filter((value): value is string => typeof value === 'string');
-  return registered.length ? [...new Set(registered)] : outfits;
+/** Outfits painted for a class; with a species, only the ones painted for that animal. */
+export function outfitsFor(characterClass: string, animal?: string): readonly string[] {
+  const pick = (withSpecies: boolean) => catalogue
+    .filter(asset => asset.class === characterClass && asset.status === 'ready' && (!withSpecies || asset.species === animal))
+    .map(asset => asset.outfit).filter((value): value is string => typeof value === 'string');
+  const registered = animal ? pick(true) : [];
+  const fallback = pick(false);
+  return registered.length ? [...new Set(registered)] : fallback.length ? [...new Set(fallback)] : outfits;
 }
 export function classDraft(draft: OutlawDraft, characterClass: OutlawDraft['class']): OutlawDraft {
-  return { ...draft, class: characterClass, outfit: outfitsFor(characterClass)[0] };
+  const choices = outfitsFor(characterClass, draft.species);
+  return { ...draft, class: characterClass, outfit: choices.includes(draft.outfit) ? draft.outfit : choices[0] };
+}
+/** Changing animal keeps the class and outfit when that animal has them, otherwise picks one it has. */
+export function speciesDraft(draft: OutlawDraft, animal: OutlawDraft['species']): OutlawDraft {
+  const choices = outfitsFor(draft.class, animal);
+  return { ...draft, species: animal, outfit: choices.includes(draft.outfit) ? draft.outfit : choices[0] };
 }
 
 /** Local data is untrusted. Accept only the creator's fields and allowed values. */
@@ -49,11 +60,13 @@ export function parseDraft(raw: string | null): OutlawDraft {
     const aliases: Record<string, string> = { 'Worn Leather Vest': 'Leather Vest', 'Ragged Hood': 'Forest Hood' };
     const oldOutfit = typeof value.outfit === 'string' ? value.outfit : '';
     const normalized = characterClass === 'Ranger' ? aliases[oldOutfit] ?? oldOutfit : oldOutfit;
+    const animal = choice(species, value.species ?? value.animal, defaultDraft.species);
+    const wardrobe = outfitsFor(characterClass, animal);
     return {
       name: typeof value.name === 'string' ? value.name.slice(0, 32) : defaultDraft.name,
-      species: choice(species, value.species ?? value.animal, defaultDraft.species),
+      species: animal,
       class: characterClass,
-      outfit: choice(outfitsFor(characterClass), normalized, outfitsFor(characterClass)[0]),
+      outfit: choice(wardrobe, normalized, wardrobe[0]),
       personality: choice(personalities, value.personality ?? value.trait, defaultDraft.personality),
       details: cleanDetails(value.details),
     };
