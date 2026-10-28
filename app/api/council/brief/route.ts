@@ -4,7 +4,7 @@ import { councilBrief } from "@/lib/council/core";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 30;
-/** Plain-text brief that Tobias (IronClaw) fetches every run: SOUL in force, mission, open votes. */
+/** Plain-text brief: SOUL in force, mission, open votes (what the bard follows). */
 export async function GET() {
   if (!identityConfig()) return new NextResponse("The Council is not open yet. Keep the tavern warm and tell the tale.", { headers: { "Content-Type": "text/plain; charset=utf-8" } });
   try {
