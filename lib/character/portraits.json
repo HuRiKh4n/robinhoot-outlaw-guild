@@ -956,5 +956,60 @@
     "width": 1024,
     "height": 1536,
     "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "owl-mage-arcane-robes",
+    "species": "Owl",
+    "class": "Mage",
+    "outfit": "Arcane Robes",
+    "status": "ready",
+    "src": "/characters/owl/mage/arcane-robes.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "owl-ranger-leather-vest",
+    "species": "Owl",
+    "class": "Ranger",
+    "outfit": "Leather Vest",
+    "status": "ready",
+    "src": "/characters/owl/ranger/leather-vest.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "owl-scout-wanderer-pack",
+    "species": "Owl",
+    "class": "Scout",
+    "outfit": "Wanderer Pack",
+    "status": "ready",
+    "src": "/characters/owl/scout/wanderer-pack.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "owl-trickster-card-sharp",
+    "species": "Owl",
+    "class": "Trickster",
+    "outfit": "Card Sharp",
+    "status": "ready",
+    "src": "/characters/owl/trickster/card-sharp.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
+  },
+  {
+    "id": "owl-warrior-battle-armor",
+    "species": "Owl",
+    "class": "Warrior",
+    "outfit": "Battle Armor",
+    "status": "ready",
+    "src": "/characters/owl/warrior/battle-armor.png",
+    "width": 1024,
+    "height": 1536,
+    "credit": "Approved original artwork uploaded by repository owner HuRiKh4n for RobinHoot integration; image preserved unchanged."
   }
 ]
