@@ -6,15 +6,23 @@ export const maxDuration = 60;
 
 const BASE = () => process.env.NEAR_AI_BASE_URL ?? "https://cloud-api.near.ai/v1";
 const SAFE = /^[a-z-]+$/;
+/** Fixed examples anyone can open; results are cached by the CDN for a day, so each one is paid for once. */
+const DEMOS: Record<string, string> = {
+  "1": "species=fox&class=ranger&outfit=leather-vest&details=an eyepatch, a golden tooth and a small lute on the back",
+  "2": "species=wolf&class=warrior&outfit=berserker&details=a scar across the eye and a necklace of gold coins",
+  "3": "species=fox&class=ranger&outfit=leather-vest&mode=new&details=an eyepatch and a golden tooth",
+};
 
 /** Private test of AI portraits built on our own base art.
  *  /api/portrait/test?secret=<TELEGRAM_WEBHOOK_SECRET>&list=1                → image models available
  *  /api/portrait/test?secret=...&species=fox&class=ranger&outfit=leather-vest&details=an eyepatch and a golden tooth
  *  add &mode=new to draw from text only (no base image), for comparison. */
 export async function GET(request: NextRequest) {
-  const q = request.nextUrl.searchParams;
-  if (!process.env.TELEGRAM_WEBHOOK_SECRET || q.get("secret") !== process.env.TELEGRAM_WEBHOOK_SECRET)
-    return NextResponse.json({ ok: false }, { status: 401 });
+  let q = request.nextUrl.searchParams;
+  const demo = DEMOS[q.get("demo") ?? ""];
+  if (demo) q = new URLSearchParams(demo);
+  else if (!process.env.TELEGRAM_WEBHOOK_SECRET || q.get("secret") !== process.env.TELEGRAM_WEBHOOK_SECRET)
+    return NextResponse.json({ ok: false, hint: "try ?demo=1, 2 or 3" }, { status: 401 });
   const key = process.env.NEAR_AI_API_KEY;
   if (!key) return NextResponse.json({ ok: false, error: "NEAR_AI_API_KEY missing" }, { status: 500 });
 
@@ -66,5 +74,5 @@ export async function GET(request: NextRequest) {
   try { const data = JSON.parse(text); b64 = data?.data?.[0]?.b64_json ?? ""; if (!b64 && data?.data?.[0]?.url) return NextResponse.redirect(data.data[0].url); } catch { /* fallthrough */ }
   if (!b64) return NextResponse.json({ ok: false, error: "no image in response", raw: text.slice(0, 800) }, { status: 502 });
   const bytes = Buffer.from(b64, "base64");
-  return new NextResponse(bytes, { headers: { "Content-Type": bytes[0] === 0x89 ? "image/png" : "image/jpeg", "Cache-Control": "no-store", "X-Seconds": String((Date.now() - started) / 1000) } });
+  return new NextResponse(bytes, { headers: { "Content-Type": bytes[0] === 0x89 ? "image/png" : "image/jpeg", "Cache-Control": demo ? "public, s-maxage=86400" : "no-store", "X-Seconds": String((Date.now() - started) / 1000) } });
 }
