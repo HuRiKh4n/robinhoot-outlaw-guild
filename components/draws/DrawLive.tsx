@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 
 type Kind = 'weekly' | 'monthly';
-interface Draw { kind: Kind; date: string; eligible: Array<string | { account: string }>; seedBlock: { height: number; hash: string }; winners: Array<{ account: string; share: number; title?: string }> }
+interface Draw { kind: Kind; date: string; eligible: Array<string | { account: string }>; seedBlock: { height: number; hash: string }; winners: Array<{ account: string; share: number; title?: string; outlaw?: { name: string; species: string; portrait: string } }> }
 const RPCS = ['https://rpc.mainnet.fastnear.com', 'https://free.rpc.fastnear.com'];
 
 /** Next Sunday 20:00 UTC (or the one just passed, within the last 6 hours). */
@@ -113,7 +113,7 @@ export default function DrawLive() {
       {dice && <p className="live-status">The dice has been cast: NEAR block <a href={`https://nearblocks.io/blocks/${dice.hash}`} target="_blank" rel="noopener noreferrer">#{dice.height.toLocaleString('en-US')}</a><br /><code>{dice.hash}</code></p>}
       {dice && !draw && <p className="live-status live-pulse">The guild is counting the holders who stayed…</p>}
       {draw && <ol className="live-winners">
-        {draw.winners.slice(0, shown).map((w, i) => <li key={w.account} className="is-in"><span>{i === 0 ? (kind === 'monthly' ? '👑' : '🍀') : '🦊'}</span>{w.account}{w.title ? <em>{w.title}</em> : null}</li>)}
+        {draw.winners.slice(0, shown).map((w, i) => <li key={w.account} className="is-in"><span>{i === 0 ? (kind === 'monthly' ? '👑' : '🍀') : '🦊'}</span>{w.outlaw && <img className="draw-outlaw" src={w.outlaw.portrait} alt="" width={56} height={84} />}{w.outlaw ? `${w.outlaw.name} the ${w.outlaw.species} · ${w.account}` : w.account}{w.title ? <em>{w.title}</em> : null}</li>)}
         {shown < draw.winners.length && <li className="is-spinning"><span>🎲</span>{spinner}</li>}
       </ol>}
     </>}

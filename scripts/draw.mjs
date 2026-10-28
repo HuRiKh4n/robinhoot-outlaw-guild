@@ -15,7 +15,10 @@
 //    $50 = 1, $200 = 2, $300 = 3, $400 = 4, $500 = 5, $1,000 = 6, $2,000 = 7, $3,000 = 8, $4,000 = 9, $5,000+ = 10.
 // 4. Winners: SHA-256(seed:kind:i) mod (tickets still in the pot) picks a ticket along the alphabetical list;
 //    its holder wins and leaves the pot with all their tickets.
-// 5. Linked wallets (sub-accounts of the same parent) are flagged for the founder's check before paying.
+// 5. Outlaw rank bonus: Guild members (one outlaw per wallet, registered before the draw) get extra tickets
+//    by how many days in a row they held at least this week's minimum, checked every day at 20:00 UTC:
+//    Trench Rat +1, Outlaw (14 days) +2, Captain (30 days) +3, Legend (90 days) +5. Same as lib/raid/ranks.ts.
+// 6. Linked wallets (sub-accounts of the same parent) are flagged for the founder's check before paying.
 import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 
@@ -36,6 +39,14 @@ const TIERS_USD = [50, 200, 300, 400, 500, 1000, 2000, 3000, 4000, 5000];
 /** Tickets for a lowest balance, with minRaw = the tokens worth $50 this week. */
 const ticketsFor = (lowest, minRaw) => TIERS_USD.filter(usd => lowest * 50n >= minRaw * BigInt(usd)).length;
 const sha = text => createHash("sha256").update(text).digest("hex");
+const RANKS = [
+  { name: "Legend", days: 90, bonus: 5 },
+  { name: "Captain", days: 30, bonus: 3 },
+  { name: "Outlaw", days: 14, bonus: 2 },
+  { name: "Trench Rat", days: 0, bonus: 1 },
+];
+const rankFor = days => RANKS.find(r => days >= r.days);
+const slug = text => String(text).toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 
 function drawTime() {
   const arg = process.argv[3];
@@ -152,7 +163,31 @@ async function main() {
       if (lowest === null || b < lowest) lowest = b;
       if (b < min) break;
     }
-    if (lowest !== null && lowest >= min) eligible.push({ account, tickets: ticketsFor(lowest, min) });
+    if (lowest !== null && lowest >= min) eligible.push({ account, base: ticketsFor(lowest, min) });
+  }
+
+  // Outlaw rank bonus for Guild members registered before the draw.
+  let registry = [];
+  try { registry = (await fetch(`${SITE}/api/outlaws`).then(r => r.json())).outlaws ?? []; } catch { console.log("Outlaw registry unavailable: no rank bonus this time"); }
+  const outlaws = new Map(registry.filter(o => Date.parse(o.since) < T).map(o => [o.account, o]));
+  const dayBlocks = new Map();
+  const dayBlock = async d => { if (!dayBlocks.has(d)) dayBlocks.set(d, await blockAtOrBefore(T - d * 864e5, head)); return dayBlocks.get(d); };
+  for (const e of eligible) {
+    const o = outlaws.get(e.account);
+    e.tickets = e.base;
+    if (!o) continue;
+    let days = 0;
+    for (let d = 1; d <= RANKS[0].days; d++) {
+      const b = await balance(rules.token, e.account, (await dayBlock(d)).height);
+      if (b < min) break;
+      days = d;
+    }
+    const rank = rankFor(days);
+    e.rank = rank.name; e.streakDays = days; e.bonus = rank.bonus; e.tickets = e.base + rank.bonus;
+    e.outlaw = {
+      name: o.name, species: o.species, class: o.class,
+      portrait: o.portrait ? `${SITE}/api/outlaws/portrait?account=${encodeURIComponent(o.account)}&v=${o.portrait}` : `${SITE}/characters/${slug(o.species)}/${slug(o.class)}/${slug(o.outfit)}.webp`,
+    };
   }
   eligible.sort((a, b) => (a.account < b.account ? -1 : a.account > b.account ? 1 : 0));
 
@@ -169,7 +204,7 @@ async function main() {
     let index = 0;
     while (ticket >= pool[index].tickets) { ticket -= pool[index].tickets; index++; }
     const [won] = pool.splice(index, 1);
-    winners.push({ account: won.account, tickets: won.tickets, share: Math.round(SHARES[i] * 100) / 100, title: i === 0 ? (kind === "monthly" ? "The Big Heist" : "The Lucky Outlaw") : undefined, check: `https://nearblocks.io/address/${won.account}` });
+    winners.push({ account: won.account, tickets: won.tickets, ...(won.outlaw ? { outlaw: won.outlaw, rank: won.rank } : {}), share: Math.round(SHARES[i] * 100) / 100, title: i === 0 ? (kind === "monthly" ? "The Big Heist" : "The Lucky Outlaw") : undefined, check: `https://nearblocks.io/address/${won.account}` });
   }
 
   const date = new Date(T).toISOString().slice(0, 10);
@@ -177,7 +212,7 @@ async function main() {
     kind, prize: kind === "monthly" ? "Grand Prize" : "Weekly prize", date, drawTime: new Date(T).toISOString(), holdHours: HOLD_HOURS, minTokens: rules.minTokens, symbol: rules.symbol,
     seedBlock: { height: seed.height, hash: seed.hash, time: new Date(seed.time).toISOString() },
     snapshotBlock: snapshot.height, checkpoints: checkpoints.map(c => c.height).sort((a, b) => a - b),
-    holdersChecked: candidates.length, totalTickets: eligible.reduce((s, e) => s + e.tickets, 0), eligible, linked, winners,
+    holdersChecked: candidates.length, guildMembers: eligible.filter(e => e.outlaw).length, totalTickets: eligible.reduce((s, e) => s + e.tickets, 0), eligible, linked, winners,
   };
   await mkdir("public/draws", { recursive: true });
   await writeFile(`public/draws/${kind}-${date}.json`, JSON.stringify(result, null, 2) + "\n");

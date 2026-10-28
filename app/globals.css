@@ -867,3 +867,6 @@ nav.site-header{background:#07070a}
 .rank-ladder strong{font-size:1rem}
 .rank-ladder span{color:#e6b45a;font-weight:700}
 .rank-ladder small{opacity:.75}
+.draw-outlaw{width:56px;height:auto;border-radius:6px;border:1px solid rgba(230,208,168,.35);margin-right:10px;vertical-align:middle;background:#151612}
+.draw-winners li.has-outlaw{align-items:center}
+.draw-winners li small{opacity:.7;margin-left:4px}
