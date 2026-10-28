@@ -34,6 +34,7 @@ export default function DrawsPage() {
         <li><b>The seed.</b> Look up the seed block on a NEAR explorer: its hash is the dice.</li>
         <li><b>Who could win.</b> Every holder whose balance never dropped below the minimum at the listed checkpoint blocks, every 6 hours over 72 hours (120 for the Grand Prize), plus 6 extra moments derived from the seed.</li>
         <li><b>Who won.</b> The eligible accounts in alphabetical order; winner number i is at position SHA-256(seed hash : kind : i) modulo the accounts still in the pot.</li>
+        <li><b>Why NEAR.</b> Blocks, balances and wallets all come from the NEAR chain. <Link href="/near">Built on NEAR →</Link></li>
         <li><b>Run it yourself.</b> The draw program is public: <code>node scripts/draw.mjs weekly YYYY-MM-DD</code> gives the same winners.</li>
       </ol>
     </section>

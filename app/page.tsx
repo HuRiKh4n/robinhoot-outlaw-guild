@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import SiteHeader from "@/components/SiteHeader";
 import HideoutScene from "@/components/hideout/HideoutScene";
 import TitleScreen from "@/components/hideout/TitleScreen";
@@ -31,6 +32,7 @@ export default function Home() {
         <b>🦊 ROBINHOOT</b>
         <p>A TALE FROM THE KINGDOM OF NEAR · $RHOOT</p>
         <p>A meme, a story and a guild. No treasure is promised, only the adventure.</p>
+        <p><Link className="profile-inline-link" href="/near">BUILT ON NEAR · NEAR AI →</Link></p>
       </footer>
     </main>
   );
