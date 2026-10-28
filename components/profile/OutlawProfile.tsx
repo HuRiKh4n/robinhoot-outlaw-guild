@@ -8,7 +8,7 @@ import CharacterPreview from '@/components/character/CharacterPreview';
 import { resolveAppearance } from '@/lib/character/appearance';
 import { useWalletState } from '@/hooks/useWalletState';
 import ChoiceDeck from '@/components/character/ChoiceDeck';
-import { classDraft, defaultDraft, draftKey, parseDraft, type OutlawDraft } from '@/lib/profile/draft';
+import { classDraft, defaultDraft, draftKey, parseDraft, speciesDraft, type OutlawDraft } from '@/lib/profile/draft';
 import { detailLabel } from '@/lib/character/details';
 import JoinGuild from './JoinGuild';
 
@@ -41,7 +41,7 @@ function DraftEditor({ accountId, dedicated }: { accountId?: string; dedicated: 
 
   function update<K extends keyof OutlawDraft>(field: K, value: OutlawDraft[K]) {
     if (!loaded) return;
-    const next = field === 'class' ? classDraft(draft, value as OutlawDraft['class']) : { ...draft, [field]: value };
+    const next = field === 'class' ? classDraft(draft, value as OutlawDraft['class']) : field === 'species' ? speciesDraft(draft, value as OutlawDraft['species']) : { ...draft, [field]: value };
     setDraft(next);
     setHasDraft(true);
     persist(next, false);

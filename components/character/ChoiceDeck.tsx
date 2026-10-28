@@ -1,7 +1,7 @@
 'use client';
 
 import { useId, useRef, useState } from 'react';
-import { classDraft, classes, offeredSpecies, outfitsFor, type OutlawDraft } from '@/lib/profile/draft';
+import { classDraft, classes, offeredSpecies, outfitsFor, speciesDraft, type OutlawDraft } from '@/lib/profile/draft';
 import { DETAILS, MAX_DETAILS, detailLabel } from '@/lib/character/details';
 import { resolveAppearance } from '@/lib/character/appearance';
 import { useSound } from '@/components/sound/SoundProvider';
@@ -48,8 +48,8 @@ export default function ChoiceDeck({ draft, disabled, onChange }: {
         <p className="choice-help">Pick up to three marks. The guild painter adds them to your portrait when you join the Guild.</p>
       </fieldset>}
       {active === index && group.field !== 'details' && <fieldset className="choice-panel"><legend>{`YOUR ${group.label.toUpperCase()}`}</legend>
-        <div className="choice-grid">{(group.field === 'outfit' ? outfitsFor(draft.class) : group.field === 'species' && !group.choices.includes(draft.species as never) ? [...group.choices, draft.species] : group.choices).map(value => {
-          const next = group.field === 'class' ? classDraft(draft, value as OutlawDraft['class']) : { ...draft, [group.field]: value } as OutlawDraft;
+        <div className="choice-grid">{(group.field === 'outfit' ? outfitsFor(draft.class, draft.species) : group.field === 'species' && !group.choices.includes(draft.species as never) ? [...group.choices, draft.species] : group.choices).map(value => {
+          const next = group.field === 'class' ? classDraft(draft, value as OutlawDraft['class']) : group.field === 'species' ? speciesDraft(draft, value as OutlawDraft['species']) : { ...draft, [group.field]: value } as OutlawDraft;
           const art = resolveAppearance(next);
           const metadata = false;
           const exact = art.kind === 'cinematic';
