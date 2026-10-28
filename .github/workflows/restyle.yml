@@ -1,0 +1,42 @@
+name: Restyle portrait backgrounds
+
+# One-off art job: asks the site to repaint the backgrounds of the mismatched portraits,
+# then commits the results to the branch art/restyled for review (originals untouched).
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  restyle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Repaint
+        run: |
+          pip install --quiet pillow
+          mkdir -p restyled
+          for f in $(curl -sf "https://www.robinhoot.fun/api/portrait/restyle?list=1" | python3 -c "import json,sys;print('\n'.join(json.load(sys.stdin)))"); do
+            out="restyled/$(echo $f | tr / _)"
+            for try in 1 2 3; do
+              code=$(curl -s -o "$out.raw" -w "%{http_code}" --max-time 90 "https://www.robinhoot.fun/api/portrait/restyle?file=$f")
+              if [ "$code" = "200" ]; then break; fi
+              echo "$f try $try -> $code $(head -c 300 "$out.raw")"; sleep 10
+            done
+            if [ "$code" = "200" ]; then
+              python3 -c "from PIL import Image;im=Image.open('$out.raw').convert('RGB');im.resize((1024,1536),Image.LANCZOS).save('$out.png')"
+              echo "ok $f"
+            fi
+            rm -f "$out.raw"
+          done
+          ls restyled | wc -l
+      - name: Commit to art/restyled
+        run: |
+          git config user.name "RobinHoot art"
+          git config user.email "evilhuri@gmail.com"
+          git checkout -B art/restyled
+          git add restyled
+          git commit -m "Restyled portrait backgrounds for review" || exit 0
+          git push -f origin art/restyled
