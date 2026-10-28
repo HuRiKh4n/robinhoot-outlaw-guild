@@ -24,7 +24,7 @@ const pow10 = (n: number) => BigInt(10) ** BigInt(n);
 export async function raidRules(now = Date.now(), holdHours = 72): Promise<RaidRules> {
   const config = raidConfig();
   const base = { minUsd: config.minUsd, holdHours, weekStartsAt: weekStart(now) };
-  if (!config.token) return { ...base, open: false, reason: "The raid opens after $RHOOT launches." };
+  if (!config.token) return { ...base, open: false, reason: "The raid opens after the coin launches." };
   const archive = new NearArchive(config.rpc);
   const meta = await archive.metadata(config.token);
   let wholeTokens: bigint;
@@ -34,7 +34,7 @@ export async function raidRules(now = Date.now(), holdHours = 72): Promise<RaidR
     priceSource = "set by the guild";
   } else {
     const price = await weeklyPrice(config.token, base.weekStartsAt);
-    if (!price) return { ...base, open: false, token: config.token, reason: "No market price yet for $RHOOT." };
+    if (!price) return { ...base, open: false, token: config.token, reason: "No market price yet for the coin." };
     priceUsd = price.usd;
     priceSource = price.source;
     // Round up to a tidy number so the threshold reads well: 2 significant digits.

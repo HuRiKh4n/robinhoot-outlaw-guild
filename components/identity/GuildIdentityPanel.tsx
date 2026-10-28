@@ -243,7 +243,7 @@ function IdentityEditor({ active }: { active: RefObject<string | undefined> }) {
           </div>
           <div style={{ display: "grid", gap: 6, borderTop: "1px solid rgba(230,208,168,.25)", paddingTop: 16 }}>
             <p className="eyebrow" style={{ margin: 0 }}>REPUTATION · COMING SOON</p>
-            <p style={{ margin: 0 }}>Guild Reputation Points (RP) are not yet earnable. No points or $RHOOT rewards are active.</p>
+            <p style={{ margin: 0 }}>Guild Reputation Points (RP) are not yet earnable. No points or coin rewards are active.</p>
             <Link className="profile-inline-link" href="/bounties">EXPLORE THE BOUNTY BOARD →</Link>
           </div>
           {!candidate ? (

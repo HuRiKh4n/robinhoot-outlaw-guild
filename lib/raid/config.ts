@@ -1,6 +1,6 @@
 import "server-only";
 
-/** Weekly Raid settings. Everything is optional until $RHOOT launches. */
+/** Weekly Raid settings. Everything is optional until the coin launches. */
 export function raidConfig() {
   const token = process.env.RHOOT_TOKEN_CONTRACT?.trim() || null;
   const minUsd = Number(process.env.RAID_MIN_USD ?? 50);

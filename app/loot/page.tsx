@@ -3,8 +3,9 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import { lootWallets, walletAddress } from '@/lib/loot';
+import { TALE_LINE, coin } from '@/lib/token';
 
-export const metadata: Metadata = { title: 'The Loot | RobinHoot', description: 'Where the gold goes: 1 billion $RHOOT, a fair launch, a 2% Sheriff’s tax paid in NEAR, 80% of it to the guild. Every wallet public.' };
+export const metadata: Metadata = { title: 'The Loot | RobinHoot', description: `Where the gold goes: 1 billion ${coin('coins')}, a fair launch, a 2% Sheriff’s tax paid in NEAR, 80% of it to the guild. Every wallet public.` };
 export const revalidate = 3600;
 
 const Split = ({ parts }: { parts: { pct: number; label: string; note: string; tone: string }[] }) =>
@@ -20,13 +21,13 @@ export default function LootPage() {
       <p className="raid-kicker">Every coin accounted for</p>
       <h1>The Loot</h1>
       <div className="ts-rule" aria-hidden="true"><i /></div>
-      <p className="raid-lead">The Sheriff hides his books. The guild nails its own to the tavern door. Here is where every coin of $RHOOT comes from and where it goes.</p>
+      <p className="raid-lead">The Sheriff hides his books. The guild nails its own to the tavern door. Here is where every coin of {coin('the guild')} comes from and where it goes.</p>
     </section>
 
     <section className="loot-section" aria-labelledby="coin-title">
       <h2 id="coin-title">The coin</h2>
       <div className="raid-terms">
-        <div><span>Supply</span><strong>1,000,000,000</strong><small>$RHOOT, and never a coin more</small></div>
+        <div><span>Supply</span><strong>1,000,000,000</strong><small>{coin('Coins')}, and never a coin more</small></div>
         <div><span>Launch</span><strong>Fair, on JustHoot</strong><small>everyone buys on the same curve</small></div>
         <div><span>Presale</span><strong>None</strong><small>no private round, no free team tokens</small></div>
       </div>
@@ -119,8 +120,8 @@ export default function LootPage() {
       })}</div>
     </section>
 
-    <p className="loot-fine">$RHOOT is a meme, a story and a guild. It is not an investment and carries no promise of profit. Prizes depend on trading volume and can be small. Never share your seed phrase.</p>
+    <p className="loot-fine">{coin('RobinHoot')} is a meme, a story and a guild. It is not an investment and carries no promise of profit. Prizes depend on trading volume and can be small. Never share your seed phrase.</p>
 
-    <footer><b>🦊 ROBINHOOT</b><p>A TALE FROM THE KINGDOM OF NEAR · $RHOOT</p><p>No promises of profit, only a fair split.</p></footer>
+    <footer><b>🦊 ROBINHOOT</b><p>{TALE_LINE}</p><p>No promises of profit, only a fair split.</p></footer>
   </main>;
 }

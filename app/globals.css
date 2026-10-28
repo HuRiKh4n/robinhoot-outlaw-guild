@@ -896,3 +896,5 @@ nav.site-header{background:#07070a}
 .council-form input,.council-form textarea,.council-card input{width:100%;background:#0b0d0a;color:inherit;border:1px solid rgba(230,208,168,.3);border-radius:8px;padding:10px;font:inherit}
 .council-log{padding:0;list-style:none;display:grid;gap:8px}
 .council-log time{opacity:.6;font-size:.85rem;margin-right:6px}
+/* After launch the menu has six links: let them wrap on two rows on small screens */
+@media(max-width:1050px){nav.site-header.is-live .nav-links{flex-wrap:wrap;justify-content:center;column-gap:14px;row-gap:0}}

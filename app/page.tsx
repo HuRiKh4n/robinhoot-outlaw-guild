@@ -4,6 +4,7 @@ import HideoutScene from "@/components/hideout/HideoutScene";
 import TitleScreen from "@/components/hideout/TitleScreen";
 import StoryDialogs from "@/components/hideout/StoryDialogs";
 import SfxLink from "@/components/sound/SfxLink";
+import { TALE_LINE } from '@/lib/token';
 
 export default function Home() {
   return (
@@ -30,7 +31,7 @@ export default function Home() {
 
       <footer>
         <b>🦊 ROBINHOOT</b>
-        <p>A TALE FROM THE KINGDOM OF NEAR · $RHOOT</p>
+        <p>{TALE_LINE}</p>
         <p>A meme, a story and a guild. No treasure is promised, only the adventure.</p>
         <p><Link className="profile-inline-link" href="/near">BUILT ON NEAR · NEAR AI →</Link></p>
       </footer>
