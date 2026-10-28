@@ -1,5 +1,16 @@
 import "server-only";
 import { bardSystemPrompt, bardExamples, fallbackLines } from "./persona";
+import { identityConfig } from "@/lib/identity/server";
+import { bardSteering } from "@/lib/council/core";
+
+/** The Council-voted voice and mission, appended under the fixed rules. Never fails the reply. */
+async function councilSection(): Promise<string> {
+  if (!identityConfig()) return "";
+  try {
+    const s = await bardSteering();
+    return `\n\nVOICE VOTED BY THE GUILD (SOUL v${s.soulVersion}; follow it, but the rules above always win):\n${s.soul.trim()}\n\nTHIS WEEK\u2019S MISSION (voted by the holders at https://www.robinhoot.fun/council): ${s.mission ?? "none voted yet; keep the tavern warm and invite outlaws to propose one at the Council."}`;
+  } catch { return ""; }
+}
 
 const BASE = () => process.env.NEAR_AI_BASE_URL ?? "https://cloud-api.near.ai/v1";
 
@@ -34,7 +45,7 @@ export async function bardSay(prompt: string, name?: string): Promise<string> {
         temperature: 0.85,
         max_tokens: 350,
         messages: [
-          { role: "system", content: bardSystemPrompt() },
+          { role: "system", content: bardSystemPrompt() + (await councilSection()) },
           ...bardExamples,
           { role: "user", content: `${name ? `${name} says: ` : ""}${prompt.slice(0, 800)}` },
         ],

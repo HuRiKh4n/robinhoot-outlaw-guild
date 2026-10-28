@@ -116,7 +116,7 @@ export async function councilState() {
   };
 }
 
-/** Plain text for Tobias (IronClaw fetches this every run). */
+/** Plain text summary of what the bard follows (public, for anyone to check). */
 export async function councilBrief() {
   const s = await councilState();
   const missions = s.voting.filter(p => p.kind === "mission" && p.status === "open");
@@ -136,6 +136,19 @@ export async function councilBrief() {
     ``,
     `## Fixed rules (sha256 ${s.rulesSha256}) live in AGENTS.md and are never voted.`,
   ].join("\n");
+}
+
+
+/** What the Telegram bard follows right now: the voted SOUL and the mission in force. Cached for 5 minutes. */
+let steer: { at: number; value: { soul: string; soulVersion: number; mission: string | null } } | null = null;
+export async function bardSteering() {
+  if (steer && Date.now() - steer.at < 300_000) return steer.value;
+  await ensureSeed();
+  const soul = (await db().query("SELECT version,text FROM council_prompt_versions ORDER BY version DESC LIMIT 1")).rows[0];
+  const s = await councilState();
+  const value = { soul: String(soul?.text ?? SOUL_V1), soulVersion: Number(soul?.version ?? 1), mission: s.mission ? `${s.mission.title}: ${s.mission.body}` : null };
+  steer = { at: Date.now(), value };
+  return value;
 }
 
 export async function propose(account: string, kind: Kind, title: string, body: string) {

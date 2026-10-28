@@ -5,7 +5,7 @@ import CouncilBoard from '@/components/council/CouncilBoard';
 
 export const metadata: Metadata = {
   title: 'The Guild Council | RobinHoot',
-  description: 'Holders steer Tobias, the Guild’s autonomous IronClaw agent on NEAR AI: vote his weekly mission and changes to his SOUL.',
+  description: 'Holders steer Tobias, the Guild’s AI bard on NEAR AI Cloud: vote his weekly mission and changes to his SOUL.',
 };
 
 export default function CouncilPage() {
@@ -15,7 +15,7 @@ export default function CouncilPage() {
       <p className="raid-kicker">The holders hold the reins</p>
       <h1>The Guild Council</h1>
       <div className="ts-rule" aria-hidden="true"><i /></div>
-      <p className="raid-lead">Tobias, the Guild&rsquo;s bard, runs on his own as an IronClaw agent on NEAR AI Cloud, inside secure hardware. Nobody drives him by hand: every week the Guild votes his mission, and Captains and Legends can put changes to his SOUL to a vote. His fixed rules keep him safe: no money, no price talk, no promises.</p>
+      <p className="raid-lead">Tobias, the Guild&rsquo;s raccoon bard, answers the outlaws on Telegram and thinks on NEAR AI Cloud, inside secure hardware. The Guild steers him: every week the holders vote his mission, and Captains and Legends can put changes to his SOUL, his voice, to a vote. His fixed rules keep him safe: no money, no price talk, no promises.</p>
     </section>
     <CouncilBoard />
     <footer><b>🦊 ROBINHOOT</b><p>A TALE FROM THE KINGDOM OF NEAR</p><p><Link className="profile-inline-link" href="/near">HOW IT WORKS →</Link></p></footer>
