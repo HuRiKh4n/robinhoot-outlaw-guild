@@ -6,8 +6,8 @@ import { resolveAppearance } from '@/lib/character/appearance';
 import { drawPassport } from './CharacterCard';
 import DownloadPngButton from './DownloadPngButton';
 
-export default function CharacterDownload({ draft }: { draft: OutlawDraft }) {
-  const fingerprint = JSON.stringify(draft);
+export default function CharacterDownload({ draft, source: painted }: { draft: OutlawDraft; source?: string }) {
+  const fingerprint = JSON.stringify([draft, painted]);
   const [asset, setAsset] = useState<{ fingerprint: string; url: string }>();
   const [failed, setFailed] = useState(false);
   useEffect(() => {
@@ -31,7 +31,7 @@ export default function CharacterDownload({ draft }: { draft: OutlawDraft }) {
     }
     image.onload = () => render(image);
     image.onerror = () => { if (active) setFailed(true); };
-    const source = resolveAppearance(draft).src;
+    const source = painted ?? resolveAppearance(draft).src;
     if (source) image.src = source; else render();
     return () => { active = false; image.onload = null; image.onerror = null; if (url) URL.revokeObjectURL(url); };
   }, [fingerprint]);

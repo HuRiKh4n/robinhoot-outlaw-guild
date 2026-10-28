@@ -1,4 +1,5 @@
 import catalogue from '../character/portraits.json';
+import { cleanDetails, type DetailId } from '../character/details';
 
 export const species = ['Raccoon', 'Wolf', 'Rabbit', 'Fox', 'Badger', 'Owl', 'Bear'] as const;
 /** Species shown in the creator: only those with at least one ready portrait.
@@ -17,9 +18,11 @@ export interface OutlawDraft {
   class: typeof classes[number];
   outfit: string;
   personality: typeof personalities[number];
+  /** Personal marks painted on the portrait (max 3). */
+  details: DetailId[];
 }
 export const defaultDraft: OutlawDraft = {
-  name: 'The Broke Bandit', species: 'Wolf', class: 'Ranger', outfit: 'Patched Cloak', personality: 'Cunning',
+  name: 'The Broke Bandit', species: 'Wolf', class: 'Ranger', outfit: 'Patched Cloak', personality: 'Cunning', details: [],
 };
 
 /** Registry entries define class outfit choices even while their artwork is missing. */
@@ -33,10 +36,10 @@ export function classDraft(draft: OutlawDraft, characterClass: OutlawDraft['clas
 
 /** Local data is untrusted. Accept only the creator's fields and allowed values. */
 export function parseDraft(raw: string | null): OutlawDraft {
-  if (!raw) return { ...defaultDraft };
+  if (!raw) return { ...defaultDraft, details: [] };
   try {
     const data: unknown = JSON.parse(raw);
-    if (!data || typeof data !== 'object' || Array.isArray(data)) return { ...defaultDraft };
+    if (!data || typeof data !== 'object' || Array.isArray(data)) return { ...defaultDraft, details: [] };
     const value = data as Record<string, unknown>;
     function choice<T extends string>(options: readonly T[], input: unknown, fallback: T): T {
       return typeof input === 'string' && options.includes(input as T) ? input as T : fallback;
@@ -52,8 +55,9 @@ export function parseDraft(raw: string | null): OutlawDraft {
       class: characterClass,
       outfit: choice(outfitsFor(characterClass), normalized, outfitsFor(characterClass)[0]),
       personality: choice(personalities, value.personality ?? value.trait, defaultDraft.personality),
+      details: cleanDetails(value.details),
     };
-  } catch { return { ...defaultDraft }; }
+  } catch { return { ...defaultDraft, details: [] }; }
 }
 
 export function draftKey(accountId?: string) {

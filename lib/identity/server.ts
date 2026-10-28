@@ -4,10 +4,11 @@ import { mainnetKeyAuthorizer } from "./rpc";
 import { GuildIdentity, IdentityError, type Database, type Sql } from "./core";
 
 export function identityConfig() {
-  if (process.env.GUILD_IDENTITY_ENABLED !== "true") return null;
-  const origin = process.env.GUILD_AUTH_ORIGIN,
-    database = process.env.DATABASE_URL,
-    rpc = process.env.NEAR_MAINNET_RPC_URL;
+  // On as soon as a database is connected (Vercel > Storage), unless explicitly switched off.
+  if (process.env.GUILD_IDENTITY_ENABLED === "false") return null;
+  const origin = process.env.GUILD_AUTH_ORIGIN ?? "https://www.robinhoot.fun",
+    database = process.env.DATABASE_URL ?? process.env.POSTGRES_URL,
+    rpc = process.env.NEAR_MAINNET_RPC_URL ?? "https://rpc.mainnet.fastnear.com";
   if (!origin || !database || !rpc) return null;
   try {
     const site = new URL(origin),
@@ -40,7 +41,7 @@ export function identityService() {
   if (service) return service;
   // Do not let URI options silently replace certificate verification.
   const url = new URL(config.database);
-  for (const key of ["sslmode", "sslcert", "sslkey", "sslrootcert", "ssl"])
+  for (const key of ["sslmode", "sslcert", "sslkey", "sslrootcert", "ssl", "channel_binding"])
     url.searchParams.delete(key);
   const pool = new Pool({
     connectionString: url.toString(),

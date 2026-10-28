@@ -45,11 +45,16 @@ export function characterDraft(value: unknown): OutlawDraft {
     throw new IdentityError(400, "Invalid character.");
   const source = value as Record<string, unknown>,
     parsed = parseDraft(JSON.stringify(value));
+  const keys = Object.keys(source).sort().join();
   if (
-    Object.keys(source).sort().join() !==
-      "class,name,outfit,personality,species" ||
+    (keys !== "class,name,outfit,personality,species" &&
+      keys !== "class,details,name,outfit,personality,species") ||
     !parsed.name.trim() ||
-    Object.entries(parsed).some(([key, v]) => source[key] !== v)
+    Object.entries(parsed).some(([key, v]) =>
+      key === "details"
+        ? JSON.stringify(source.details ?? []) !== JSON.stringify(v)
+        : source[key] !== v,
+    )
   )
     throw new IdentityError(400, "Invalid character.");
   return parsed;
@@ -335,6 +340,72 @@ export class GuildIdentity {
       [session.linked_account],
     );
     return { submissions: result.rows };
+  }
+  /** Checks the session and the painting allowance before an AI portrait is painted. */
+  async portraitJob(sessionToken: string, expectedAccount: string) {
+    const session = await this.session(sessionToken, expectedAccount);
+    const result = await this.db.query(
+      "SELECT draft FROM outlaw_characters WHERE owner_account=$1",
+      [session.linked_account],
+    );
+    if (!result.rows[0])
+      throw new IdentityError(409, "Save your outlaw to the Guild first.");
+    const draft = parseDraft(JSON.stringify(result.rows[0].draft));
+    if (!draft.details.length)
+      throw new IdentityError(400, "Pick at least one mark for the painter.");
+    const draftHash = hash(JSON.stringify(draft));
+    const current = await this.db.query(
+      "SELECT draft_hash, CASE WHEN painted_on=current_date THEN paints_today ELSE 0 END AS today FROM outlaw_portraits WHERE owner_account=$1",
+      [session.linked_account],
+    );
+    if (Number(current.rows[0]?.today ?? 0) >= 3)
+      throw new IdentityError(429, "The painter needs rest: three portraits a day. Come back tomorrow.");
+    const global = await this.db.query(
+      `INSERT INTO identity_rate_limits(bucket,hits,expires_at) VALUES($1,1,now()+interval '1 day') ON CONFLICT(bucket) DO UPDATE SET hits=CASE WHEN identity_rate_limits.expires_at<=now() THEN 1 ELSE identity_rate_limits.hits+1 END, expires_at=CASE WHEN identity_rate_limits.expires_at<=now() THEN now()+interval '1 day' ELSE identity_rate_limits.expires_at END RETURNING hits`,
+      [hash("paint:global")],
+    );
+    if (Number(global.rows[0].hits) > 400)
+      throw new IdentityError(429, "The painter is busy today. Try again tomorrow.");
+    return { linked: session.linked_account, accountId: session.account_id, draft, draftHash };
+  }
+  async savePortrait(linked: string, image: Uint8Array, contentType: string, draftHash: string) {
+    await this.db.query(
+      `INSERT INTO outlaw_portraits(owner_account,image,content_type,draft_hash) VALUES($1,$2,$3,$4)
+       ON CONFLICT(owner_account) DO UPDATE SET image=EXCLUDED.image, content_type=EXCLUDED.content_type, draft_hash=EXCLUDED.draft_hash,
+         paints_today=CASE WHEN outlaw_portraits.painted_on=current_date THEN outlaw_portraits.paints_today+1 ELSE 1 END,
+         painted_on=current_date, updated_at=now()`,
+      [linked, Buffer.from(image), contentType, draftHash],
+    );
+  }
+  /** Public: every registered outlaw (used by the draws and the site). */
+  async registry() {
+    const result = await this.db.query(
+      `SELECT a.account_id, c.draft, c.created_at, p.updated_at AS portrait_at
+       FROM outlaw_characters c JOIN near_accounts a ON a.id=c.owner_account
+       LEFT JOIN outlaw_portraits p ON p.owner_account=c.owner_account
+       WHERE a.network='mainnet' ORDER BY a.account_id`,
+    );
+    return result.rows.map((row) => {
+      const draft = parseDraft(JSON.stringify(row.draft));
+      return {
+        account: String(row.account_id),
+        name: draft.name.trim(),
+        species: draft.species,
+        class: draft.class,
+        outfit: draft.outfit,
+        details: draft.details,
+        since: new Date(row.created_at as string).toISOString(),
+        portrait: row.portrait_at ? new Date(row.portrait_at as string).getTime() : null,
+      };
+    });
+  }
+  async portraitOf(account: string) {
+    const result = await this.db.query(
+      `SELECT p.image, p.content_type FROM outlaw_portraits p JOIN near_accounts a ON a.id=p.owner_account WHERE a.account_id=$1 AND a.network='mainnet'`,
+      [accountId(account)],
+    );
+    const row = result.rows[0];
+    return row ? { image: row.image as Buffer, contentType: String(row.content_type) } : null;
   }
   async save(
     sessionToken: string,
