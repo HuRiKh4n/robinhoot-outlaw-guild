@@ -13,6 +13,8 @@ const DEMOS: Record<string, string> = {
   "3": "species=fox&class=ranger&outfit=leather-vest&mode=new&details=an eyepatch and a golden tooth",
   "4": "species=fox&class=ranger&outfit=leather-vest&full=Turn this fox into a big brown bear, an anthropomorphic bear outlaw with a round bear head, small round ears, thick brown fur and a short tail. Keep exactly the same outfit, same weapons, same pose, same painterly cinematic fantasy style, same dark grey smoky studio background and lighting, full body, centred. No text, no logos, no frame.",
   "5": "species=fox&class=warrior&outfit=battle-armor&full=Turn this fox into a big brown bear, an anthropomorphic bear warrior with a round bear head, small round ears, thick brown fur and a short tail. Keep exactly the same armour, same weapons, same pose, same painterly cinematic fantasy style, same dark grey smoky studio background and lighting, full body, centred. No text, no logos, no frame.",
+  "7": "species=wolf&class=ranger&outfit=leather-vest&full=Turn this wolf into a huge grizzly bear outlaw: broad heavy bear head, small round ears, short muzzle, dark brown fur with grey streaks, a fierce cunning scowl, narrowed amber eyes, battle scars on the snout, bared teeth in a smirk, menacing and rough, NOT cute, NOT a teddy bear. Bears have no visible tail: remove the long bushy tail completely. Keep exactly the same outfit, same weapons, same pose, same painterly cinematic fantasy style with the same level of detail on the face as the original, same dark grey smoky studio background and lighting, full body, centred. No text, no logos, no frame.",
+  "8": "species=wolf&class=warrior&outfit=battle-armor&full=Turn this wolf into a huge grizzly bear outlaw: broad heavy bear head, small round ears, short muzzle, dark brown fur with grey streaks, a fierce cunning scowl, narrowed amber eyes, battle scars on the snout, bared teeth in a smirk, menacing and rough, NOT cute, NOT a teddy bear. Bears have no visible tail: remove the long bushy tail completely. Keep exactly the same outfit, same weapons, same pose, same painterly cinematic fantasy style with the same level of detail on the face as the original, same dark grey smoky studio background and lighting, full body, centred. No text, no logos, no frame.",
   "6": "species=badger&class=mage&outfit=arcane-robes&full=Keep exactly the same honey badger mage: same face, same robes, same staff, same pose, same painterly style. Replace only the background and lighting with a plain dark grey smoky studio background and soft neutral studio light, like a character sheet. Full body, centred. No text, no logos, no frame.",
 };
 
@@ -24,12 +26,13 @@ export async function GET(request: NextRequest) {
   let q = request.nextUrl.searchParams;
   const demo = DEMOS[q.get("demo") ?? ""];
   if (demo) q = new URLSearchParams(demo);
+  else if (q.get("models")) { /* public model list, no cost */ }
   else if (!process.env.TELEGRAM_WEBHOOK_SECRET || q.get("secret") !== process.env.TELEGRAM_WEBHOOK_SECRET)
     return NextResponse.json({ ok: false, hint: "try ?demo=1, 2 or 3" }, { status: 401 });
   const key = process.env.NEAR_AI_API_KEY;
   if (!key) return NextResponse.json({ ok: false, error: "NEAR_AI_API_KEY missing" }, { status: 500 });
 
-  if (q.get("list")) {
+  if (q.get("list") || request.nextUrl.searchParams.get("models")) {
     const data = await fetch(`${BASE()}/model/list?limit=300`, { cache: "no-store" }).then(r => r.json()).catch(e => ({ error: String(e) }));
     const models = (data?.models ?? data?.data ?? []) as Record<string, unknown>[];
     const pick = models.filter(m => /flux|image|diffusion|sdxl|qwen-image|imagen|seedream/i.test(JSON.stringify(m)));
