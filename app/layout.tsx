@@ -5,7 +5,7 @@ import SessionBoundary from '@/components/identity/SessionBoundary';
 import { WalletProvider } from '@/hooks/useWalletState';
 import SoundProvider from '@/components/sound/SoundProvider';
 const description = 'A tale from the kingdom of NEAR. The whales have the gold; the outlaws take it back to the trenches. Make your outlaw and print your WANTED poster.';
-const shareImage = { url: '/og/robinhoot-og.jpg', width: 1200, height: 630, alt: 'RobinHoot, the outlaw of NEAR: a fox outlaw carrying a sack of gold out of the dark forest.' };
+const shareImage = { url: '/og/robinhoot-share.jpg', width: 1200, height: 630, alt: 'RobinHoot, the outlaw of NEAR: a fox outlaw carrying a sack of gold out of the dark forest.' };
 export const metadata: Metadata = {
   metadataBase: new URL('https://www.robinhoot.fun'),
   title: 'RobinHoot | The Outlaw of NEAR',
