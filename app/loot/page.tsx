@@ -4,6 +4,7 @@ import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import { lootWallets, walletAddress } from '@/lib/loot';
 import { TALE_LINE, coin } from '@/lib/token';
+import GrandCountdown from '@/components/draws/GrandCountdown';
 
 export const metadata: Metadata = { title: 'The Loot | RobinHoot', description: `Where the gold goes: 1 billion ${coin('coins')}, a fair launch, a 2% Sheriff’s tax paid in NEAR, 80% of it to the guild. Every wallet public.` };
 export const revalidate = 3600;
@@ -23,6 +24,8 @@ export default function LootPage() {
       <div className="ts-rule" aria-hidden="true"><i /></div>
       <p className="raid-lead">The Sheriff hides his books. The guild nails its own to the tavern door. Here is where every coin of {coin('the guild')} comes from and where it goes.</p>
     </section>
+
+    <GrandCountdown link />
 
     <section className="loot-section" aria-labelledby="coin-title">
       <h2 id="coin-title">The coin</h2>

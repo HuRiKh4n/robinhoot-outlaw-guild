@@ -136,7 +136,7 @@ async function main() {
   else {
     if (!rules.cycleStart) throw new Error("DRAW_CYCLE_START is not set on the site");
     const weeks = Math.round((T - Date.parse(`${rules.cycleStart}T20:00:00Z`)) / (7 * 864e5));
-    if (weeks < 0) throw new Error("The draw cycle has not started yet");
+    if (weeks < 0) { console.log(`The draw cycle starts on ${rules.cycleStart}: nothing to draw yet.`); return; }
     setKind(weeks % 4 === 3 ? "monthly" : "weekly");
   }
   const head = await block();
