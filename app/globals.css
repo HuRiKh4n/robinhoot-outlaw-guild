@@ -898,3 +898,19 @@ nav.site-header{background:#07070a}
 .council-log time{opacity:.6;font-size:.85rem;margin-right:6px}
 /* After launch the menu has six links: let them wrap on two rows on small screens */
 @media(max-width:1050px){nav.site-header.is-live .nav-links{flex-wrap:wrap;justify-content:center;column-gap:14px;row-gap:0}}
+/* The Grand Prize countdown */
+.grand-countdown{max-width:860px;margin:28px auto;padding:40px 20px 34px;text-align:center;display:grid;gap:14px;justify-items:center;border:1px solid #c9a46455;background:radial-gradient(ellipse at 50% 0%,#c9a46426,transparent 70%),#0b0a0dcc;box-shadow:0 0 60px #c9a4641a inset}
+.grand-countdown h2{margin:0;font:600 clamp(38px,7vw,64px)/1 'Cormorant Garamond',Georgia,serif;letter-spacing:.06em;color:var(--ink);text-shadow:0 0 30px #c9a46455}
+.grand-countdown .eyebrow{margin:0;color:var(--gold)}
+.grand-clock{display:flex;gap:12px;justify-content:center}
+.grand-clock div{min-width:96px;border:1px solid #c9a46499;background:#0d0c10;padding:16px 8px;display:grid;gap:6px;box-shadow:0 0 24px #c9a46422}
+.grand-clock strong{font:600 64px/1 'Cormorant Garamond',Georgia,serif;color:var(--gold)}
+.grand-clock span{font:600 11px Oswald,sans-serif;letter-spacing:.26em;text-transform:uppercase;color:#a99c84}
+.grand-when{margin:0;color:#a99c84;font-size:14px}
+.grand-road{list-style:none;margin:6px 0 0;padding:0;display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:100%;max-width:620px}
+.grand-road li{border:1px solid #c9a46433;padding:10px 4px;display:grid;gap:3px;color:#a99c84}
+.grand-road li b{font-size:18px}.grand-road li span{font:600 15px Oswald,sans-serif;letter-spacing:.08em;color:var(--ink)}.grand-road li small{font-size:11px;letter-spacing:.06em}
+.grand-road li.is-next{border-color:var(--gold);box-shadow:0 0 18px #c9a46433}
+.grand-road li.is-grand{border-color:#c9a46499;background:#c9a46414}.grand-road li.is-grand span{color:var(--gold)}
+.grand-road li.is-done{opacity:.5}
+@media(max-width:700px){.grand-clock{gap:6px}.grand-clock div{min-width:64px;padding:12px 4px}.grand-clock strong{font-size:40px}.grand-road{grid-template-columns:repeat(2,1fr)}}

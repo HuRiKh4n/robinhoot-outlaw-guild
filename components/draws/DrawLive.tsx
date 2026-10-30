@@ -63,7 +63,10 @@ export default function DrawLive() {
   const [spinner, setSpinner] = useState('');
   const fetching = useRef(false);
 
-  const target = nextSunday(now);
+  // Before the first draw Sunday, count down to it (not to the Sundays before it).
+  const firstDraw = cycleStart ? Date.parse(`${cycleStart}T20:00:00Z`) : 0;
+  const target = Math.max(nextSunday(now), firstDraw);
+  const isFirst = Boolean(cycleStart) && target === firstDraw;
   const kind = kindOf(target, cycleStart);
   let grandIn = 0;
   while (grandIn < 4 && kindOf(target + grandIn * 7 * 864e5, cycleStart) !== 'monthly') grandIn++;
@@ -101,7 +104,7 @@ export default function DrawLive() {
 
   const title = kind === 'monthly' ? 'The Grand Prize' : 'The weekly draw';
   return <section className="live-draw" aria-live="polite">
-    <p className="loot-card-kicker">{title}</p>
+    <p className="loot-card-kicker">{isFirst && kind === 'weekly' ? 'The first draw' : title}</p>
     {!live && <>
       <Clock ms={target - now} />
       <p className="live-when">{new Date(target).toLocaleString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit', timeZone: 'UTC' })} UTC</p>
