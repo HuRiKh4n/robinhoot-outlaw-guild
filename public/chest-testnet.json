@@ -1,0 +1,11 @@
+{
+  "network": "testnet",
+  "contract": "guild-chest-mvyyz43d.testnet",
+  "drawer": "drawbot-mvyyz43d.testnet",
+  "dev": "dev.drawbot-mvyyz43d.testnet",
+  "reserve": "reserve.drawbot-mvyyz43d.testnet",
+  "cycleStart": "2026-11-01T20:00:00.000Z",
+  "taxTx": "5yYFPNCbfBkBrdYyi6RTpLkfGrkjKjFuCE6KJCicXLWZ",
+  "drawTx": "2rnctSr8YeKekQ88JUzM2obLi88AZX22sg1Qo6yjijDE",
+  "deployedAt": "2026-11-02T08:02:01.299Z"
+}
