@@ -27,7 +27,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Wallet libraries (only when the Guild Chest contract pays)
+        if: hashFiles('public/chest.json') != ''
+        run: npm install --no-save --no-audit --no-fund near-api-js@4.0.4 tweetnacl@1 bs58@4
       - name: Draw
+        env:
+          DRAWER_SEED: ${{ secrets.DRAWER_SEED }}
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             node scripts/draw.mjs "${{ inputs.kind }}" ${{ inputs.date }}

@@ -197,8 +197,19 @@ async function main() {
   for (const e of eligible) { const p = parentOf(e.account); if (p) byParent.set(p, [...(byParent.get(p) ?? []), e.account]); }
   const linked = [...byParent.values()].filter(group => group.length > 1);
 
+  // With the Guild Chest contract (CHEST_CONTRACT + DRAWER_SEED), the chain rolls the dice and pays at once:
+  // this script only submits the eligible list. Without it, the old way: winners from the seed block, paid by hand.
+  let chest = null;
+  const chestConfig = await readFile("public/chest.json", "utf8").then(JSON.parse).catch(() => null);
+  if (chestConfig?.contract && process.env.DRAWER_SEED) chest = await submitToChest(eligible, T, chestConfig);
   const pool = eligible.map(e => ({ ...e })), winners = [];
-  for (let i = 0; i < WINNERS && pool.length; i++) {
+  if (chest) {
+    for (const [i, w] of chest.winners.entries()) {
+      const e = eligible.find(x => x.account === w.account) ?? {};
+      winners.push({ account: w.account, tickets: w.tickets, ...(e.outlaw ? { outlaw: e.outlaw, rank: e.rank } : {}), share: Math.round(SHARES[i] * 100) / 100, amountNear: Number(BigInt(w.amount) / 10n ** 21n) / 1000, title: i === 0 ? (kind === "monthly" ? "The Big Heist" : "The Lucky Outlaw") : undefined, check: `https://nearblocks.io/address/${w.account}` });
+    }
+  }
+  for (let i = 0; !chest && i < WINNERS && pool.length; i++) {
     const total = pool.reduce((sum, e) => sum + e.tickets, 0);
     let ticket = Number(BigInt("0x" + sha(`${seed.hash}:${kind}:${i}`)) % BigInt(total));
     let index = 0;
@@ -212,6 +223,7 @@ async function main() {
     kind, prize: kind === "monthly" ? "Grand Prize" : "Weekly prize", date, drawTime: new Date(T).toISOString(), holdHours: HOLD_HOURS, minTokens: rules.minTokens, symbol: rules.symbol,
     seedBlock: { height: seed.height, hash: seed.hash, time: new Date(seed.time).toISOString() },
     snapshotBlock: snapshot.height, checkpoints: checkpoints.map(c => c.height).sort((a, b) => a - b),
+    ...(chest ? { chest: { contract: chestConfig.contract, network: chestConfig.network, index: chest.index, seed: chest.seed, listHash: chest.list_hash, prizeNear: Number(BigInt(chest.prize) / 10n ** 21n) / 1000, tx: chest.tx, paidBy: "contract" } } : { paidBy: "founder" }),
     holdersChecked: candidates.length, guildMembers: eligible.filter(e => e.outlaw).length, totalTickets: eligible.reduce((s, e) => s + e.tickets, 0), eligible, linked, winners,
   };
   await mkdir("public/draws", { recursive: true });
@@ -221,6 +233,30 @@ async function main() {
   index = [{ kind, date, file: `${kind}-${date}.json`, eligible: eligible.length, winners: winners.length }, ...index.filter(d => !(d.kind === kind && d.date === date))];
   await writeFile("public/draws/index.json", JSON.stringify(index, null, 2) + "\n");
   console.log(JSON.stringify({ seed: result.seedBlock, eligible: eligible.length, winners }, null, 2));
+}
+
+/** Submit the eligible list to the Guild Chest contract, which rolls and pays. Returns the contract's Draw. */
+async function submitToChest(eligible, T, cfg) {
+  const { connect, keyStores, KeyPair } = await import("near-api-js");
+  const nacl = (await import("tweetnacl")).default;
+  const bs58 = (await import("bs58")).default;
+  const network = cfg.network || "mainnet";
+  const rpc = process.env.CHEST_RPC || (network === "mainnet" ? "https://rpc.mainnet.fastnear.com" : "https://test.rpc.fastnear.com");
+  const kp = nacl.sign.keyPair.fromSeed(createHash("sha256").update("robinhoot-drawer:" + process.env.DRAWER_SEED).digest());
+  const key = KeyPair.fromString("ed25519:" + bs58.encode(Buffer.from(kp.secretKey)));
+  const drawer = cfg.drawer;
+  const keyStore = new keyStores.InMemoryKeyStore();
+  await keyStore.setKey(network, drawer, key);
+  const near = await connect({ networkId: network, nodeUrl: rpc, keyStore });
+  const account = await near.account(drawer);
+  const view = await account.viewFunction({ contractId: cfg.contract, methodName: "get_chest", args: {} });
+  const index = Math.round((T - view.cycle_start_ms) / (7 * 864e5));
+  if (index < 0) throw new Error("The chest's cycle has not started yet");
+  const entries = eligible.map(e => ({ account: e.account, tickets: e.tickets }));
+  const out = await account.functionCall({ contractId: cfg.contract, methodName: "draw", args: { index, entries }, gas: 300n * 10n ** 12n });
+  const draw = JSON.parse(Buffer.from(out.status.SuccessValue, "base64").toString());
+  console.log(`Chest draw #${index}: ${draw.winners.length} winners paid by the contract, tx ${out.transaction.hash}`);
+  return { ...draw, tx: out.transaction.hash };
 }
 
 main().catch(error => { console.error(error.message); process.exit(1); });
