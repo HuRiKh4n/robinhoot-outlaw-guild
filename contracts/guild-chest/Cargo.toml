@@ -1,0 +1,15 @@
+[package]
+name = "guild-chest"
+version = "0.1.0"
+edition = "2021"
+description = "RobinHoot Guild Chest: Hold & Win prize pots paid by code, no owner."
+license = "MIT"
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+near-sdk = "5"
+
+[dev-dependencies]
+near-sdk = { version = "5", features = ["unit-testing"] }
