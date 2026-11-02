@@ -1,0 +1,33 @@
+name: Guild Chest testnet demo
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  demo:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: rustup show
+        working-directory: contracts
+      - uses: Swatinem/rust-cache@v2
+        with: { workspaces: contracts }
+      - name: Build the contract
+        working-directory: contracts
+        run: |
+          curl --proto '=https' --tlsv1.2 -LsSf https://github.com/near/cargo-near/releases/latest/download/cargo-near-installer.sh | sh
+          (cd guild-chest && cargo near build non-reproducible-wasm --no-abi)
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Deploy, tax, draw, lock
+        run: |
+          mkdir -p /tmp/demo && cd /tmp/demo && npm init -y >/dev/null && npm install --no-audit --no-fund near-api-js@4.0.4 >/dev/null
+          cp $GITHUB_WORKSPACE/scripts/chest/testnet-demo.mjs . && node testnet-demo.mjs $GITHUB_WORKSPACE/contracts/target/near/guild_chest/guild_chest.wasm $GITHUB_WORKSPACE/public/chest-testnet.json
+      - name: Save the demo addresses
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/chest-testnet.json && git commit -m "Guild Chest testnet demo $(date -u +%Y-%m-%dT%H:%MZ)" && git push
