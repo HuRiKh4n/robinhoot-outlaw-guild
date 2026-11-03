@@ -50,9 +50,9 @@ export default function LootPage() {
       <h2 id="chest-title">Hold &amp; Win</h2>
       <p className="loot-lead"><b>Hold the coin. Win NEAR. Every Sunday.</b> No sign-up, no forms: the chain knows who stayed. Three Sundays out of four it&rsquo;s the weekly prize; the fourth is the Grand Prize.</p>
       <Split parts={[
-        { pct: 36, label: 'The weekly prizes', note: 'Sundays 1, 2 and 3 of every cycle: 3 holders drawn, the Lucky Outlaw takes 40%, two more take 30% each', tone: 'gold' },
-        { pct: 54, label: 'The Grand Prize', note: 'Builds up for four weeks; on the 4th Sunday, 5 holders drawn: The Big Heist takes 50%, four more take 12.5% each. 40% stays in the chest', tone: 'blood' },
-        { pct: 10, label: 'The reserve', note: 'Kept for lean weeks, so the prizes stay steady', tone: 'ember' },
+        { pct: 30, label: 'The weekly prizes', note: 'Sundays 1, 2 and 3 of every cycle: the whole weekly pot to 3 holders drawn, the Lucky Outlaw takes 40%, two more take 30% each', tone: 'gold' },
+        { pct: 50, label: 'The Grand Prize', note: 'Builds up for four weeks; on the 4th Sunday, 5 holders drawn: The Big Heist takes 50%, four more take 12.5% each. 40% stays in the chest', tone: 'blood' },
+        { pct: 20, label: 'The reserve', note: 'Sent to the founder’s public reserve wallet, to top up the prizes in lean weeks. It can only add to the chest, never take from it', tone: 'ember' },
       ]} />
       <ol className="raid-how">
         <li><b>Hold.</b> At least $50 of the coin for 3 days in a row for a weekly prize, 5 days for the Grand Prize. <Link href="/raid">Check if you are in →</Link></li>
@@ -70,7 +70,7 @@ export default function LootPage() {
           A big holder who is a Legend can reach 15 tickets; a $50 Legend has 6. <Link href="/my-outlaw">Make your outlaw →</Link>
         </li>
         <li><b>Drawn in the open.</b> Every Sunday at 20:00 UTC, the dice is the first NEAR block after that moment. Anyone can check it. <Link href="/draws">See the draws →</Link></li>
-        <li><b>Paid in NEAR, announced on X.</b> Straight from the Guild Chest to the winners&rsquo; wallets.</li>
+        <li><b>Paid by code, not by people.</b> The Guild Chest is a NEAR contract with no owner and no withdraw button: the weekly tax goes in, it splits it by the rules above, rolls the dice and pays the winners&rsquo; wallets in the same transaction. Nobody can stop a payment or take the prizes back, the founder included. <Link href="/chest">See the chest →</Link></li>
       </ol>
     </section>
 
@@ -85,18 +85,18 @@ export default function LootPage() {
       <div className="loot-cards">
         <article className="loot-card">
           <p className="loot-card-kicker">Sundays 1, 2, 3 · 3 holders each</p>
-          <div className="loot-card-top"><span>🍀 The Lucky Outlaw</span><strong>$430</strong></div>
-          <div className="loot-card-rest"><span>2 more holders</span><strong>$322 each</strong></div>
-          <p className="loot-card-note">About $1,075 every weekly Sunday. Hold 3 days and you are in.</p>
+          <div className="loot-card-top"><span>🍀 The Lucky Outlaw</span><strong>$269</strong></div>
+          <div className="loot-card-rest"><span>2 more holders</span><strong>$202 each</strong></div>
+          <p className="loot-card-note">About $672 a week. The Sunday after the Grand Prize is a double (two weeks of pot). Hold 3 days and you are in.</p>
         </article>
         <article className="loot-card loot-card-grand">
           <p className="loot-card-kicker">Sunday 4 · the Grand Prize · 5 holders</p>
-          <div className="loot-card-top"><span>👑 The Big Heist</span><strong>$1,452</strong></div>
-          <div className="loot-card-rest"><span>4 more holders</span><strong>$363 each</strong></div>
-          <p className="loot-card-note">First cycle. The chest keeps 40% for the next one, so it grows: up to about <b>$2,420</b> and <b>$605 each</b>.</p>
+          <div className="loot-card-top"><span>👑 The Big Heist</span><strong>$1,344</strong></div>
+          <div className="loot-card-rest"><span>4 more holders</span><strong>$336 each</strong></div>
+          <p className="loot-card-note">First cycle. The chest keeps 40% for the next one, so it grows: up to about <b>$2,240</b> and <b>$560 each</b>.</p>
         </article>
       </div>
-      <p className="loot-example">Another 10% of the chest (about $900 a cycle) is kept as a reserve for lean weeks. Prizes are paid in NEAR, so their dollar value moves with the price of NEAR. Figures are rounded.</p>
+      <p className="loot-example">Another 20% of the chest (about $1,790 a cycle) goes to the reserve wallet for lean weeks. Prizes are paid in NEAR, so their dollar value moves with the price of NEAR. Figures are rounded.</p>
     </section>
 
     <section className="loot-section" aria-labelledby="bag-title">
