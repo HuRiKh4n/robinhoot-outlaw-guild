@@ -914,3 +914,38 @@ nav.site-header{background:#07070a}
 .grand-road li.is-grand{border-color:#c9a46499;background:#c9a46414}.grand-road li.is-grand span{color:var(--gold)}
 .grand-road li.is-done{opacity:.5}
 @media(max-width:700px){.grand-clock{gap:6px}.grand-clock div{min-width:64px;padding:12px 4px}.grand-clock strong{font-size:40px}.grand-road{grid-template-columns:repeat(2,1fr)}}
+
+/* The Guild Chest */
+.chest-live{max-width:880px;margin:0 auto;padding:24px 20px}
+.chest-live h2{font:600 30px 'Cormorant Garamond',Georgia,serif;color:var(--gold);letter-spacing:.06em;text-align:center;margin:0 0 14px}
+.chest-tag{display:inline-block;vertical-align:middle;margin-left:8px;font:600 10px Oswald,sans-serif;letter-spacing:.2em;color:#a99c84;border:1px solid #c9a46455;padding:3px 7px}
+.chest-pots{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.chest-pots div{border:1px solid #c9a46455;background:#0d0c10cc;padding:18px 14px;display:grid;gap:6px;text-align:center}
+.chest-pots div.big{border-color:#c9a464;box-shadow:0 0 30px #c9a46422}
+.chest-pots span,.chest-totals span{font:600 10px Oswald,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#a99c84}
+.chest-pots strong{font:600 clamp(28px,5vw,40px)/1 'Cormorant Garamond',Georgia,serif;color:#f0d9a0}
+.chest-pots small{color:#a99c84;font-size:12px;line-height:1.5}
+.chest-totals{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.chest-totals div{border:1px solid #c9a46433;padding:10px 12px;display:grid;gap:2px}
+.chest-totals b{font:600 20px 'Cormorant Garamond',Georgia,serif;color:var(--ink)}
+.chest-contract,.chest-proof{color:#a99c84;font-size:12px;text-align:center;overflow-wrap:anywhere}
+.chest-contract a,.chest-proof a,.chest-draws a{color:var(--gold)}
+.chest-note{color:#cfc4ad;text-align:center;font-size:14px;line-height:1.6}
+.chest-note.err{color:#ff9a8f}
+.chest-draws{list-style:none;padding:0;margin:0;display:grid;gap:10px}
+.chest-draws>li{border:1px solid #c9a46455;background:#0d0c10cc;padding:14px}
+.chest-draws header{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.chest-draws header b{font:600 20px 'Cormorant Garamond',Georgia,serif;color:var(--ink)}
+.chest-draws header span{color:#a99c84;font-size:13px}
+.chest-draws ul{list-style:none;padding:0;margin:10px 0 0;display:grid;gap:4px}
+.chest-draws ul li{display:flex;justify-content:space-between;gap:10px;font-size:14px}
+.chest-draws ul b{color:#f0d9a0}
+.chest-send{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.chest-send input{background:#0b0a0e;color:var(--ink);border:1px solid #c9a46466;padding:12px;font:600 17px 'DM Sans',sans-serif;width:180px}
+.chest-btn{background:linear-gradient(180deg,#e4c47f,#b8914a);color:#1a1308;border:0;padding:12px 18px;font:700 13px Oswald,sans-serif;letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
+.chest-btn:disabled{opacity:.5;cursor:not-allowed}
+.chest-roles{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+.chest-roles div{border:1px solid #c9a46455;background:#0d0c10cc;padding:16px}
+.chest-roles h3{margin:0 0 6px;font:600 20px 'Cormorant Garamond',Georgia,serif;color:var(--gold)}
+.chest-roles p{margin:0;color:#cfc4ad;font-size:14px;line-height:1.6}
+@media(max-width:700px){.chest-pots,.chest-roles{grid-template-columns:1fr}.chest-totals{grid-template-columns:1fr 1fr}}

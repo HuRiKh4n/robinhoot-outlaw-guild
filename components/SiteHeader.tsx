@@ -13,6 +13,7 @@ export default function SiteHeader() {
       <Link href="/my-outlaw">Your Outlaw</Link>
       <Link href="/bounties">Bounties</Link>
       <Link href="/loot">The Loot</Link>
+      {live && <Link href="/chest">The Chest</Link>}
       {live && <Link href="/draws">The Draws</Link>}
       {live && <Link href="/council">Council</Link>}
     </div>

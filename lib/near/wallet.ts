@@ -12,6 +12,8 @@ export interface WalletConnection {
   disconnect(): Promise<void>;
   switchAccount(accountId: string): void;
   signIdentityChallenge(challenge:IdentityChallenge):Promise<{accountId:string;publicKey:string;signature:string}>;
+  /** One payable call, approved by the user in their wallet (used for the Guild Chest only). */
+  payCall(receiverId: string, methodName: string, args: object, depositYocto: string): Promise<void>;
 }
 
 const network = 'mainnet';
@@ -24,6 +26,7 @@ interface ConnectedWallet {
   manifest: { id: string; name: string };
   getAccounts(data?: { network?: string }): Promise<Array<{ accountId: string }>>;
   signMessage(params: { message: string; recipient: string; nonce: Uint8Array; network?: string }): Promise<{ accountId: string; publicKey: string; signature: string }>;
+  signAndSendTransaction(params: { receiverId: string; actions: Array<{ type: 'FunctionCall'; params: { methodName: string; args: object; gas: string; deposit: string } }> }): Promise<unknown>;
 }
 interface Connector {
   connect(input?: Record<string, never>): Promise<ConnectedWallet>;
@@ -97,6 +100,11 @@ async function initialize(): Promise<WalletConnection> {
         throw new Error('Selected account changed.');
       }
       return { accountId: proof.accountId, publicKey: proof.publicKey, signature: await toBase64Signature(proof.signature) };
+    },
+    async payCall(receiverId, methodName, args, depositYocto) {
+      const wallet = await current();
+      if (!wallet) throw new Error('No wallet connected.');
+      await wallet.signAndSendTransaction({ receiverId, actions: [{ type: 'FunctionCall', params: { methodName, args, gas: '30000000000000', deposit: depositYocto } }] });
     },
     subscribe(listener) {
       listeners.add(listener);
