@@ -1,0 +1,49 @@
+name: Guild Chest mainnet deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      dev_wallet: { description: "Dev wallet (gets 20%)", required: true }
+      reserve_wallet: { description: "Reserve wallet (gets 20% of the guild share)", required: true }
+      first_draw: { description: "First draw, a Sunday (YYYY-MM-DD)", required: true, default: "2026-11-08" }
+      dry_run: { description: "Only check, send nothing", type: boolean, default: true }
+
+permissions:
+  contents: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: rustup show
+        working-directory: contracts
+      - uses: Swatinem/rust-cache@v2
+        with: { workspaces: contracts }
+      - name: Test and build the contract
+        working-directory: contracts
+        run: |
+          cargo test -p guild-chest
+          curl --proto '=https' --tlsv1.2 -LsSf https://github.com/near/cargo-near/releases/latest/download/cargo-near-installer.sh | sh
+          (cd guild-chest && cargo near build non-reproducible-wasm --no-abi)
+          sha256sum target/near/guild_chest/guild_chest.wasm
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Deploy, init, delete keys
+        env:
+          CHEST_ACCOUNT: robinchest.near
+          CHEST_PRIVATE_KEY: ${{ secrets.CHEST_PRIVATE_KEY }}
+          DRAWER_SEED: ${{ secrets.DRAWER_SEED }}
+          DEV_WALLET: ${{ inputs.dev_wallet }}
+          RESERVE_WALLET: ${{ inputs.reserve_wallet }}
+          FIRST_DRAW: ${{ inputs.first_draw }}
+          DRY_RUN: ${{ inputs.dry_run }}
+        run: |
+          mkdir -p /tmp/deploy && cd /tmp/deploy && npm init -y >/dev/null && npm install --no-audit --no-fund near-api-js@4.0.4 tweetnacl@1 bs58@4 >/dev/null
+          cp $GITHUB_WORKSPACE/scripts/chest/mainnet-deploy.mjs . && node mainnet-deploy.mjs $GITHUB_WORKSPACE/contracts/target/near/guild_chest/guild_chest.wasm $GITHUB_WORKSPACE/public/chest.json
+      - name: Save public/chest.json
+        if: ${{ !inputs.dry_run }}
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/chest.json && git commit -m "Guild Chest live on mainnet" && git push
