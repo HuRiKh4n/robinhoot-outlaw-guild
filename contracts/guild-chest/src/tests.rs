@@ -17,7 +17,7 @@ fn reserve() -> AccountId { "reserve.near".parse().unwrap() }
 fn bot() -> AccountId { "drawbot.near".parse().unwrap() }
 fn chest() -> Contract {
     testing_env!(ctx(accounts(0), START - 10 * WEEK_MS, 0, 1).build());
-    Contract::new(dev(), reserve(), bot(), START)
+    Contract::new(dev(), reserve(), bot(), START, None)
 }
 fn entries(n: usize) -> Vec<Entry> {
     (0..n).map(|i| Entry { account: format!("holder{i:03}.near").parse().unwrap(), tickets: (i % 10 + 1) as u32 }).collect()
@@ -31,7 +31,7 @@ fn tax(c: &mut Contract, near: u128, ms: u64) {
 fn the_cycle_must_start_on_a_sunday_evening() {
     testing_env!(ctx(accounts(0), START, 0, 1).build());
     for bad in [START + 3600_000, START + 24 * 3600_000] {
-        assert!(std::panic::catch_unwind(|| Contract::new(dev(), reserve(), bot(), bad)).is_err());
+        assert!(std::panic::catch_unwind(|| Contract::new(dev(), reserve(), bot(), bad, None)).is_err());
     }
 }
 
@@ -145,4 +145,72 @@ fn top_ups_add_and_nothing_comes_out_until_the_bot_is_dead() {
     testing_env!(ctx(accounts(3), START - 10 * WEEK_MS + ABANDONED_MS + 1, 0, 1).build());
     c.release_abandoned();
     assert_eq!(c.get_chest().grand_pot.0, 0);
+}
+
+// ---------------- PEARL (or any NEP-141 token) chest ----------------
+
+fn pearl() -> AccountId { "pearl.near".parse().unwrap() }
+fn token_chest() -> Contract {
+    testing_env!(ctx(accounts(0), START - 10 * WEEK_MS, 0, 1).build());
+    Contract::new(dev(), reserve(), bot(), START, Some(pearl()))
+}
+fn send_pearl(c: &mut Contract, from_token: AccountId, amount: u128, msg: &str) {
+    testing_env!(ctx(from_token, START - WEEK_MS, 0, 1).build());
+    let _ = c.ft_on_transfer(accounts(1), U128(amount), msg.into());
+}
+
+#[test]
+fn a_token_chest_splits_pearl_the_same_way() {
+    let mut c = token_chest();
+    send_pearl(&mut c, pearl(), 1000, "tax");
+    let v = c.get_chest();
+    assert_eq!(v.token, Some(pearl()));
+    assert_eq!((v.weekly_pot.0, v.grand_pot.0), (240, 400));
+    assert_eq!((v.pending_dev.0, v.pending_reserve.0), (200, 160));
+    testing_env!(ctx(accounts(4), START - WEEK_MS, 0, 1).build());
+    c.flush();
+    let v = c.get_chest();
+    assert_eq!((v.pending_dev.0, v.pending_reserve.0), (0, 0), "flush sends dev and reserve");
+    send_pearl(&mut c, pearl(), 50, "grand");
+    assert_eq!(c.get_chest().grand_pot.0, 450);
+}
+
+#[test]
+fn a_token_chest_refuses_other_tokens_and_native_near() {
+    let mut c = token_chest();
+    let other: AccountId = "fake-pearl.near".parse().unwrap();
+    assert!(std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| send_pearl(&mut c, other.clone(), 1000, "tax"))).is_err());
+    testing_env!(ctx(accounts(1), START - WEEK_MS, NEAR, 1).build());
+    assert!(std::panic::catch_unwind(std::panic::AssertUnwindSafe(|| c.deposit_tax())).is_err());
+    assert_eq!(c.get_chest().taxed.0, 0);
+}
+
+#[test]
+fn a_token_chest_draws_and_pays_in_pearl() {
+    let mut c = token_chest();
+    send_pearl(&mut c, pearl(), 10_000, "");
+    testing_env!(ctx(bot(), START + 1, 0, 5).build());
+    let d = c.draw(0, entries(30));
+    assert_eq!(d.prize.0, 2400);
+    assert_eq!(d.winners.iter().map(|w| w.amount.0).collect::<Vec<_>>(), vec![960, 720, 720]);
+    let v = c.get_chest();
+    assert_eq!(v.weekly_pot.0, 0);
+    assert_eq!((v.pending_dev.0, v.pending_reserve.0), (0, 0), "the draw also sends dev and reserve");
+}
+
+#[test]
+fn a_bounced_payment_goes_back() {
+    let mut c = token_chest();
+    send_pearl(&mut c, pearl(), 10_000, "tax");
+    testing_env!(ctx(bot(), START + 1, 0, 5).build());
+    let d = c.draw(0, entries(30));
+    let w = d.winners[0].clone();
+    let mut b = ctx("chest.near".parse().unwrap(), START + 2, 0, 1);
+    b.current_account_id("chest.near".parse().unwrap());
+    testing_env!(b.build(), near_sdk::test_vm_config(), near_sdk::RuntimeFeesConfig::test(), Default::default(), vec![PromiseResult::Failed]);
+    c.on_paid(w.account, w.amount, "weekly".into());
+    assert_eq!(c.get_chest().weekly_pot.0, 960);
+    testing_env!(b.build(), near_sdk::test_vm_config(), near_sdk::RuntimeFeesConfig::test(), Default::default(), vec![PromiseResult::Failed]);
+    c.on_paid(dev(), U128(2000), "dev".into());
+    assert_eq!(c.get_chest().pending_dev.0, 2000);
 }

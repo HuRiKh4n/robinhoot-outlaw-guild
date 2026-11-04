@@ -3,7 +3,8 @@
 // 2. deploys the contract and calls new(dev, reserve, drawer, first Sunday)
 // 3. deletes every access key of the chest: no owner, no upgrade, no withdraw, forever
 // 4. writes public/chest.json for the site and the draw bot
-// Env: CHEST_ACCOUNT, CHEST_PRIVATE_KEY, DRAWER_SEED, DEV_WALLET, RESERVE_WALLET, FIRST_DRAW (YYYY-MM-DD, a Sunday), DRY_RUN
+// Env: CHEST_ACCOUNT, CHEST_PRIVATE_KEY, DRAWER_SEED, DEV_WALLET, RESERVE_WALLET, FIRST_DRAW (YYYY-MM-DD, a Sunday),
+//      PRIZE_TOKEN (empty = NEAR, or the NEP-141 contract the chest runs in, e.g. PEARL), DRY_RUN
 // Usage: node mainnet-deploy.mjs <guild_chest.wasm> <out.json>
 import { connect, keyStores, KeyPair, utils } from "near-api-js";
 import nacl from "tweetnacl";
@@ -15,6 +16,7 @@ const [wasm, outFile] = process.argv.slice(2);
 const env = k => { const v = (process.env[k] || "").trim(); if (!v) throw new Error(`Missing ${k}`); return v; };
 const CHEST = env("CHEST_ACCOUNT"), DEV = env("DEV_WALLET"), RESERVE = env("RESERVE_WALLET");
 const FIRST = env("FIRST_DRAW"), DRY = process.env.DRY_RUN === "true";
+const TOKEN = (process.env.PRIZE_TOKEN || "").trim() || null;
 const TGAS = 10n ** 12n;
 const near = n => BigInt(utils.format.parseNearAmount(String(n)));
 
@@ -37,11 +39,17 @@ for (const id of [DEV, RESERVE]) {
   const ok = await conn.connection.provider.query({ request_type: "view_account", finality: "final", account_id: id }).then(() => true, () => false);
   if (!ok) throw new Error(`Wallet ${id} does not exist on mainnet`);
 }
+let meta = null;
+if (TOKEN) {
+  meta = await chest.viewFunction({ contractId: TOKEN, methodName: "ft_metadata" }).catch(() => null);
+  if (!meta) throw new Error(`${TOKEN} is not a token contract on mainnet`);
+  console.log(`prize token: ${TOKEN} = ${meta.symbol} (${meta.decimals} decimals)`);
+}
 const bal = await chest.getAccountBalance();
 console.log(`${CHEST}: ${utils.format.formatNearAmount(bal.available, 3)} NEAR available`);
 const keys = await chest.getAccessKeys();
 if (!keys.some(k => k.public_key === ownerKey.getPublicKey().toString())) throw new Error("CHEST_PRIVATE_KEY is not a key of " + CHEST);
-console.log(`plan: drawer ${DRAWER} (key ${drawerKey.getPublicKey()}), dev ${DEV}, reserve ${RESERVE}, first draw ${new Date(start).toISOString()}`);
+console.log(`plan: coin ${TOKEN ?? "NEAR"}, drawer ${DRAWER} (key ${drawerKey.getPublicKey()}), dev ${DEV}, reserve ${RESERVE}, first draw ${new Date(start).toISOString()}`);
 if (DRY) { console.log("DRY RUN: all checks passed, nothing sent."); process.exit(0); }
 
 const exists = await conn.connection.provider.query({ request_type: "view_account", finality: "final", account_id: DRAWER }).then(() => true, () => false);
@@ -49,7 +57,14 @@ if (!exists) { await chest.createAccount(DRAWER, drawerKey.getPublicKey(), near(
 
 await chest.deployContract(await readFile(wasm));
 console.log("contract deployed");
-await chest.functionCall({ contractId: CHEST, methodName: "new", args: { dev_wallet: DEV, reserve_wallet: RESERVE, drawer: DRAWER, cycle_start_ms: start }, gas: 50n * TGAS });
+await chest.functionCall({ contractId: CHEST, methodName: "new", args: { dev_wallet: DEV, reserve_wallet: RESERVE, drawer: DRAWER, cycle_start_ms: start, token: TOKEN }, gas: 50n * TGAS });
+if (TOKEN) {
+  // The chest must be registered on the token to receive it; register dev and reserve too.
+  for (const id of [CHEST, DEV, RESERVE]) {
+    await chest.functionCall({ contractId: TOKEN, methodName: "storage_deposit", args: { account_id: id, registration_only: true }, gas: 30n * TGAS, attachedDeposit: near(0.0125) });
+  }
+  console.log(`chest, dev and reserve registered on ${TOKEN}`);
+}
 console.log("chest", JSON.stringify(await chest.viewFunction({ contractId: CHEST, methodName: "get_chest" })));
 
 for (const k of await chest.getAccessKeys()) {
@@ -58,5 +73,5 @@ for (const k of await chest.getAccessKeys()) {
 await chest.deleteKey(ownerKey.getPublicKey());
 console.log("All chest keys deleted:", JSON.stringify(await (await conn.account(CHEST)).getAccessKeys()));
 
-await writeFile(outFile, JSON.stringify({ network: "mainnet", contract: CHEST, drawer: DRAWER, dev: DEV, reserve: RESERVE, cycleStart: new Date(start).toISOString(), deployedAt: new Date().toISOString() }, null, 2) + "\n");
+await writeFile(outFile, JSON.stringify({ network: "mainnet", contract: CHEST, token: TOKEN, symbol: meta?.symbol ?? "NEAR", decimals: meta?.decimals ?? 24, drawer: DRAWER, dev: DEV, reserve: RESERVE, cycleStart: new Date(start).toISOString(), deployedAt: new Date().toISOString() }, null, 2) + "\n");
 console.log("Wrote", outFile);

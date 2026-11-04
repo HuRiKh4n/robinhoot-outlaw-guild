@@ -203,10 +203,12 @@ async function main() {
   const chestConfig = await readFile("public/chest.json", "utf8").then(JSON.parse).catch(() => null);
   if (chestConfig?.contract && process.env.DRAWER_SEED) chest = await submitToChest(eligible, T, chestConfig);
   const pool = eligible.map(e => ({ ...e })), winners = [];
+  const coinDec = BigInt(chestConfig?.decimals ?? 24), coin = chestConfig?.token ? chestConfig.symbol ?? "TOKEN" : "NEAR";
+  const units = raw => Number(BigInt(raw) * 1000n / 10n ** coinDec) / 1000;
   if (chest) {
     for (const [i, w] of chest.winners.entries()) {
       const e = eligible.find(x => x.account === w.account) ?? {};
-      winners.push({ account: w.account, tickets: w.tickets, ...(e.outlaw ? { outlaw: e.outlaw, rank: e.rank } : {}), share: Math.round(SHARES[i] * 100) / 100, amountNear: Number(BigInt(w.amount) / 10n ** 21n) / 1000, title: i === 0 ? (kind === "monthly" ? "The Big Heist" : "The Lucky Outlaw") : undefined, check: `https://nearblocks.io/address/${w.account}` });
+      winners.push({ account: w.account, tickets: w.tickets, ...(e.outlaw ? { outlaw: e.outlaw, rank: e.rank } : {}), share: Math.round(SHARES[i] * 100) / 100, amount: units(w.amount), coin, title: i === 0 ? (kind === "monthly" ? "The Big Heist" : "The Lucky Outlaw") : undefined, check: `https://nearblocks.io/address/${w.account}` });
     }
   }
   for (let i = 0; !chest && i < WINNERS && pool.length; i++) {
@@ -223,7 +225,7 @@ async function main() {
     kind, prize: kind === "monthly" ? "Grand Prize" : "Weekly prize", date, drawTime: new Date(T).toISOString(), holdHours: HOLD_HOURS, minTokens: rules.minTokens, symbol: rules.symbol,
     seedBlock: { height: seed.height, hash: seed.hash, time: new Date(seed.time).toISOString() },
     snapshotBlock: snapshot.height, checkpoints: checkpoints.map(c => c.height).sort((a, b) => a - b),
-    ...(chest ? { chest: { contract: chestConfig.contract, network: chestConfig.network, index: chest.index, seed: chest.seed, listHash: chest.list_hash, prizeNear: Number(BigInt(chest.prize) / 10n ** 21n) / 1000, tx: chest.tx, paidBy: "contract" } } : { paidBy: "founder" }),
+    ...(chest ? { chest: { contract: chestConfig.contract, network: chestConfig.network, index: chest.index, seed: chest.seed, listHash: chest.list_hash, prize: units(chest.prize), coin, token: chestConfig.token ?? null, tx: chest.tx, paidBy: "contract" } } : { paidBy: "founder" }),
     holdersChecked: candidates.length, guildMembers: eligible.filter(e => e.outlaw).length, totalTickets: eligible.reduce((s, e) => s + e.tickets, 0), eligible, linked, winners,
   };
   await mkdir("public/draws", { recursive: true });

@@ -13,7 +13,7 @@ export interface WalletConnection {
   switchAccount(accountId: string): void;
   signIdentityChallenge(challenge:IdentityChallenge):Promise<{accountId:string;publicKey:string;signature:string}>;
   /** One payable call, approved by the user in their wallet (used for the Guild Chest only). */
-  payCall(receiverId: string, methodName: string, args: object, depositYocto: string): Promise<void>;
+  payCall(receiverId: string, methodName: string, args: object, depositYocto: string, gasTgas?: number): Promise<void>;
 }
 
 const network = 'mainnet';
@@ -101,10 +101,10 @@ async function initialize(): Promise<WalletConnection> {
       }
       return { accountId: proof.accountId, publicKey: proof.publicKey, signature: await toBase64Signature(proof.signature) };
     },
-    async payCall(receiverId, methodName, args, depositYocto) {
+    async payCall(receiverId, methodName, args, depositYocto, gasTgas = 30) {
       const wallet = await current();
       if (!wallet) throw new Error('No wallet connected.');
-      await wallet.signAndSendTransaction({ receiverId, actions: [{ type: 'FunctionCall', params: { methodName, args, gas: '30000000000000', deposit: depositYocto } }] });
+      await wallet.signAndSendTransaction({ receiverId, actions: [{ type: 'FunctionCall', params: { methodName, args, gas: `${gasTgas}000000000000`, deposit: depositYocto } }] });
     },
     subscribe(listener) {
       listeners.add(listener);
