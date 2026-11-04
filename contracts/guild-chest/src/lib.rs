@@ -98,6 +98,8 @@ pub struct ChestView {
     /// Dev and reserve shares waiting to be sent (anyone can push them with `flush`).
     pub pending_dev: U128,
     pub pending_reserve: U128,
+    /// When the last tax arrived (ms, 0 = never): the site estimates the tax still on its way from here.
+    pub last_tax_ms: u64,
     pub draws: u64,
 }
 
@@ -120,6 +122,7 @@ pub struct Contract {
     paid: u128,
     pending_dev: u128,
     pending_reserve: u128,
+    last_tax_ms: u64,
     draws: Vector<Draw>,
 }
 
@@ -134,7 +137,7 @@ impl Contract {
         Self {
             token, dev_wallet, reserve_wallet, drawer, cycle_start_ms,
             weekly_pot: 0, grand_pot: 0, next_draw_index: 0, last_activity_ms: env::block_timestamp_ms(),
-            taxed: 0, to_dev: 0, to_reserve: 0, topped_up: 0, paid: 0, pending_dev: 0, pending_reserve: 0,
+            taxed: 0, to_dev: 0, to_reserve: 0, topped_up: 0, paid: 0, pending_dev: 0, pending_reserve: 0, last_tax_ms: 0,
             draws: Vector::new(Key::Draws),
         }
     }
@@ -284,7 +287,7 @@ impl Contract {
         while self.cycle_start_ms + i * WEEK_MS + WEEK_MS <= now { i += 1; } // skip Sundays already gone
         let grand = i % 4 == 3;
         ChestView {
-            token: self.token.clone(), pending_dev: U128(self.pending_dev), pending_reserve: U128(self.pending_reserve),
+            token: self.token.clone(), pending_dev: U128(self.pending_dev), pending_reserve: U128(self.pending_reserve), last_tax_ms: self.last_tax_ms,
             dev_wallet: self.dev_wallet.clone(), reserve_wallet: self.reserve_wallet.clone(), drawer: self.drawer.clone(),
             cycle_start_ms: self.cycle_start_ms, weekly_pot: U128(self.weekly_pot), grand_pot: U128(self.grand_pot),
             next_draw_index: i, next_draw_ms: self.cycle_start_ms + i * WEEK_MS,
@@ -316,6 +319,7 @@ impl Contract {
         self.to_reserve += reserve;
         self.pending_dev += dev;
         self.pending_reserve += reserve;
+        self.last_tax_ms = env::block_timestamp_ms();
         log!("EVENT_JSON:{}", near_sdk::serde_json::json!({"standard":"guildchest","version":"1.0.0","event":"tax","data":[{"from": from, "amount": U128(amount), "dev": U128(dev), "weekly": U128(weekly), "grand": U128(grand), "reserve": U128(reserve)}]}));
     }
 

@@ -6,6 +6,7 @@ import StoryDialogs from "@/components/hideout/StoryDialogs";
 import SfxLink from "@/components/sound/SfxLink";
 import { TALE_LINE } from '@/lib/token';
 import GrandCountdown from '@/components/draws/GrandCountdown';
+import PrizeTicker from '@/components/chest/PrizeTicker';
 
 export default function Home() {
   return (
@@ -28,6 +29,7 @@ export default function Home() {
         <SfxLink className="button strip-forge" href="/my-outlaw">FORGE YOUR OUTLAW →</SfxLink>
       </section>
 
+      <PrizeTicker mainnetOnly link />
       <GrandCountdown link />
 
       <StoryDialogs />

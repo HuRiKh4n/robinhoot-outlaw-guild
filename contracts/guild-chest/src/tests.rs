@@ -44,6 +44,7 @@ fn the_tax_is_split_20_dev_then_30_50_20() {
     assert_eq!(v.weekly_pot.0, 24 * NEAR); // 30% of 80
     assert_eq!(v.grand_pot.0, 40 * NEAR); // 50% of 80
     assert_eq!(v.to_reserve.0, 16 * NEAR); // 20% of 80
+    assert_eq!(v.last_tax_ms, START - WEEK_MS);
     assert!(get_logs().iter().any(|l| l.contains("\"event\":\"tax\"")));
 }
 

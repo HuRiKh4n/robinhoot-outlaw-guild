@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import ChestLive from '@/components/chest/ChestLive';
+import PrizeTicker from '@/components/chest/PrizeTicker';
 import { PRIZE_COIN } from '@/lib/token';
 
 export const metadata: Metadata = { title: 'The Guild Chest | RobinHoot', description: 'A NEAR contract with no owner that holds the prizes and pays the winners by itself.' };
@@ -15,6 +16,7 @@ export default function ChestPage() {
       <div className="ts-rule" aria-hidden="true"><i /></div>
       <p className="raid-lead">The prizes don&apos;t sit in anyone&apos;s wallet. They sit in a NEAR contract that nobody controls, not even the founder. It splits every coin that comes in, rolls its own dice every Sunday and pays the winners by itself.</p>
     </section>
+    <PrizeTicker />
     <ChestLive />
     <section className="raid-rules" aria-labelledby="who-title">
       <h2 id="who-title">Who can do what</h2>
