@@ -102,10 +102,10 @@ export default function LootPage() {
 
     <section className="loot-section" aria-labelledby="bag-title">
       <h2 id="bag-title">The founder&rsquo;s bag: 5%</h2>
-      <p className="loot-lead">At launch the founder buys 5% on the same curve as everyone else, paying for it in {PRIZE_COIN}. Then it is split into two public wallets.</p>
+      <p className="loot-lead">At launch the founder buys 5% on the same curve as everyone else, paying for it in {PRIZE_COIN}. It stays in the creator wallet (The Tax Gate below), in plain sight.</p>
       <Split parts={[
-        { pct: 3, label: 'The Herald (marketing)', note: 'Prizes, airdrops to early outlaws, partnerships. Any sale is small and announced.', tone: 'gold' },
-        { pct: 2, label: 'The Founder (team)', note: 'No sales for 3 months. Then small amounts, always announced first.', tone: 'ember' },
+        { pct: 3, label: 'Marketing', note: 'Prizes, airdrops to early outlaws, partnerships. Any sale is small and announced.', tone: 'gold' },
+        { pct: 2, label: 'The founder', note: 'No sales for 3 months. Then small amounts, always announced first.', tone: 'ember' },
       ]} />
     </section>
 
