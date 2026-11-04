@@ -1,14 +1,14 @@
 {
   "network": "testnet",
-  "contract": "guild-chest-mw1pq1bo.testnet",
+  "contract": "guild-chest-mw2kn7ez.testnet",
   "token": "tgold.robinhoot-heist-mvxns2hb.testnet",
   "symbol": "tGOLD",
   "decimals": 18,
-  "drawer": "drawbot-mw1pq1bo.testnet",
-  "dev": "dev.drawbot-mw1pq1bo.testnet",
-  "reserve": "reserve.drawbot-mw1pq1bo.testnet",
+  "drawer": "drawbot-mw2kn7ez.testnet",
+  "dev": "dev.drawbot-mw2kn7ez.testnet",
+  "reserve": "reserve.drawbot-mw2kn7ez.testnet",
   "cycleStart": "2026-11-01T20:00:00.000Z",
-  "taxTx": "5zYT6fSLzpjpohxkMs44gwrCy2gN2EDrhJvC19ohVnSZ",
-  "drawTx": "8YfPLfPXoyGvG5iw36tL8tQUkQyWfy2kxDc4uqPFky3g",
-  "deployedAt": "2026-11-04T06:06:35.070Z"
+  "taxTx": "ZVQouj19XvFjkTf1woi5GrxCgGLSWCebhv5NTmUqWbh",
+  "drawTx": "RrT6JxTxT1qm8ZbGknfSaM1WVpVxHWcpw9dgCN5bPCQ",
+  "deployedAt": "2026-11-04T20:32:06.127Z"
 }
