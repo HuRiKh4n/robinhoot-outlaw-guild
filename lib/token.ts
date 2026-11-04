@@ -8,5 +8,5 @@ export const coin = (fallback = 'the coin') => (TICKER ? `$${TICKER}` : fallback
 export const TALE_LINE = `A TALE FROM THE KINGDOM OF NEAR${TICKER ? ` · $${TICKER}` : ''}`;
 export const launched = () => Boolean(process.env.RHOOT_TOKEN_CONTRACT?.trim());
 
-/** The coin the tax and the prizes are paid in (the JustHoot pair): NEAR or PEARL. Set NEXT_PUBLIC_PRIZE_COIN on Vercel. */
+/** The coin the tax and the prizes are paid in (the JustHoot pair). NEAR unless NEXT_PUBLIC_PRIZE_COIN says otherwise. */
 export const PRIZE_COIN = (process.env.NEXT_PUBLIC_PRIZE_COIN || 'NEAR').trim().toUpperCase();
