@@ -3,7 +3,7 @@ name: Guild Chest testnet demo
 on:
   workflow_dispatch:
     inputs:
-      token: { description: "Run the chest in this testnet token (empty = NEAR)", required: false, default: "tgold.robinhoot-heist-mvxns2hb.testnet" }
+      token: { description: "Run the chest in this testnet token (empty = NEAR)", required: false, default: "" }
 
 permissions:
   contents: write
