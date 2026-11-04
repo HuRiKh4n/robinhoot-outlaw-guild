@@ -2,6 +2,7 @@ import "server-only";
 
 /** The guild's public wallets. Filled in on Vercel at launch (env), shown on /loot. */
 export const lootWallets = [
+  { key: 'LOOT_WALLET_TAX', name: 'The Tax Gate', use: 'The creator wallet on JustHoot. The 2% tax lands here and is sent to the Guild Chest every hour, by a bot, in public.' },
   { key: 'LOOT_WALLET_GUILD', name: 'The Guild Chest (contract)', use: '80% of the Sheriff’s tax. A contract with no owner: it pays the weekly prizes and the Grand Prize by itself.' },
   { key: 'LOOT_WALLET_RESERVE', name: 'The Reserve', use: '20% of the Guild’s share. Tops up the prizes in lean weeks; it can only add to the chest.' },
   { key: 'LOOT_WALLET_DEV', name: 'The Hideout', use: '20% of the Sheriff’s tax. Pays for the site, the art, the videos and the tools.' },

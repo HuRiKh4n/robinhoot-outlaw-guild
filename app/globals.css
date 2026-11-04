@@ -964,3 +964,9 @@ nav.site-header{background:#07070a}
 .prize-ticker-note{margin:12px 0 0;color:#cfc4ad;font-size:13px;line-height:1.6}
 .prize-ticker-note a{color:var(--gold)}
 @media(max-width:600px){.prize-ticker-row{grid-template-columns:1fr}}
+.loot-balance{margin:4px 0 0;display:grid;gap:4px}
+.loot-balance div{display:flex;justify-content:space-between;gap:10px;border-top:1px solid #c9a46422;padding-top:6px}
+.loot-balance dt{font:600 11px Oswald,sans-serif;letter-spacing:.18em;color:#a99c84}
+.loot-balance dd{margin:0;font:600 18px 'Cormorant Garamond',Georgia,serif;color:#f0d9a0;text-align:right}
+.loot-balance small{font:400 12px 'DM Sans',sans-serif;color:#a99c84}
+.loot-never{font:600 10px Oswald,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#d0453a}
