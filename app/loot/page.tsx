@@ -5,6 +5,7 @@ import SiteHeader from '@/components/SiteHeader';
 import { lootWallets, walletAddress } from '@/lib/loot';
 import { TALE_LINE, coin, PRIZE_COIN } from '@/lib/token';
 import GrandCountdown from '@/components/draws/GrandCountdown';
+import OpenBooks from '@/components/loot/OpenBooks';
 
 export const metadata: Metadata = { title: 'The Loot | RobinHoot', description: `Where the gold goes: 1 billion ${coin('coins')}, a fair launch, a 2% Sheriff’s tax paid in ${PRIZE_COIN}, 80% of it to the guild. Every wallet public.` };
 export const revalidate = 3600;
@@ -110,17 +111,8 @@ export default function LootPage() {
 
     <section className="loot-section" aria-labelledby="books-title">
       <h2 id="books-title">The open books</h2>
-      <p className="loot-lead">Every wallet is public. Anyone can follow the gold on the chain.</p>
-      <div className="loot-wallets">{lootWallets.map(wallet => {
-        const address = walletAddress(wallet.key);
-        return <article key={wallet.key}>
-          <h3>{wallet.name}</h3>
-          <p>{wallet.use}</p>
-          {address
-            ? <a href={`https://nearblocks.io/address/${address}`} target="_blank" rel="noopener noreferrer">{address} ↗</a>
-            : <span className="loot-soon">Address published at launch</span>}
-        </article>;
-      })}</div>
+      <p className="loot-lead">Every wallet is public, with its balance read live from the chain. None of them can ever win a draw.</p>
+      <OpenBooks wallets={lootWallets.map(wallet => ({ name: wallet.name, use: wallet.use, address: walletAddress(wallet.key) }))} />
     </section>
 
     <p className="loot-fine">{coin('RobinHoot')} is a meme, a story and a guild. It is not an investment and carries no promise of profit. Prizes depend on trading volume and can be small. Never share your seed phrase.</p>
