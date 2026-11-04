@@ -1,0 +1,30 @@
+name: Forward the tax to the Guild Chest
+
+on:
+  schedule:
+    - cron: "7 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency: { group: forward-tax, cancel-in-progress: false }
+
+jobs:
+  forward:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - name: Forward
+        env:
+          TAX_WALLET: ${{ vars.TAX_WALLET }}
+          TAX_WALLET_KEY: ${{ secrets.TAX_WALLET_KEY }}
+          MIN_FORWARD: ${{ vars.TAX_MIN_FORWARD }}
+          KEEP: ${{ vars.TAX_KEEP }}
+        run: |
+          if [ ! -f public/chest.json ] || [ -z "$TAX_WALLET_KEY" ]; then echo "Not set up yet."; exit 0; fi
+          mkdir -p /tmp/fwd && cd /tmp/fwd && npm init -y >/dev/null && npm install --no-audit --no-fund near-api-js@4.0.4 >/dev/null
+          cp $GITHUB_WORKSPACE/scripts/chest/forward-tax.mjs . && node forward-tax.mjs $GITHUB_WORKSPACE/public/chest.json
