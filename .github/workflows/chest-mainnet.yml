@@ -5,6 +5,7 @@ on:
     inputs:
       dev_wallet: { description: "Dev wallet (gets 20%)", required: true }
       reserve_wallet: { description: "Reserve wallet (gets 20% of the guild share)", required: true }
+      prize_token: { description: "Prize coin: token contract (e.g. PEARL). Empty = NEAR", required: false, default: "" }
       first_draw: { description: "First draw, a Sunday (YYYY-MM-DD)", required: true, default: "2026-11-08" }
       dry_run: { description: "Only check, send nothing", type: boolean, default: true }
 
@@ -37,6 +38,7 @@ jobs:
           DEV_WALLET: ${{ inputs.dev_wallet }}
           RESERVE_WALLET: ${{ inputs.reserve_wallet }}
           FIRST_DRAW: ${{ inputs.first_draw }}
+          PRIZE_TOKEN: ${{ inputs.prize_token }}
           DRY_RUN: ${{ inputs.dry_run }}
         run: |
           mkdir -p /tmp/deploy && cd /tmp/deploy && npm init -y >/dev/null && npm install --no-audit --no-fund near-api-js@4.0.4 tweetnacl@1 bs58@4 >/dev/null

@@ -2,6 +2,8 @@ name: Guild Chest testnet demo
 
 on:
   workflow_dispatch:
+    inputs:
+      token: { description: "Run the chest in this testnet token (empty = NEAR)", required: false, default: "tgold.robinhoot-heist-mvxns2hb.testnet" }
 
 permissions:
   contents: write
@@ -23,6 +25,8 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 22 }
       - name: Deploy, tax, draw, lock
+        env:
+          TOKEN: ${{ inputs.token }}
         run: |
           mkdir -p /tmp/demo && cd /tmp/demo && npm init -y >/dev/null && npm install --no-audit --no-fund near-api-js@4.0.4 >/dev/null
           cp $GITHUB_WORKSPACE/scripts/chest/testnet-demo.mjs . && node testnet-demo.mjs $GITHUB_WORKSPACE/contracts/target/near/guild_chest/guild_chest.wasm $GITHUB_WORKSPACE/public/chest-testnet.json
