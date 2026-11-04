@@ -3,10 +3,10 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import { lootWallets, walletAddress } from '@/lib/loot';
-import { TALE_LINE, coin } from '@/lib/token';
+import { TALE_LINE, coin, PRIZE_COIN } from '@/lib/token';
 import GrandCountdown from '@/components/draws/GrandCountdown';
 
-export const metadata: Metadata = { title: 'The Loot | RobinHoot', description: `Where the gold goes: 1 billion ${coin('coins')}, a fair launch, a 2% Sheriff’s tax paid in NEAR, 80% of it to the guild. Every wallet public.` };
+export const metadata: Metadata = { title: 'The Loot | RobinHoot', description: `Where the gold goes: 1 billion ${coin('coins')}, a fair launch, a 2% Sheriff’s tax paid in ${PRIZE_COIN}, 80% of it to the guild. Every wallet public.` };
 export const revalidate = 3600;
 
 const Split = ({ parts }: { parts: { pct: number; label: string; note: string; tone: string }[] }) =>
@@ -38,17 +38,17 @@ export default function LootPage() {
 
     <section className="loot-section" aria-labelledby="tax-title">
       <h2 id="tax-title">The Sheriff&rsquo;s tax: 2%</h2>
-      <p className="loot-lead">Every buy and every sell pays 2%, in NEAR. The Sheriff spends his on himself. Ours goes back to the trenches.</p>
+      <p className="loot-lead">Every buy and every sell pays 2%, in {PRIZE_COIN}. The Sheriff spends his on himself. Ours goes back to the trenches.</p>
       <Split parts={[
-        { pct: 80, label: 'The Guild Chest', note: 'Prizes for the outlaws, paid in NEAR', tone: 'gold' },
+        { pct: 80, label: 'The Guild Chest', note: `Prizes for the outlaws, paid in ${PRIZE_COIN}`, tone: 'gold' },
         { pct: 20, label: 'The Hideout', note: 'Site, art, videos and tools', tone: 'ember' },
       ]} />
-      <p className="loot-example">Example: 1,000 NEAR traded in a week → 20 NEAR of tax → 16 NEAR to the guild, 4 NEAR to the hideout.</p>
+      <p className="loot-example">Example: 1,000 {PRIZE_COIN} traded in a week → 20 {PRIZE_COIN} of tax → 16 {PRIZE_COIN} to the guild, 4 {PRIZE_COIN} to the hideout.</p>
     </section>
 
     <section className="loot-section" aria-labelledby="chest-title">
       <h2 id="chest-title">Hold &amp; Win</h2>
-      <p className="loot-lead"><b>Hold the coin. Win NEAR. Every Sunday.</b> No sign-up, no forms: the chain knows who stayed. Three Sundays out of four it&rsquo;s the weekly prize; the fourth is the Grand Prize.</p>
+      <p className="loot-lead"><b>Hold the coin. Win {PRIZE_COIN}. Every Sunday.</b> No sign-up, no forms: the chain knows who stayed. Three Sundays out of four it&rsquo;s the weekly prize; the fourth is the Grand Prize.</p>
       <Split parts={[
         { pct: 30, label: 'The weekly prizes', note: 'Sundays 1, 2 and 3 of every cycle: the whole weekly pot to 3 holders drawn, the Lucky Outlaw takes 40%, two more take 30% each', tone: 'gold' },
         { pct: 50, label: 'The Grand Prize', note: 'Builds up for four weeks; on the 4th Sunday, 5 holders drawn: The Big Heist takes 50%, four more take 12.5% each. 40% stays in the chest', tone: 'blood' },
@@ -96,12 +96,12 @@ export default function LootPage() {
           <p className="loot-card-note">First cycle. The chest keeps 40% for the next one, so it grows: up to about <b>$2,240</b> and <b>$560 each</b>.</p>
         </article>
       </div>
-      <p className="loot-example">Another 20% of the chest (about $1,790 a cycle) goes to the reserve wallet for lean weeks. Prizes are paid in NEAR, so their dollar value moves with the price of NEAR. Figures are rounded.</p>
+      <p className="loot-example">Another 20% of the chest (about $1,790 a cycle) goes to the reserve wallet for lean weeks. Prizes are paid in {PRIZE_COIN}, so their dollar value moves with the price of {PRIZE_COIN}. Figures are rounded.</p>
     </section>
 
     <section className="loot-section" aria-labelledby="bag-title">
       <h2 id="bag-title">The founder&rsquo;s bag: 5%</h2>
-      <p className="loot-lead">At launch the founder buys 5% on the same curve as everyone else, paying for it in NEAR. Then it is split into two public wallets.</p>
+      <p className="loot-lead">At launch the founder buys 5% on the same curve as everyone else, paying for it in {PRIZE_COIN}. Then it is split into two public wallets.</p>
       <Split parts={[
         { pct: 3, label: 'The Herald (marketing)', note: 'Prizes, airdrops to early outlaws, partnerships. Any sale is small and announced.', tone: 'gold' },
         { pct: 2, label: 'The Founder (team)', note: 'No sales for 3 months. Then small amounts, always announced first.', tone: 'ember' },

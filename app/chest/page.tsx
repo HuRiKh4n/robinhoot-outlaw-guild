@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import ChestLive from '@/components/chest/ChestLive';
+import { PRIZE_COIN } from '@/lib/token';
 
 export const metadata: Metadata = { title: 'The Guild Chest | RobinHoot', description: 'A NEAR contract with no owner that holds the prizes and pays the winners by itself.' };
 
@@ -18,7 +19,7 @@ export default function ChestPage() {
     <section className="raid-rules" aria-labelledby="who-title">
       <h2 id="who-title">Who can do what</h2>
       <div className="chest-roles">
-        <div><h3>Anyone</h3><p>Send NEAR to the chest. Read every pot, every draw and every winner, live from the chain.</p></div>
+        <div><h3>Anyone</h3><p>Send {PRIZE_COIN} to the chest. Read every pot, every draw and every winner, live from the chain.</p></div>
         <div><h3>The founder</h3><p>Forwards the trading tax to the chest. Can add to the pots. <b>Cannot take anything out.</b></p></div>
         <div><h3>The draw bot</h3><p>Once a week, hands in the list of holders who stayed. <b>Cannot pick winners, cannot move coins,</b> cannot draw twice or off schedule.</p></div>
         <div><h3>The contract</h3><p>Rolls the dice with NEAR&apos;s own randomness, picks the winners (more tickets, more chances) and pays them in the same transaction.</p></div>
