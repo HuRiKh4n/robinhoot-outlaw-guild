@@ -4,7 +4,8 @@ import HideoutScene from "@/components/hideout/HideoutScene";
 import TitleScreen from "@/components/hideout/TitleScreen";
 import StoryDialogs from "@/components/hideout/StoryDialogs";
 import SfxLink from "@/components/sound/SfxLink";
-import { TALE_LINE } from '@/lib/token';
+import { TALE_LINE, TOKEN_CONTRACT } from '@/lib/token';
+import ContractAddress from '@/components/ContractAddress';
 import GrandCountdown from '@/components/draws/GrandCountdown';
 import PrizeTicker from '@/components/chest/PrizeTicker';
 
@@ -29,6 +30,7 @@ export default function Home() {
         <SfxLink className="button strip-forge" href="/my-outlaw">FORGE YOUR OUTLAW →</SfxLink>
       </section>
 
+      {TOKEN_CONTRACT && <ContractAddress address={TOKEN_CONTRACT} />}
       <PrizeTicker mainnetOnly link />
       <GrandCountdown link />
 
