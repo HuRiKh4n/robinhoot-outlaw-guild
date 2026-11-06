@@ -3,7 +3,8 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import SiteHeader from '@/components/SiteHeader';
 import { lootWallets, walletAddress } from '@/lib/loot';
-import { TALE_LINE, coin, PRIZE_COIN } from '@/lib/token';
+import { TALE_LINE, coin, PRIZE_COIN, TOKEN_CONTRACT } from '@/lib/token';
+import ContractAddress from '@/components/ContractAddress';
 import GrandCountdown from '@/components/draws/GrandCountdown';
 import OpenBooks from '@/components/loot/OpenBooks';
 
@@ -35,6 +36,7 @@ export default function LootPage() {
         <div><span>Launch</span><strong>Fair, on JustHoot</strong><small>everyone buys on the same curve</small></div>
         <div><span>Presale</span><strong>None</strong><small>no private round, no free team tokens</small></div>
       </div>
+      {TOKEN_CONTRACT && <ContractAddress address={TOKEN_CONTRACT} />}
     </section>
 
     <section className="loot-section" aria-labelledby="tax-title">

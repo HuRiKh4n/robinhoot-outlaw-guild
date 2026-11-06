@@ -970,3 +970,12 @@ nav.site-header{background:#07070a}
 .loot-balance dd{margin:0;font:600 18px 'Cormorant Garamond',Georgia,serif;color:#f0d9a0;text-align:right}
 .loot-balance small{font:400 12px 'DM Sans',sans-serif;color:#a99c84}
 .loot-never{font:600 10px Oswald,sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#d0453a}
+
+/* Contract address */
+.ca-box{max-width:880px;margin:24px auto;padding:16px 20px;text-align:center;display:grid;gap:8px;justify-items:center}
+.ca-label{font:600 10px Oswald,sans-serif;letter-spacing:.26em;color:var(--gold)}
+.ca-value{display:flex;align-items:center;gap:10px;max-width:100%;background:#0d0c10e6;border:1px solid #c9a46488;color:var(--ink);padding:10px 12px;cursor:pointer}
+.ca-value code{font:500 14px ui-monospace,Menlo,monospace;overflow-wrap:anywhere;text-align:left}
+.ca-value b{font:700 11px Oswald,sans-serif;letter-spacing:.16em;color:#1a1308;background:var(--gold);padding:5px 8px;white-space:nowrap}
+.ca-links{margin:0;display:flex;gap:16px;flex-wrap:wrap;justify-content:center;font-size:13px}
+.ca-links a{color:var(--gold)}

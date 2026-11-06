@@ -1,8 +1,9 @@
+import { TOKEN_CONTRACT } from "@/lib/token";
 import "server-only";
 
 /** Weekly Raid settings. Everything is optional until the coin launches. */
 export function raidConfig() {
-  const token = process.env.RHOOT_TOKEN_CONTRACT?.trim() || null;
+  const token = TOKEN_CONTRACT || null;
   const minUsd = Number(process.env.RAID_MIN_USD ?? 50);
   const manualTokens = process.env.RAID_HOLD_TOKENS?.trim() || null; // whole tokens, overrides the USD rule
   const rpc = process.env.NEAR_ARCHIVAL_RPC_URL?.trim() || "https://archival-rpc.mainnet.fastnear.com";
