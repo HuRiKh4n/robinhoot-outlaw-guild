@@ -6,7 +6,7 @@ on:
       dev_wallet: { description: "Dev wallet (gets 20%)", required: true }
       reserve_wallet: { description: "Reserve wallet (gets 20% of the guild share)", required: true }
       prize_token: { description: "Prize coin: token contract (e.g. PEARL). Empty = NEAR", required: false, default: "" }
-      first_draw: { description: "First draw, a Sunday (YYYY-MM-DD)", required: true, default: "2026-11-08" }
+      first_draw: { description: "First draw, a Sunday (YYYY-MM-DD)", required: true, default: "2026-11-22" }
       dry_run: { description: "Only check, send nothing", type: boolean, default: true }
 
 permissions:
