@@ -19,7 +19,7 @@ Sister project, also submitted (track *Games*): **[The Heist](https://github.com
 | Look up `guild-chest-mw2kret3.testnet` on a testnet explorer | The demo run: tax tx `41jVVBR8h3FpRaPPJy4JaWLx8nYN1dPTGejJixg5gXGX` split 20/24/40/16; draw tx `EFSH1ytSwPjztRtUqijPMGz5uEMSazZeioBiqYRuE2k7` paid 3 holders 0.48 / 0.36 / 0.36 NEAR; then the account's only key was deleted. |
 | Run `node scripts/chest/testnet-demo.mjs <guild_chest.wasm> out.json` (or Actions → *Guild Chest testnet demo*) | A fresh chest on testnet: deploy, tax, draw, payouts checked, key deleted. |
 | Open https://robinhoot.fun/raid and paste any holder | Whether that wallet qualifies this week, its tickets and why (lowest balance, rank bonus, exclusions). |
-| `node scripts/draw.mjs weekly 2026-11-15` (after that Sunday) | Rebuilds that week's eligible list from public chain data. The contract stores the sha256 of the list it received (`list_hash`, sorted `account:tickets` lines), so anyone can compare. |
+| `node scripts/draw.mjs weekly 2026-11-22` (after that Sunday) | Rebuilds that week's eligible list from public chain data. The contract stores the sha256 of the list it received (`list_hash`, sorted `account:tickets` lines), so anyone can compare. |
 
 ## The mechanic
 
@@ -83,6 +83,6 @@ docs/SITE-NOTES.md        earlier notes on the site and wallet integration
 
 ## Built during the hackathon
 
-Code written from 19 Oct 2026 counts (rule Q-001). The site, outlaws, ranks, Council and bard were built 25–31 Oct; the Guild Chest contract, its demo, the live chest page, the draw integration and the tax forwarder from 1 Nov. The token was launched on JustHoot during the hackathon (6 Nov); we never touch the token contract itself. Mainnet chest deployment and the first paid draw are scheduled for Sunday 15 Nov 2026.
+Code written from 19 Oct 2026 counts (rule Q-001). The site, outlaws, ranks, Council and bard were built 25–31 Oct; the Guild Chest contract, its demo, the live chest page, the draw integration and the tax forwarder from 1 Nov. The token was launched on JustHoot during the hackathon (6 Nov); we never touch the token contract itself. Mainnet chest deployment is scheduled for the week of 16 Nov; the first paid draw is Sunday 22 Nov 2026 (Grand Prize 13 Dec).
 
 The meme, the art and the outlaws are RobinHoot's. No promise of profit: prizes depend on trading volume.
